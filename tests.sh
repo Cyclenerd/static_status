@@ -28,6 +28,9 @@ assert_raises "false" 1
 # end of test suite
 assert_end examples
 
+# $ bash status.sh silent
+assert "bash status.sh silent"
+
 # $ bash status.sh loud
 #
 # UP:   ping ftp.freenet.de
