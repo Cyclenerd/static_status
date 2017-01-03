@@ -151,6 +151,7 @@ function exit_with_failure() {
 	echo
 	debug_variables
 	echo
+	del_lock
 	exit 1
 }
 
@@ -172,6 +173,25 @@ function echo_do_not_edit() {
 	echo "#     $MY_HOSTNAME_STATUS_LASTRUN"
 	echo "#     $MY_HOSTNAME_STATUS_HISTORY"
 	echo "#"
+}
+
+# set_lock() sets lock file
+function set_lock() {
+	if ! echo "$MY_DATE_TIME" > "$MY_STATUS_LOCKFILE"; then
+		exit_with_failure "Can not create lock file '$MY_STATUS_LOCKFILE'"
+	fi
+}
+
+# del_lock() delets lock file
+function del_lock() {
+	rm "$MY_STATUS_LOCKFILE" &> /dev/null
+}
+
+# check_lock() checks lock file and exit if the file exists
+function check_lock() {
+	if [ -f "$MY_STATUS_LOCKFILE" ]; then
+		exit_with_failure "$ME is already running. Please wait... In case of problems simply delete the file: '$MY_STATUS_LOCKFILE'"
+	fi
 }
 
 # port_to_name() outputs name of well-known ports
@@ -337,6 +357,7 @@ function save_history() {
 		fi
 	fi
 }
+
 
 ################################################################################
 # HTML
@@ -533,12 +554,8 @@ for MY_COMMAND in "${MY_COMMANDS[@]}"; do
 	check_command "$MY_COMMAND"
 done
 
-if [ -f "$MY_STATUS_LOCKFILE" ]; then
-	exit_with_failure "$ME is already running. Please wait... In case of problems simply delete the file: '$MY_STATUS_LOCKFILE'"
-fi
-if ! echo "$MY_DATE_TIME" > "$MY_STATUS_LOCKFILE"; then
-	exit_with_failure "Can not create lock file '$MY_STATUS_LOCKFILE'"
-fi
+check_lock
+set_lock
 check_file "$MY_HOSTNAME_STATUS_DOWN"
 check_file "$MY_HOSTNAME_STATUS_LASTRUN"
 check_file "$MY_HOSTNAME_STATUS_HISTORY"
@@ -710,6 +727,5 @@ fi
 
 page_footer
 
-# Delete lock file
-rm "$MY_STATUS_LOCKFILE" &> /dev/null
+del_lock
 echo
