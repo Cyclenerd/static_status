@@ -1,4 +1,5 @@
 .DS_Store
+assert.sh
 status_hostname_down.txt
 status_hostname_history.txt
 status_hostname_last.txt
