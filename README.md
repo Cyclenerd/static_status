@@ -55,7 +55,7 @@ https://cyclenerd.github.io/static_status_demo/
 
 ## Requirements
 
-Only `bash`, `ping`, `curl` and `nc`. In many *NIX distributions (Ubuntu, macOS, OpenBSD) the commands are already included.
+Only `bash`, `ping`, `curl` and `nc`. In many *NIX distributions (Ubuntu, macOS) the commands are already included.
 If not, the missing packages can be installed quickly.
 On a debian-based system (Ubuntu), just run `sudo apt-get install curl iputils-ping netcat-openbsd`.
 
