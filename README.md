@@ -34,10 +34,11 @@ Example:
 
 Execute a cron job every minute:
 
+	$ crontab -e
+
+Add:
+
 	*/1 * * * * bash /path/to/status.sh silent >> /dev/null
-
-Tip:
-
 
 
 ## Demo
