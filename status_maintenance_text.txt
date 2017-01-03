@@ -1,0 +1,2 @@
+The content of <code>status_maintenance_text.txt</code> is displayed as a maintenance message at the top.
+If you do not have any maintenance, <mark>delete this file or empty it</mark>.

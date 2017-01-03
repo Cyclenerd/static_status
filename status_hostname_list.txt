@@ -1,0 +1,23 @@
+#
+# status.sh Configuration File
+#
+# What should be monitored? Each line one entry.
+#
+# Structure:
+# <COMMAND>;<HOSTNAME, IP or URL>;<PORT>
+#
+# COMMAND: Command to run. Can be ping, curl or nc.
+#          ping = send ICMP ECHO_REQUEST packets to network hosts
+#          curl = transfer a URL
+#          nc   = check TCP and UDP connections
+#
+# HOSTNAME: Hostname for the 'ping' or 'nc' command
+# IP: IP adress for the 'ping' or 'nc' command
+# URL: URL called by the command 'curl'. I.e. https://www.heise.de/ or ftp://ftp.freenet.de/README
+#
+# PORT: Optional port specification. Only for 'nc' command.
+#
+ping;ftp.freenet.de
+nc;ftp.freenet.de;21
+curl;ftp://ftp.freenet.de/README
+curl;http://ftp.freenet.de/README
