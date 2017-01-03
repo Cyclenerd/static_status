@@ -1,7 +1,10 @@
 language: bash
+os:
+  - linux
+  - osx
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y bash perl curl iputils-ping netcat-openbsd
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y bash perl curl iputils-ping netcat-openbsd ; fi
 before_script:
   - curl -f "https://raw.githubusercontent.com/lehmannro/assert.sh/v1.1/assert.sh" -o assert.sh
 script:
