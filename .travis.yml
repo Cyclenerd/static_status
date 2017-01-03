@@ -1,7 +1,7 @@
 language: bash
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y bash curl iputils-ping netcat-openbsd
+  - sudo apt-get install -y bash perl curl iputils-ping netcat-openbsd
 before_script:
   - curl -f "https://raw.githubusercontent.com/lehmannro/assert.sh/v1.1/assert.sh" -o assert.sh
 script:

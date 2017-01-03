@@ -44,5 +44,5 @@ assert_raises "bash status.sh loud"
 
 assert "cat $HOME/status/status_hostname_ok.txt | grep 'ping;ftp.freenet.de'" "ping;ftp.freenet.de;"
 assert "cat $HOME/status/status_hostname_ok.txt | grep 'http://ftp.freenet.de/README'" "curl;http://ftp.freenet.de/README;"
-assert "cat $HOME/status/status_hostname_down.txt | grep 'nkn-it.de' | wc -l" "       4"
+assert "cat $HOME/status/status_hostname_down.txt | grep 'nkn-it.de' | wc -l | perl -pe 's/\s//g'" "4"
 assert_end status_sh
