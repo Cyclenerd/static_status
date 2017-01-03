@@ -265,7 +265,12 @@ function port_to_name() {
 		MY_PORT_NAME="SAP Telnet"
 		;;
 	*)
-		MY_PORT_NAME="Port $1"
+		MY_SERVICE_NAME=$(awk  '$2 ~ /^'"$1"'\// {print $1; exit}' "/etc/services" 2> /dev/null)
+		if [ ! -z "$MY_SERVICE_NAME" ]; then
+			MY_PORT_NAME=$(echo "$MY_SERVICE_NAME" | awk '{print toupper($0)}')
+		else
+			MY_PORT_NAME="Port $1"
+		fi
 		;;
 	esac
 	printf "%s" "$MY_PORT_NAME"
