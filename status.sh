@@ -523,7 +523,7 @@ EOF
 	fi
 	
 	if [[ "$MY_HISTORY_COMMAND" = "ping" ]]; then
-		echo "ping $MY_DOWN_HOSTNAME"
+		echo "ping $MY_HISTORY_HOSTNAME"
 	elif [[ "$MY_HISTORY_COMMAND" = "nc" ]]; then
 		echo "$(port_to_name "$MY_HISTORY_PORT") on $MY_HISTORY_HOSTNAME"
 	elif [[ "$MY_HISTORY_COMMAND" = "curl" ]]; then
