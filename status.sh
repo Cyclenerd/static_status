@@ -335,8 +335,10 @@ function notify() {
         MY_PORT="$3"
         MY_DOWN_TIME="$4"
 
-	echo "Check Failed: $MY_COMMAND $MY_HOSTNAME $MY_PORT $MY_DOWN_TIME"  | mail -s "$MY_STATUS_TITLE check failed for $MY_HOSTNAME"
-	
+	if [[ "$NOTIFY_MAIL_TO" ]] ;
+	then
+		echo "Check Failed: $MY_COMMAND $MY_HOSTNAME $MY_PORT $MY_DOWN_TIME"  | mail -s "$MY_STATUS_TITLE check failed for $MY_HOSTNAME" $NOTIFY_MAIL_TO
+	fi
 
 }
 
