@@ -23,7 +23,7 @@ MY_STATUS_CONFIG_DIR="$HOME/status"
 MY_HOSTNAME_FILE="$MY_STATUS_CONFIG_DIR/status_hostname_list.txt"
 
 # Where should the HTML status page be stored?
-MY_STATUS_HTML="$MY_STATUS_CONFIG_DIR/status_index.html"
+MY_STATUS_HTML="$HOME/status_index.html"
 
 # Text file in which you can place a status message.
 # If the file exists and has a content, all errors on the status page are overwritten.
