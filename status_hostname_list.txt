@@ -13,11 +13,11 @@
 #
 # HOSTNAME: Hostname for the 'ping' or 'nc' command
 # IP: IP adress for the 'ping' or 'nc' command
-# URL: URL called by the command 'curl'. I.e. https://www.heise.de/ or ftp://ftp.freenet.de/README
+# URL: URL called by the command 'curl'. I.e. https://www.heise.de/ping or ftp://ftp.debian.org/debian/README
 #
 # PORT: Optional port specification. Only for 'nc' command.
 #
-ping;ftp.freenet.de
-nc;ftp.freenet.de;21
-curl;ftp://ftp.freenet.de/README
-curl;http://ftp.freenet.de/README
+ping;www.heise.de
+nc;www.heise.de;80
+curl;https://www.heise.de/ping
+curl;ftp://ftp.debian.org/debian/README
