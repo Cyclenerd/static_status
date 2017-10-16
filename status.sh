@@ -25,10 +25,6 @@ MY_HOSTNAME_FILE="$MY_STATUS_CONFIG_DIR/status_hostname_list.txt"
 # Where should the HTML status page be stored?
 MY_STATUS_HTML="$HOME/status_index.html"
 
-# email adress to send notification on the first down event
-# no mail notification if empty
-NOTIFY_MAIL_TO=""
-
 # Text file in which you can place a status message.
 # If the file exists and has a content, all errors on the status page are overwritten.
 MY_MAINTENANCE_TEXT_FILE="$MY_STATUS_CONFIG_DIR/status_maintenance_text.txt"
@@ -66,23 +62,12 @@ MY_LASTRUN_TIME="0"
 BE_LOUD="no"
 BE_QUIET="no"
 # Commands we need
-if [[ "$NOTIFY_MAIL_TO" ]] ; 
-then
-	MY_COMMANDS=(
-		ping
-		nc
-		curl
-		grep
-		mail
-	)
-else
-	MY_COMMANDS=(
-		ping
-		nc
-		curl
-		grep
-	)
-fi
+MY_COMMANDS=(
+	ping
+	nc
+	curl
+	grep
+)
 
 ################################################################################
 # Usage
@@ -326,18 +311,6 @@ function check_downtime() {
 			fi
 		fi
 	done <"$MY_HOSTNAME_STATUS_LASTRUN" # MY_HOSTNAME_STATUS_DOWN is copied to MY_HOSTNAME_STATUS_LASTRUN
-}
-
-# notify (about first downtime of check)
-function notify() {
-	MY_COMMAND="$1"
-        MY_HOSTNAME="$2"
-        MY_PORT="$3"
-        MY_DOWN_TIME="$4"
-
-	echo "Check Failed: $MY_COMMAND $MY_HOSTNAME $MY_PORT $MY_DOWN_TIME"  | mail -s "$MY_STATUS_TITLE check failed for $MY_HOSTNAME"
-	
-
 }
 
 # save_downtime()
@@ -647,9 +620,6 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME"
-			if [[ "$MY_DOWN_TIME" -eq "0" ]]; then # check is false the first time
-				notify "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME"
-			fi
 		fi
 	elif [[ "$MY_COMMAND" = "nc" ]]; then
 		let MY_HOSTNAME_COUNT++
@@ -663,9 +633,6 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
-			if [[ "$MY_DOWN_TIME" -eq "0" ]]; then # check is false the first time
-				notify "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
-			fi
 		fi
 	elif [[ "$MY_COMMAND" = "curl" ]]; then
 		let MY_HOSTNAME_COUNT++
@@ -679,9 +646,6 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME"
-			if [[ "$MY_DOWN_TIME" -eq "0" ]]; then # check is false the first time
-				notify "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME"
-			fi
 		fi
 	elif [[ "$MY_COMMAND" = "grep" ]]; then
 		let MY_HOSTNAME_COUNT++
@@ -695,9 +659,6 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
-			if [[ "$MY_DOWN_TIME" -eq "0" ]]; then # check is false the first time
-				notify "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
-			fi
 		fi
 	fi
 	
