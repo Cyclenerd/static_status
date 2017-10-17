@@ -10,14 +10,34 @@
 #          ping = send ICMP ECHO_REQUEST packets to network hosts
 #          curl = transfer a URL
 #          nc   = check TCP and UDP connections
+#          grep = extension to the curl check
+#                 curl downloads the webpage and pipes it to grep,
+#                 that checks if the keyword is in the page.
 #
 # HOSTNAME: Hostname for the 'ping' or 'nc' command
 # IP: IP adress for the 'ping' or 'nc' command
-# URL: URL called by the command 'curl'. I.e. https://www.heise.de/ping or ftp://ftp.debian.org/debian/README
+# URL: URL called by the command 'curl' and 'grep'. I.e. https://www.heise.de/ping or ftp://ftp.debian.org/debian/README
 #
 # PORT: Optional port specification. Only for 'nc' command.
 #
+
+#
+# ping;<HOSTNAME or IP>
+#
 ping;www.heise.de
+
+#
+# nc;<HOSTNAME or IP>;<PORT>
+#
 nc;www.heise.de;80
+
+#
+# curl;<URL>;<PORT>
+#
 curl;https://www.heise.de/ping
 curl;ftp://ftp.debian.org/debian/README
+
+#
+# grep;<URL>;<ONE WORD>
+#
+grep;https://www.nkn-it.de/imprint.html;Nils
