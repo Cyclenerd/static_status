@@ -649,7 +649,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 		fi
 	elif [[ "$MY_COMMAND" = "grep" ]]; then
 		let MY_HOSTNAME_COUNT++
-		if curl -fs --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" | grep -q "$MY_PORT"  &> /dev/null; then
+		if curl --no-buffer -fs --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" | grep -q "$MY_PORT"  &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
