@@ -4,6 +4,11 @@
 #
 # https://github.com/lehmannro/assert.sh
 
+if [ ! -e assert.sh ]; then
+	echo "downloading unit test script"
+	curl -f "https://raw.githubusercontent.com/lehmannro/assert.sh/v1.1/assert.sh" -o assert.sh
+fi
+
 mkdir "$HOME/status" &> /dev/null
 cat > "$HOME/status/status_hostname_list.txt" << EOF
 # UP
