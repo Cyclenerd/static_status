@@ -82,9 +82,9 @@ function usage {
 	returnCode="$1"
 	echo -e "Usage: $ME [OPTION]:
 	OPTION is one of the following:
-	\tsilent\t no output from faulty connections to stout (default: $BE_QUIET)
-	\tloud\t output from successful and faulty connections to stout (default: $BE_LOUD)
-	\thelp\t displays help (this message)"
+	\\tsilent\\t no output from faulty connections to stout (default: $BE_QUIET)
+	\\tloud\\t output from successful and faulty connections to stout (default: $BE_LOUD)
+	\\thelp\\t displays help (this message)"
 	exit "$returnCode"
 }
 
@@ -285,9 +285,9 @@ function save_downtime() {
 	MY_HOSTNAME="$2"
 	MY_PORT="$3"
 	MY_DOWN_TIME="$4"
-	printf "\n%s;%s;%s;%s" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME" >> "$MY_HOSTNAME_STATUS_DOWN"
+	printf "\\n%s;%s;%s;%s" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME" >> "$MY_HOSTNAME_STATUS_DOWN"
 	if [[ "$BE_LOUD" = "yes" ]] || [[ "$BE_QUIET" = "no" ]]; then
-		printf "\n%-5s %-4s %s" "DOWN:" "$MY_COMMAND" "$MY_HOSTNAME"
+		printf "\\n%-5s %-4s %s" "DOWN:" "$MY_COMMAND" "$MY_HOSTNAME"
 		if [[ $MY_COMMAND == "nc" ]]; then
 			printf " %s" "$(port_to_name "$MY_PORT")"
 		fi
@@ -302,9 +302,9 @@ function save_availability() {
 	MY_COMMAND="$1"
 	MY_HOSTNAME="$2"
 	MY_PORT="$3"
-	printf "\n%s;%s;%s" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" >> "$MY_HOSTNAME_STATUS_OK"
+	printf "\\n%s;%s;%s" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" >> "$MY_HOSTNAME_STATUS_OK"
 	if [[ "$BE_LOUD" = "yes" ]]; then
-		printf "\n%-5s %-4s %s" "UP:" "$MY_COMMAND" "$MY_HOSTNAME"
+		printf "\\n%-5s %-4s %s" "UP:" "$MY_COMMAND" "$MY_HOSTNAME"
 		if [[ $MY_COMMAND == "nc" ]]; then
 			printf " %s" "$(port_to_name "$MY_PORT")"
 		fi
@@ -322,7 +322,7 @@ function save_history() {
 	MY_DOWN_TIME="$4"
 	MY_DATE_TIME="$5"
 	if cp "$MY_HOSTNAME_STATUS_HISTORY" "$MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT" &> /dev/null; then
-		printf "\n%s;%s;%s;%s;%s" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME" > "$MY_HOSTNAME_STATUS_HISTORY"
+		printf "\\n%s;%s;%s;%s;%s" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME" > "$MY_HOSTNAME_STATUS_HISTORY"
 		cat "$MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT" >> "$MY_HOSTNAME_STATUS_HISTORY"
 		rm "$MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT" &> /dev/null
 	else
@@ -330,7 +330,7 @@ function save_history() {
 	fi
 
 	if [[ "$BE_LOUD" = "yes" ]]; then
-		printf "\n%-5s %-4s %s %s sec" "HIST:" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_DOWN_TIME"
+		printf "\\n%-5s %-4s %s %s sec" "HIST:" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_DOWN_TIME"
 		if [[ $MY_COMMAND == "nc" ]]; then
 			printf " %s" "$(port_to_name "$MY_PORT")"
 		fi
