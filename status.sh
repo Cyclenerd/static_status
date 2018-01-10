@@ -543,6 +543,8 @@ if [ -e "$STATUS_CONFIG" ]; then
 	if [[ "$BE_LOUD" = "yes" ]] || [[ "$BE_QUIET" = "no" ]]; then
 		echo "using config from file: $STATUS_CONFIG"
 	fi
+	# ignore SC1090
+	# shellcheck source=/dev/null
 	source "$STATUS_CONFIG"
 fi
 
