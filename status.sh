@@ -53,7 +53,6 @@ MY_STATUS_LOCKFILE="/tmp/STATUS_SH_IS_RUNNING.lock"
 #### END Configuration Section
 ################################################################################
 
-
 ME=$(basename "$0")
 MY_TIMESTAMP=$(date -u "+%s")
 MY_DATE_TIME=$(date -u "+%Y-%m-%d %H:%M:%S")
@@ -68,6 +67,12 @@ MY_COMMANDS=(
 	curl
 	grep
 )
+
+# if a config file has been specified with STATUS_CONFIG=myfile use this one, otherwise default to config
+BASE_PATH="$(dirname "$(readlink -f "$0")")"
+if [[ ! -n "$STATUS_CONFIG" ]]; then
+	STATUS_CONFIG="$BASE_PATH/config"
+fi
 
 ################################################################################
 # Usage
@@ -101,12 +106,12 @@ debug_variables() {
 	echo "MY_HOSTNAME_STATUS_LASTRUN: $MY_HOSTNAME_STATUS_LASTRUN"
 	echo "MY_HOSTNAME_STATUS_HISTORY: $MY_HOSTNAME_STATUS_HISTORY"
 	echo
-	echo "MY_STATUS_HTML: $MY_STATUS_HTML" 
-	echo "MY_MAINTENANCE_TEXT_FILE: $MY_MAINTENANCE_TEXT_FILE" 
-	echo "MY_HOMEPAGE_URL: $MY_HOMEPAGE_URL" 
-	echo "MY_STATUS_TITLE: $MY_STATUS_TITLE" 
-	echo "MY_STATUS_STYLESHEET: $MY_STATUS_STYLESHEET" 
-	echo "MY_STATUS_FOOTER: $MY_STATUS_FOOTER" 
+	echo "MY_STATUS_HTML: $MY_STATUS_HTML"
+	echo "MY_MAINTENANCE_TEXT_FILE: $MY_MAINTENANCE_TEXT_FILE"
+	echo "MY_HOMEPAGE_URL: $MY_HOMEPAGE_URL"
+	echo "MY_STATUS_TITLE: $MY_STATUS_TITLE"
+	echo "MY_STATUS_STYLESHEET: $MY_STATUS_STYLESHEET"
+	echo "MY_STATUS_FOOTER: $MY_STATUS_FOOTER"
 	echo
 	echo "MY_STATUS_LOCKFILE: $MY_STATUS_LOCKFILE"
 	echo
@@ -199,47 +204,11 @@ function check_lock() {
 #    https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers#Well-known_ports
 function port_to_name() {
 	case "$1" in
-	21)
-		MY_PORT_NAME="FTP"
-		;;
-	22)
-		MY_PORT_NAME="SSH"
-		;;
-	23)
-		MY_PORT_NAME="Telnet"
-		;;
-	25)
-		MY_PORT_NAME="SMTP"
-		;;
-	80)
-		MY_PORT_NAME="HTTP"
-		;;
-	110)
-		MY_PORT_NAME="POP3"
-		;;
-	123)
-		MY_PORT_NAME="NTP"
-		;;
-	143)
-		MY_PORT_NAME="IMAP"
-		;;
-	194)
-		MY_PORT_NAME="IRC"
-		;;
-	220)
-		MY_PORT_NAME="IMAP"
-		;;
-	443)
-		MY_PORT_NAME="HTTPS"
-		;;
 	585)
 		MY_PORT_NAME="IMAPS"
 		;;
 	32[0-9][0-9])
 		MY_PORT_NAME="SAP Dispatcher"
-		;;
-	3306)
-		MY_PORT_NAME="MySQL"
 		;;
 	33[0-9][0-9])
 		MY_PORT_NAME="SAP Gateway"
@@ -297,7 +266,7 @@ function check_downtime() {
 	MY_HOSTNAME="$2"
 	MY_PORT="$3"
 	MY_DOWN_TIME="0"
-	
+
 	while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME MY_DOWN_PORT MY_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
 		if [[ "$MY_DOWN_COMMAND" = "ping" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "nc" ]] ||
@@ -362,7 +331,7 @@ function save_history() {
 	else
 		exit_with_failure "Can not copy file '$MY_HOSTNAME_STATUS_HISTORY' to '$MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT'"
 	fi
-	
+
 	if [[ "$BE_LOUD" = "yes" ]]; then
 		printf "\n%-5s %-4s %s %s sec" "HIST:" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_DOWN_TIME"
 		if [[ $MY_COMMAND == "nc" ]]; then
@@ -411,7 +380,7 @@ function page_header() {
 		Homepage
 	</a>
 </p>
-	
+
 EOF
 }
 
@@ -437,7 +406,7 @@ function page_alert_success() {
 	<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
 	All Systems Operational
 </div>
-	
+
 EOF
 }
 
@@ -447,7 +416,7 @@ function page_alert_warning() {
 	<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
 	Outage
 </div>
-	
+
 EOF
 }
 
@@ -457,7 +426,7 @@ function page_alert_danger() {
 	<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
 	Major Outage
 </div>
-	
+
 EOF
 }
 
@@ -511,7 +480,7 @@ EOF
 	else
 		echo "</span>"
 	fi
-	
+
 	if [[ "$MY_DOWN_COMMAND" = "ping" ]]; then
 		echo "ping $MY_DOWN_HOSTNAME"
 	elif [[ "$MY_DOWN_COMMAND" = "nc" ]]; then
@@ -536,7 +505,7 @@ EOF
 	else
 		echo "</span>"
 	fi
-	
+
 	if [[ "$MY_HISTORY_COMMAND" = "ping" ]]; then
 		echo "ping $MY_HISTORY_HOSTNAME"
 	elif [[ "$MY_HISTORY_COMMAND" = "nc" ]]; then
@@ -546,7 +515,7 @@ EOF
 	elif [[ "$MY_HISTORY_COMMAND" = "grep" ]]; then
 		echo "Grep for \"$MY_HISTORY_PORT\" on  $MY_HISTORY_HOSTNAME"
 	fi
-	
+
 	echo '<small class="text-muted">'
 	echo "$MY_HISTORY_DATE_TIME"
 	echo '</small>'
@@ -559,16 +528,26 @@ EOF
 ################################################################################
 
 case "$1" in
+"")
+	# called without arguments
+	;;
 "silent")
 	BE_QUIET="yes"
 	;;
 "loud")
 	BE_LOUD="yes"
 	;;
-"h" | "help" | "-h" | "-help" | "-?")
+"h" | "help" | "-h" | "-help" | "-?" | *)
 	usage 0
 	;;
 esac
+
+if [ -e $STATUS_CONFIG ]; then
+	if [[ "$BE_LOUD" = "yes" ]] || [[ "$BE_QUIET" = "no" ]]; then
+		echo "using config from file: $STATUS_CONFIG"
+	fi
+	source "$STATUS_CONFIG"
+fi
 
 check_bash
 
@@ -578,6 +557,7 @@ done
 
 check_lock
 set_lock
+check_file "$MY_HOSTNAME_FILE"
 check_file "$MY_HOSTNAME_STATUS_DOWN"
 check_file "$MY_HOSTNAME_STATUS_LASTRUN"
 check_file "$MY_HOSTNAME_STATUS_HISTORY"
@@ -591,11 +571,11 @@ else
 fi
 
 {
-	echo "# $MY_DATE_TIME" 
+	echo "# $MY_DATE_TIME"
 	echo_do_not_edit
 } > "$MY_HOSTNAME_STATUS_OK"
 {
-	echo "# $MY_DATE_TIME" 
+	echo "# $MY_DATE_TIME"
 	echo_do_not_edit
 	echo "timestamp;$MY_TIMESTAMP"
 } > "$MY_HOSTNAME_STATUS_DOWN"
@@ -607,7 +587,7 @@ fi
 
 MY_HOSTNAME_COUNT=0
 while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; do
-	
+
 	if [[ "$MY_COMMAND" = "ping" ]]; then
 		let MY_HOSTNAME_COUNT++
 		if ping -c 5 "$MY_HOSTNAME" &> /dev/null; then
@@ -661,7 +641,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
 	fi
-	
+
 done <"$MY_HOSTNAME_FILE"
 
 
@@ -675,24 +655,24 @@ page_header
 MY_OUTAGE_COUNT=0
 MY_OUTAGE_ITEMS=()
 while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME MY_DOWN_PORT MY_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
-	
+
 	if [[ "$MY_DOWN_COMMAND" = "ping" ]] || [[ "$MY_DOWN_COMMAND" = "nc" ]] || [[ "$MY_DOWN_COMMAND" = "curl" ]] || [[ "$MY_DOWN_COMMAND" = "grep" ]]; then
 		let MY_OUTAGE_COUNT++
 		MY_OUTAGE_ITEMS+=("$(item_down)")
 	fi
-	
+
 done <"$MY_HOSTNAME_STATUS_DOWN"
 
 # Get available systems
 MY_AVAILABLE_COUNT=0
 MY_AVAILABLE_ITEMS=()
 while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME MY_OK_PORT || [[ -n "$MY_OK_COMMAND" ]]; do
-	
+
 	if [[ "$MY_OK_COMMAND" = "ping" ]] || [[ "$MY_OK_COMMAND" = "nc" ]] || [[ "$MY_OK_COMMAND" = "curl" ]] || [[ "$MY_OK_COMMAND" = "grep" ]]; then
 		let MY_AVAILABLE_COUNT++
 		MY_AVAILABLE_ITEMS+=("$(item_ok)")
 	fi
-	
+
 done <"$MY_HOSTNAME_STATUS_OK"
 
 # Maintenance text
@@ -735,7 +715,7 @@ fi
 MY_HISTORY_COUNT=0
 MY_HISTORY_ITEMS=()
 while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME MY_HISTORY_PORT MY_HISTORY_DOWN_TIME MY_HISTORY_DATE_TIME || [[ -n "$MY_HISTORY_COMMAND" ]]; do
-	
+
 	if [[ "$MY_HISTORY_COMMAND" = "ping" ]] || [[ "$MY_HISTORY_COMMAND" = "nc" ]] || [[ "$MY_HISTORY_COMMAND" = "curl" ]] || [[ "$MY_HISTORY_COMMAND" = "grep" ]]; then
 		let MY_HISTORY_COUNT++
 		MY_HISTORY_ITEMS+=("$(item_history)")
@@ -743,7 +723,7 @@ while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME MY_HISTORY_PORT MY_
 	if [[ "$MY_HISTORY_COUNT" -gt "9" ]]; then
 		break
 	fi
-	
+
 done <"$MY_HOSTNAME_STATUS_HISTORY"
 
 # History to HTML
