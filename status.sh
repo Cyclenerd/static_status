@@ -204,9 +204,6 @@ function check_lock() {
 #    https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers#Well-known_ports
 function port_to_name() {
 	case "$1" in
-	585)
-		MY_PORT_NAME="IMAPS"
-		;;
 	32[0-9][0-9])
 		MY_PORT_NAME="SAP Dispatcher"
 		;;
