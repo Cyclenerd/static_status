@@ -54,6 +54,7 @@ MY_STATUS_LOCKFILE="/tmp/STATUS_SH_IS_RUNNING.lock"
 ################################################################################
 
 ME=$(basename "$0")
+BASE_PATH=$(dirname "$0") # TODO: Resolv symlinks https://stackoverflow.com/questions/59895
 MY_TIMESTAMP=$(date -u "+%s")
 MY_DATE_TIME=$(date -u "+%Y-%m-%d %H:%M:%S")
 MY_DATE_TIME+=" UTC"
@@ -69,7 +70,6 @@ MY_COMMANDS=(
 )
 
 # if a config file has been specified with STATUS_CONFIG=myfile use this one, otherwise default to config
-BASE_PATH="$(dirname "$(readlink -f "$0")")"
 if [[ ! -n "$STATUS_CONFIG" ]]; then
 	STATUS_CONFIG="$BASE_PATH/config"
 fi
