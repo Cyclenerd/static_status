@@ -586,7 +586,7 @@ MY_HOSTNAME_COUNT=0
 while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; do
 
 	if [[ "$MY_COMMAND" = "ping" ]]; then
-		let MY_HOSTNAME_COUNT++
+		(( MY_HOSTNAME_COUNT++ ))
 		if ping -c 5 "$MY_HOSTNAME" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
 			# Check status change
@@ -599,7 +599,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "nc" ]]; then
-		let MY_HOSTNAME_COUNT++
+		(( MY_HOSTNAME_COUNT++ ))
 		if nc -z -w "$MY_TIMEOUT" "$MY_HOSTNAME" "$MY_PORT" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
 			# Check status change
@@ -612,7 +612,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "curl" ]]; then
-		let MY_HOSTNAME_COUNT++
+		(( MY_HOSTNAME_COUNT++ ))
 		if curl -If --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
 			# Check status change
@@ -625,7 +625,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "grep" ]]; then
-		let MY_HOSTNAME_COUNT++
+		(( MY_HOSTNAME_COUNT++ ))
 		if curl --no-buffer -fs --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" | grep -q "$MY_PORT"  &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
 			# Check status change
@@ -654,7 +654,7 @@ MY_OUTAGE_ITEMS=()
 while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME MY_DOWN_PORT MY_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
 
 	if [[ "$MY_DOWN_COMMAND" = "ping" ]] || [[ "$MY_DOWN_COMMAND" = "nc" ]] || [[ "$MY_DOWN_COMMAND" = "curl" ]] || [[ "$MY_DOWN_COMMAND" = "grep" ]]; then
-		let MY_OUTAGE_COUNT++
+		(( MY_OUTAGE_COUNT++ ))
 		MY_OUTAGE_ITEMS+=("$(item_down)")
 	fi
 
@@ -666,7 +666,7 @@ MY_AVAILABLE_ITEMS=()
 while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME MY_OK_PORT || [[ -n "$MY_OK_COMMAND" ]]; do
 
 	if [[ "$MY_OK_COMMAND" = "ping" ]] || [[ "$MY_OK_COMMAND" = "nc" ]] || [[ "$MY_OK_COMMAND" = "curl" ]] || [[ "$MY_OK_COMMAND" = "grep" ]]; then
-		let MY_AVAILABLE_COUNT++
+		(( MY_AVAILABLE_COUNT++ ))
 		MY_AVAILABLE_ITEMS+=("$(item_ok)")
 	fi
 
@@ -714,7 +714,7 @@ MY_HISTORY_ITEMS=()
 while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME MY_HISTORY_PORT MY_HISTORY_DOWN_TIME MY_HISTORY_DATE_TIME || [[ -n "$MY_HISTORY_COMMAND" ]]; do
 
 	if [[ "$MY_HISTORY_COMMAND" = "ping" ]] || [[ "$MY_HISTORY_COMMAND" = "nc" ]] || [[ "$MY_HISTORY_COMMAND" = "curl" ]] || [[ "$MY_HISTORY_COMMAND" = "grep" ]]; then
-		let MY_HISTORY_COUNT++
+		(( MY_HISTORY_COUNT++ ))
 		MY_HISTORY_ITEMS+=("$(item_history)")
 	fi
 	if [[ "$MY_HISTORY_COUNT" -gt "9" ]]; then
