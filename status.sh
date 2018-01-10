@@ -539,7 +539,7 @@ case "$1" in
 	;;
 esac
 
-if [ -e $STATUS_CONFIG ]; then
+if [ -e "$STATUS_CONFIG" ]; then
 	if [[ "$BE_LOUD" = "yes" ]] || [[ "$BE_QUIET" = "no" ]]; then
 		echo "using config from file: $STATUS_CONFIG"
 	fi
