@@ -75,9 +75,9 @@ MY_COMMANDS=(
 	grep
 )
 
-# if a config file has been specified with STATUS_CONFIG=myfile use this one, otherwise default to config
-if [[ ! -n "$STATUS_CONFIG" ]]; then
-	STATUS_CONFIG="$BASE_PATH/config"
+# if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
+if [[ ! -n "$MY_STATUS_CONFIG" ]]; then
+	MY_STATUS_CONFIG="$BASE_PATH/config"
 fi
 
 ################################################################################
