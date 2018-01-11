@@ -30,7 +30,7 @@ source assert.sh
 # `echo test` is expected to write "test" on stdout
 assert "echo test" "test"
 # `seq 3` is expected to print "1", "2" and "3" on different lines
-assert "seq 3" "1\n2\n3"
+assert "seq 3" "1\\n2\\n3"
 # exit code of `true` is expected to be 0
 assert_raises "true"
 # exit code of `false` is expected to be 1
@@ -62,5 +62,5 @@ assert "cat $HOME/status/status_hostname_ok.txt | grep 'nc;www.heise.de;80'" "nc
 assert "cat $HOME/status/status_hostname_ok.txt | grep 'https://www.heise.de/ping'" "curl;https://www.heise.de/ping;"
 assert "cat $HOME/status/status_hostname_ok.txt | grep 'grep;https://www.nkn-it.de/imprint.html;Nils'" "grep;https://www.nkn-it.de/imprint.html;Nils"
 # DOWN
-assert "cat $HOME/status/status_hostname_down.txt | grep 'nkn-it.de' | wc -l | perl -pe 's/\s//g'" "5"
+assert "cat $HOME/status/status_hostname_down.txt | grep 'nkn-it.de' | wc -l | perl -pe 's/\\s//g'" "5"
 assert_end status_sh
