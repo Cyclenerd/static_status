@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 
 # status.sh
-# Author: Nils Knieling - https://github.com/Cyclenerd/static_status
+# Author: Nils Knieling and Contributors- https://github.com/Cyclenerd/static_status
 
 # Simple Bash script to generate a status page.
 
 ################################################################################
 #### Configuration Section
 ################################################################################
+
+# Tip: You can also outsource configuration to an extra configuration file.
+#      Just create a file named 'config' at the location of this script.
+#      You can find an example here:
+#      https://github.com/Cyclenerd/static_status/blob/master/config-example
+#      You can also pass a configuration file with the variable MY_STATUS_CONFIG.
 
 # Title for the status page
 MY_STATUS_TITLE="Status Page"
@@ -539,13 +545,13 @@ case "$1" in
 	;;
 esac
 
-if [ -e "$STATUS_CONFIG" ]; then
+if [ -e "$MY_STATUS_CONFIG" ]; then
 	if [[ "$BE_LOUD" = "yes" ]] || [[ "$BE_QUIET" = "no" ]]; then
-		echo "using config from file: $STATUS_CONFIG"
+		echo "using config from file: $MY_STATUS_CONFIG"
 	fi
 	# ignore SC1090
 	# shellcheck source=/dev/null
-	source "$STATUS_CONFIG"
+	source "$MY_STATUS_CONFIG"
 fi
 
 check_bash
