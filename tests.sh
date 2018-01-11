@@ -24,6 +24,7 @@ curl;https://www.nkn-it.de/404
 grep;https://www.nkn-it.de/imprint.html;GibtEsNicht
 EOF
 
+# shellcheck disable=SC1091
 source assert.sh
 
 # `echo test` is expected to write "test" on stdout
