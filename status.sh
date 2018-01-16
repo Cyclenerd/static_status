@@ -38,6 +38,10 @@ MY_MAINTENANCE_TEXT_FILE="$MY_STATUS_CONFIG_DIR/status_maintenance_text.txt"
 # Duration we wait for response (nc and curl).
 MY_TIMEOUT="2"
 
+# Duration we wait for response (only ping).
+MY_PING_TIMEOUT="5"
+MY_PING_COUNT="2"
+
 # Location for the status files. Please do not edit created files.
 MY_HOSTNAME_STATUS_OK="$MY_STATUS_CONFIG_DIR/status_hostname_ok.txt"
 MY_HOSTNAME_STATUS_DOWN="$MY_STATUS_CONFIG_DIR/status_hostname_down.txt"
@@ -595,7 +599,14 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 
 	if [[ "$MY_COMMAND" = "ping" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
-		if ping -c 5 "$MY_HOSTNAME" &> /dev/null; then
+		if stat --version &>/dev/null; then
+			# GNU
+			pingcmd="ping -w"
+		else
+			# BSD
+			pingcmd="ping -t"
+		fi
+		if $pingcmd "$MY_PING_TIMEOUT" -c "$MY_PING_COUNT" "$MY_HOSTNAME" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
