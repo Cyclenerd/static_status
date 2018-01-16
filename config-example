@@ -26,8 +26,8 @@ MY_MAINTENANCE_TEXT_FILE="$MY_STATUS_CONFIG_DIR/status_maintenance_text.txt"
 MY_TIMEOUT="2"
 
 # Duration we wait for response (only ping).
-MY_PING_TIMEOUT="2"
-MY_PING_COUNT="5"
+MY_PING_TIMEOUT="4"
+MY_PING_COUNT="2"
 
 # Location for the status files. Please do not edit created files.
 MY_HOSTNAME_STATUS_OK="$MY_STATUS_CONFIG_DIR/status_hostname_ok.txt"

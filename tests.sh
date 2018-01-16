@@ -38,9 +38,41 @@ assert_raises "false" 1
 # end of test suite
 assert_end examples
 
+# Detect ping Version
+ping &> /dev/null
+# FreeBSD: 64 = ping -t TIMEOUT
+# macOS:   64 = ping -t TIMEOUT
+# GNU:      2 = ping -w TIMEOUT (-t TTL)
+# OpenBSD:  1 = ping -w TIMEOUT (-t TTL)
+if [ $? -gt 2 ]; then
+	echo "BSD ping"
+	MY_PING_COMMAND='ping -t'
+else
+	echo "GNU or OpenBSD ping"
+	MY_PING_COMMAND='ping -w'
+fi
+# Check commands
+# ping
+assert_raises "$MY_PING_COMMAND 4 -c 2 www.heise.de"
+assert_end ping
+# nc
+assert_raises "nc -z -w 2 www.heise.de 80"
+assert_end nc
+# curl
+assert_raises "curl -If --max-time 2 https://www.heise.de/ping"
+assert_raises "curl --no-buffer -fs --max-time 2 'https://www.nkn-it.de/imprint.html' | grep -q 'Nils'"
+assert_end curl
+
 # $ bash status.sh silent
 assert "bash status.sh silent"
 
+# UP
+assert "cat $HOME/status/status_hostname_ok.txt | grep 'ping;www.heise.de'" "ping;www.heise.de;"
+assert "cat $HOME/status/status_hostname_ok.txt | grep 'nc;www.heise.de;80'" "nc;www.heise.de;80"
+assert "cat $HOME/status/status_hostname_ok.txt | grep 'https://www.heise.de/ping'" "curl;https://www.heise.de/ping;"
+assert "cat $HOME/status/status_hostname_ok.txt | grep 'grep;https://www.nkn-it.de/imprint.html;Nils'" "grep;https://www.nkn-it.de/imprint.html;Nils"
+# DOWN
+assert "cat $HOME/status/status_hostname_down.txt | grep 'nkn-it.de' | wc -l | perl -pe 's/\\s//g'" "5"
 
 # $ bash status.sh loud
 #
@@ -56,11 +88,4 @@ assert "bash status.sh silent"
 
 assert_raises "bash status.sh loud"
 
-# UP
-assert "cat $HOME/status/status_hostname_ok.txt | grep 'ping;www.heise.de'" "ping;www.heise.de;"
-assert "cat $HOME/status/status_hostname_ok.txt | grep 'nc;www.heise.de;80'" "nc;www.heise.de;80"
-assert "cat $HOME/status/status_hostname_ok.txt | grep 'https://www.heise.de/ping'" "curl;https://www.heise.de/ping;"
-assert "cat $HOME/status/status_hostname_ok.txt | grep 'grep;https://www.nkn-it.de/imprint.html;Nils'" "grep;https://www.nkn-it.de/imprint.html;Nils"
-# DOWN
-assert "cat $HOME/status/status_hostname_down.txt | grep 'nkn-it.de' | wc -l | perl -pe 's/\\s//g'" "5"
 assert_end status_sh

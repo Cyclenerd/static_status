@@ -39,7 +39,7 @@ MY_MAINTENANCE_TEXT_FILE="$MY_STATUS_CONFIG_DIR/status_maintenance_text.txt"
 MY_TIMEOUT="2"
 
 # Duration we wait for response (only ping).
-MY_PING_TIMEOUT="5"
+MY_PING_TIMEOUT="4"
 MY_PING_COUNT="2"
 
 # Location for the status files. Please do not edit created files.
@@ -599,14 +599,20 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 
 	if [[ "$MY_COMMAND" = "ping" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
-		if stat --version &>/dev/null; then
-			# GNU
-			pingcmd="ping -w"
+		# Detect ping Version
+		ping &> /dev/null
+		# FreeBSD: 64 = ping -t TIMEOUT
+		# macOS:   64 = ping -t TIMEOUT
+		# GNU:      2 = ping -w TIMEOUT (-t TTL)
+		# OpenBSD:  1 = ping -w TIMEOUT (-t TTL)
+		if [ $? -gt 2 ]; then
+			# BSD ping
+			MY_PING_COMMAND='ping -t'
 		else
-			# BSD
-			pingcmd="ping -t"
+			# GNU or OpenBSD ping
+			MY_PING_COMMAND='ping -w'
 		fi
-		if $pingcmd "$MY_PING_TIMEOUT" -c "$MY_PING_COUNT" "$MY_HOSTNAME" &> /dev/null; then
+		if $MY_PING_COMMAND "$MY_PING_TIMEOUT" -c "$MY_PING_COUNT" "$MY_HOSTNAME" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
