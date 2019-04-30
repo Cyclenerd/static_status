@@ -21,6 +21,9 @@ MY_STATUS_TITLE="Status Page"
 # Link for the homepage button
 MY_HOMEPAGE_URL="https://github.com/Cyclenerd/static_status"
 
+# Text for the homepage button
+MY_HOMEPAGE_TITLE="Homepage"
+
 # Shortcut to place the configuration file in a folder.
 # Save it without / at the end.
 MY_STATUS_CONFIG_DIR="$HOME/status"
@@ -119,6 +122,7 @@ debug_variables() {
 	echo "MY_STATUS_HTML: $MY_STATUS_HTML"
 	echo "MY_MAINTENANCE_TEXT_FILE: $MY_MAINTENANCE_TEXT_FILE"
 	echo "MY_HOMEPAGE_URL: $MY_HOMEPAGE_URL"
+	echo "MY_HOMEPAGE_TITLE: $MY_HOMEPAGE_TITLE"
 	echo "MY_STATUS_TITLE: $MY_STATUS_TITLE"
 	echo "MY_STATUS_STYLESHEET: $MY_STATUS_STYLESHEET"
 	echo "MY_STATUS_FOOTER: $MY_STATUS_FOOTER"
@@ -375,7 +379,7 @@ function page_header() {
 		<span class="pull-right hidden-xs hidden-sm">
 			<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button">
 				<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-				Homepage
+				$MY_HOMEPAGE_TITLE
 			</a>
 		</span>
 	</h1>
@@ -384,7 +388,7 @@ function page_header() {
 <p class="hidden-md hidden-lg">
 	<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button">
 		<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-		Homepage
+		$MY_HOMEPAGE_TITLE
 	</a>
 </p>
 
