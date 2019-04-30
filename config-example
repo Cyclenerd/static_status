@@ -8,6 +8,9 @@ MY_STATUS_TITLE="Status Page"
 # Link for the homepage button
 MY_HOMEPAGE_URL="https://github.com/Cyclenerd/static_status"
 
+# Text for the homepage button
+MY_HOMEPAGE_TITLE="Homepage"
+
 # Shortcut to place the configuration file in a folder.
 # Save it without / at the end.
 MY_STATUS_CONFIG_DIR="$HOME/status"
