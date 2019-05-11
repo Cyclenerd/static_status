@@ -38,12 +38,17 @@ MY_STATUS_HTML="$HOME/status_index.html"
 # If the file exists and has a content, all errors on the status page are overwritten.
 MY_MAINTENANCE_TEXT_FILE="$MY_STATUS_CONFIG_DIR/status_maintenance_text.txt"
 
-# Duration we wait for response (nc and curl).
+# Duration we wait for response (nc, curl and traceroute).
 MY_TIMEOUT="2"
 
 # Duration we wait for response (only ping).
 MY_PING_TIMEOUT="4"
 MY_PING_COUNT="2"
+
+# Route to host
+MY_TRACEROUTE_HOST="1.1.1.1" # Cloudflare DNS
+# Sets the number of probe packets per hop
+MY_TRACEROUTE_NQUERIES="1"
 
 # Location for the status files. Please do not edit created files.
 MY_HOSTNAME_STATUS_OK="$MY_STATUS_CONFIG_DIR/status_hostname_ok.txt"
@@ -80,6 +85,7 @@ MY_COMMANDS=(
 	nc
 	curl
 	grep
+	traceroute
 )
 
 # if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
@@ -282,6 +288,7 @@ function check_downtime() {
 		if [[ "$MY_DOWN_COMMAND" = "ping" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "nc" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "grep" ]] ||
+		   [[ "$MY_DOWN_COMMAND" = "traceroute" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "curl" ]]; then
 			if 	[[ "$MY_DOWN_HOSTNAME" = "$MY_HOSTNAME" ]]; then
 				if 	[[ "$MY_DOWN_PORT" = "$MY_PORT" ]]; then
@@ -475,6 +482,8 @@ EOF
 		echo "Site $MY_OK_HOSTNAME"
 	elif [[ "$MY_OK_COMMAND" = "grep" ]]; then
 		echo "Grep for \"$MY_OK_PORT\" on  $MY_OK_HOSTNAME"
+	elif [[ "$MY_OK_COMMAND" = "traceroute" ]]; then
+		echo "Route path contains $MY_OK_HOSTNAME"
 	fi
 
 	echo "</li>"
@@ -500,6 +509,8 @@ EOF
 		echo "Site $MY_DOWN_HOSTNAME"
 	elif [[ "$MY_DOWN_COMMAND" = "grep" ]]; then
 		echo "Grep for \"$MY_DOWN_PORT\" on  $MY_DOWN_HOSTNAME"
+	elif [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
+		echo "Route path contains $MY_DOWN_HOSTNAME"
 	fi
 
 	echo "</li>"
@@ -525,6 +536,8 @@ EOF
 		echo "Site $MY_HISTORY_HOSTNAME"
 	elif [[ "$MY_HISTORY_COMMAND" = "grep" ]]; then
 		echo "Grep for \"$MY_HISTORY_PORT\" on  $MY_HISTORY_HOSTNAME"
+	elif [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
+		echo "Route path contains $MY_HISTORY_HOSTNAME"
 	fi
 
 	echo '<small class="text-muted">'
@@ -666,6 +679,20 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
+	elif [[ "$MY_COMMAND" = "traceroute" ]]; then
+		(( MY_HOSTNAME_COUNT++ ))
+		MY_PORT=${MY_PORT:=64}
+		if traceroute -w "$MY_TIMEOUT" -q "$MY_TRACEROUTE_NQUERIES" -m "$MY_PORT" "$MY_TRACEROUTE_HOST" | grep -q "$MY_HOSTNAME"  &> /dev/null; then
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			# Check status change
+			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
+				save_history  "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
+			fi
+			save_availability "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+		else
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
+		fi
 	fi
 
 done <"$MY_HOSTNAME_FILE"
@@ -682,7 +709,11 @@ MY_OUTAGE_COUNT=0
 MY_OUTAGE_ITEMS=()
 while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME MY_DOWN_PORT MY_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
 
-	if [[ "$MY_DOWN_COMMAND" = "ping" ]] || [[ "$MY_DOWN_COMMAND" = "nc" ]] || [[ "$MY_DOWN_COMMAND" = "curl" ]] || [[ "$MY_DOWN_COMMAND" = "grep" ]]; then
+	if [[ "$MY_DOWN_COMMAND" = "ping" ]] ||
+	   [[ "$MY_DOWN_COMMAND" = "nc" ]] ||
+	   [[ "$MY_DOWN_COMMAND" = "curl" ]] ||
+	   [[ "$MY_DOWN_COMMAND" = "grep" ]] ||
+	   [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
 		(( MY_OUTAGE_COUNT++ ))
 		MY_OUTAGE_ITEMS+=("$(item_down)")
 	fi
@@ -694,7 +725,11 @@ MY_AVAILABLE_COUNT=0
 MY_AVAILABLE_ITEMS=()
 while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME MY_OK_PORT || [[ -n "$MY_OK_COMMAND" ]]; do
 
-	if [[ "$MY_OK_COMMAND" = "ping" ]] || [[ "$MY_OK_COMMAND" = "nc" ]] || [[ "$MY_OK_COMMAND" = "curl" ]] || [[ "$MY_OK_COMMAND" = "grep" ]]; then
+	if [[ "$MY_OK_COMMAND" = "ping" ]] ||
+	   [[ "$MY_OK_COMMAND" = "nc" ]] ||
+	   [[ "$MY_OK_COMMAND" = "curl" ]] ||
+	   [[ "$MY_OK_COMMAND" = "grep" ]] ||
+	   [[ "$MY_OK_COMMAND" = "traceroute" ]]; then
 		(( MY_AVAILABLE_COUNT++ ))
 		MY_AVAILABLE_ITEMS+=("$(item_ok)")
 	fi
@@ -742,7 +777,11 @@ MY_HISTORY_COUNT=0
 MY_HISTORY_ITEMS=()
 while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME MY_HISTORY_PORT MY_HISTORY_DOWN_TIME MY_HISTORY_DATE_TIME || [[ -n "$MY_HISTORY_COMMAND" ]]; do
 
-	if [[ "$MY_HISTORY_COMMAND" = "ping" ]] || [[ "$MY_HISTORY_COMMAND" = "nc" ]] || [[ "$MY_HISTORY_COMMAND" = "curl" ]] || [[ "$MY_HISTORY_COMMAND" = "grep" ]]; then
+	if [[ "$MY_HISTORY_COMMAND" = "ping" ]] ||
+	   [[ "$MY_HISTORY_COMMAND" = "nc" ]] ||
+	   [[ "$MY_HISTORY_COMMAND" = "curl" ]] ||
+	   [[ "$MY_HISTORY_COMMAND" = "grep" ]] ||
+	   [[ "$MY_HISTORY_COMMAND" = "traceroute"  ]]; then
 		(( MY_HISTORY_COUNT++ ))
 		MY_HISTORY_ITEMS+=("$(item_history)")
 	fi

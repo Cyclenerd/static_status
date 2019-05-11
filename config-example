@@ -25,12 +25,17 @@ MY_STATUS_HTML="$HOME/status_index.html"
 # If the file exists and has a content, all errors on the status page are overwritten.
 MY_MAINTENANCE_TEXT_FILE="$MY_STATUS_CONFIG_DIR/status_maintenance_text.txt"
 
-# Duration we wait for response (nc and curl).
+# Duration we wait for response (nc, curl and traceroute).
 MY_TIMEOUT="2"
 
 # Duration we wait for response (only ping).
 MY_PING_TIMEOUT="4"
 MY_PING_COUNT="2"
+
+# Route to host
+MY_TRACEROUTE_HOST="1.1.1.1" # Cloudflare DNS
+# Sets the number of probe packets per hop
+MY_TRACEROUTE_NQUERIES="1"
 
 # Location for the status files. Please do not edit created files.
 MY_HOSTNAME_STATUS_OK="$MY_STATUS_CONFIG_DIR/status_hostname_ok.txt"

@@ -7,15 +7,16 @@
 # <COMMAND>;<HOSTNAME, IP or URL>;<PORT>
 #
 # COMMAND: Command to run. Can be ping, curl or nc.
-#          ping = send ICMP ECHO_REQUEST packets to network hosts
-#          curl = transfer a URL
-#          nc   = check TCP and UDP connections
-#          grep = extension to the curl check
-#                 curl downloads the webpage and pipes it to grep,
-#                 that checks if the keyword is in the page.
+#          ping       = send ICMP ECHO_REQUEST packets to network hosts
+#          curl       = transfer a URL
+#          nc         = check TCP and UDP connections
+#          grep       = extension to the curl check
+#                       curl downloads the webpage and pipes it to grep,
+#                       that checks if the keyword is in the page.
+#          traceroute = check if host or ip exists in route path to MY_TRACEROUTE_HOST
 #
-# HOSTNAME: Hostname for the 'ping' or 'nc' command
-# IP: IP adress for the 'ping' or 'nc' command
+# HOSTNAME: Hostname for the 'ping', 'nc' or 'traceroute' command
+# IP: IP adress for the 'ping', 'nc' or 'traceroute' command
 # URL: URL called by the command 'curl' and 'grep'. I.e. https://www.heise.de/ping or ftp://ftp.debian.org/debian/README
 #
 # PORT: Optional port specification. Only for 'nc' command.
@@ -41,3 +42,15 @@ curl;ftp://ftp.debian.org/debian/README
 # grep;<URL>;<ONE WORD>
 #
 grep;https://www.nkn-it.de/imprint.html;Nils
+
+
+#
+# traceroute;<HOSTNAME or IP>;<MAX NUMBER OF HOPS>
+#
+# Note:
+# This HOSTNAME or IP is not the host to which the route path is traced. This is done via the parameter MY_TRACEROUTE_HOST
+# This HOSTNAME or IP must be present in the route path.
+# MAX NUMBER OF HOPS sets the max time-to-live (max number of hops) used in outgoing probe packets.
+# If the hostname should always be the third hop, enter 3.
+#
+traceroute;your.isp.router;3
