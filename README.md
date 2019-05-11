@@ -4,6 +4,10 @@
 
 Simple Bash script to generate a static status page. Displays status of websites, services (HTTP, SAP, MySQL...) and ping. Everything easy to customize. 🤓
 
+You can also easily check more complicated things with this script.
+For example if a text is present in a web page or if a host appears in the route path (traceroute).
+Checking the route path is useful, for instance, if you have a backup mobile internet connection in addition to your cable connection.
+
 ![Screenshot](https://www.nkn-it.de/static_status/Status-Page-Past-Incidents.jpg)
 
 ## Installation
@@ -57,9 +61,9 @@ https://cyclenerd.github.io/static_status_demo/
 
 ## Requirements
 
-Only `bash`, `ping`, `curl` and `nc`. In many *NIX distributions (Ubuntu, macOS) the commands are already included.
+Only `bash`, `ping`, `traceroute`, `curl` and `nc`. In many *NIX distributions (Ubuntu, macOS) the commands are already included.
 If not, the missing packages can be installed quickly.
-On a debian-based system (Ubuntu), just run `sudo apt-get install curl iputils-ping netcat-openbsd`.
+On a debian-based system (Ubuntu), just run `sudo apt-get install curl iputils-ping traceroute netcat-openbsd`.
 
 ## TODO
 

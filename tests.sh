@@ -62,6 +62,9 @@ assert_end nc
 assert_raises "curl -If --max-time 2 https://www.heise.de/ping"
 assert_raises "curl --no-buffer -fs --max-time 2 'https://www.nkn-it.de/imprint.html' | grep -q 'Nils'"
 assert_end curl
+# traceroute
+assert_raises "traceroute -w 2 -m 64 www.heise.de"
+assert_end traceroute
 
 # $ bash status.sh silent
 assert "bash status.sh silent"
