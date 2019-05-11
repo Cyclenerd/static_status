@@ -89,7 +89,7 @@ MY_COMMANDS=(
 )
 
 # if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
-if [[ ! -n "$MY_STATUS_CONFIG" ]]; then
+if [[ -z "$MY_STATUS_CONFIG" ]]; then
 	MY_STATUS_CONFIG="$BASE_PATH/config"
 fi
 
@@ -253,7 +253,7 @@ function port_to_name() {
 		;;
 	*)
 		MY_SERVICE_NAME=$(awk  '$2 ~ /^'"$1"'\// {print $1; exit}' "/etc/services" 2> /dev/null)
-		if [ ! -z "$MY_SERVICE_NAME" ]; then
+		if [ -n "$MY_SERVICE_NAME" ]; then
 			MY_PORT_NAME=$(echo "$MY_SERVICE_NAME" | awk '{print toupper($0)}')
 		else
 			MY_PORT_NAME="Port $1"
