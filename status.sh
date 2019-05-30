@@ -536,7 +536,7 @@ EOF
 		echo "Site $MY_HISTORY_HOSTNAME"
 	elif [[ "$MY_HISTORY_COMMAND" = "grep" ]]; then
 		echo "Grep for \"$MY_HISTORY_PORT\" on  $MY_HISTORY_HOSTNAME"
-	elif [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
+	elif [[ "$MY_HISTORY_COMMAND" = "traceroute" ]]; then
 		echo "Route path contains $MY_HISTORY_HOSTNAME"
 	fi
 
