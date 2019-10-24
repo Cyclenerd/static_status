@@ -158,6 +158,13 @@ function check_command() {
 	fi
 }
 
+# check_config() check if the configuration file is readble
+function check_config() {
+	if [ ! -r "$1" ]; then
+		exit_with_failure "Can not read required configuration file '$1'"
+	fi
+}
+
 # check_file() check if the file exists if not create the file
 function check_file() {
 	if [ ! -f "$1" ]; then
@@ -583,7 +590,7 @@ done
 
 check_lock
 set_lock
-check_file "$MY_HOSTNAME_FILE"
+check_config "$MY_HOSTNAME_FILE"
 check_file "$MY_HOSTNAME_STATUS_DOWN"
 check_file "$MY_HOSTNAME_STATUS_LASTRUN"
 check_file "$MY_HOSTNAME_STATUS_HISTORY"
