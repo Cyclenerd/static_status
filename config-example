@@ -21,6 +21,9 @@ MY_HOSTNAME_FILE="$MY_STATUS_CONFIG_DIR/status_hostname_list.txt"
 # Where should the HTML status page be stored?
 MY_STATUS_HTML="$HOME/status_index.html"
 
+# Where should the JSON status page be stored? Set to "" to disable JSON output
+MY_STATUS_JSON="$HOME/status.json"
+
 # Text file in which you can place a status message.
 # If the file exists and has a content, all errors on the status page are overwritten.
 MY_MAINTENANCE_TEXT_FILE="$MY_STATUS_CONFIG_DIR/status_maintenance_text.txt"

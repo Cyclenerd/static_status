@@ -34,6 +34,9 @@ MY_HOSTNAME_FILE="$MY_STATUS_CONFIG_DIR/status_hostname_list.txt"
 # Where should the HTML status page be stored?
 MY_STATUS_HTML="$HOME/status_index.html"
 
+# Where should the JSON status page be stored? Set to "" to disable JSON output
+MY_STATUS_JSON="$HOME/status.json"
+
 # Text file in which you can place a status message.
 # If the file exists and has a content, all errors on the status page are overwritten.
 MY_MAINTENANCE_TEXT_FILE="$MY_STATUS_CONFIG_DIR/status_maintenance_text.txt"
@@ -711,6 +714,8 @@ done <"$MY_HOSTNAME_FILE"
 
 page_header
 
+MY_ITEMS_JSON=()
+
 # Get outage
 MY_OUTAGE_COUNT=0
 MY_OUTAGE_ITEMS=()
@@ -723,6 +728,7 @@ while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME MY_DOWN_PORT MY_DOWN_TIME
 	   [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
 		(( MY_OUTAGE_COUNT++ ))
 		MY_OUTAGE_ITEMS+=("$(item_down)")
+		MY_ITEMS_JSON+=("$MY_DOWN_HOSTNAME $MY_DOWN_COMMAND Fail")
 	fi
 
 done <"$MY_HOSTNAME_STATUS_DOWN"
@@ -739,6 +745,7 @@ while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME MY_OK_PORT || [[ -n "$MY_OK_C
 	   [[ "$MY_OK_COMMAND" = "traceroute" ]]; then
 		(( MY_AVAILABLE_COUNT++ ))
 		MY_AVAILABLE_ITEMS+=("$(item_ok)")
+		MY_ITEMS_JSON+=("$MY_OK_HOSTNAME $MY_OK_COMMAND OK")
 	fi
 
 done <"$MY_HOSTNAME_STATUS_OK"
@@ -777,6 +784,25 @@ EOF
 		echo "$MY_AVAILABLE_ITEM" >> "$MY_STATUS_HTML"
 	done
 	echo "</ul>" >> "$MY_STATUS_HTML"
+fi
+
+# Outage and operational to JSON
+if [ -n "$MY_STATUS_JSON" ]; then
+	printf "[\n" > "$MY_STATUS_JSON"
+	for ((position = 0; position < ${#MY_ITEMS_JSON[@]}; ++position)); do
+		read -r -a ITEMS <<< "${MY_ITEMS_JSON[$position]}"
+		MY_OUTAGE_ITEM=${ITEMS[0]}
+		MY_OUTAGE_ITEM_CMD=${ITEMS[1]}
+		MY_OUTAGE_ITEM_STATUS=${ITEMS[2]}
+		printf '  {\n    "site": "%s",\n    "command": "%s",\n    "status": "%s",\n    "updated": "%s"\n  }' \
+				"$MY_OUTAGE_ITEM" "$MY_OUTAGE_ITEM_CMD" "$MY_OUTAGE_ITEM_STATUS" "$MY_DATE_TIME" >> "$MY_STATUS_JSON"
+		if [ "$position" -lt "$(( ${#MY_ITEMS_JSON[@]} - 1 ))" ];	then
+			printf ",\n" >> "$MY_STATUS_JSON"
+		else
+			printf "\n" >> "$MY_STATUS_JSON"
+		fi
+	done
+	printf "]" >> "$MY_STATUS_JSON"
 fi
 
 # Get history (last 10 incidents)
