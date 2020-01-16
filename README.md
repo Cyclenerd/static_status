@@ -8,7 +8,7 @@ You can also easily check more complicated things with this script.
 For example if a text is present in a web page or if a host appears in the route path (traceroute).
 Checking the route path is useful, for instance, if you have a backup mobile internet connection in addition to your cable connection.
 
-![Screenshot](https://www.nkn-it.de/static_status/Status-Page-Past-Incidents.jpg)
+![Screenshot](images/Status-Page-Past-Incidents.jpg)
 
 ## Installation
 
@@ -49,15 +49,15 @@ Add:
 
 ## Demo
 
-https://cyclenerd.github.io/static_status_demo/
+https://www.nkn-it.de/static_status_demo/
 
 ### Screenshots
 
-![Screenshot](https://www.nkn-it.de/static_status/Status-Page-Maintenance.jpg)
-![Screenshot](https://www.nkn-it.de/static_status/Status-Page-OK.jpg)
-![Screenshot](https://www.nkn-it.de/static_status/Status-Page-Outage.jpg)
-![Screenshot](https://www.nkn-it.de/static_status/Status-Page-Major_Outage.jpg)
-![Screenshot](https://www.nkn-it.de/static_status/Status-Page-Past-Incidents.jpg)
+![Screenshot](images/Status-Page-Maintenance.jpg)
+![Screenshot](images/Status-Page-OK.jpg)
+![Screenshot](images/Status-Page-Outage.jpg)
+![Screenshot](images/Status-Page-Major_Outage.jpg)
+![Screenshot](images/Status-Page-Past-Incidents.jpg)
 
 ## Requirements
 
