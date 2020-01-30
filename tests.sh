@@ -20,7 +20,7 @@ grep;https://www.nkn-it.de/imprint.html;Nils
 ping;gibt.es.nicht.nkn-it.de
 nc;gibt.es.nicht.nkn-it.de;21
 curl;http://gibt.es.nicht.nkn-it.de
-curl;https://www.nkn-it.de/404
+curl;https://www.nkn-it.de/gibtesnicht
 grep;https://www.nkn-it.de/imprint.html;GibtEsNicht
 EOF
 
