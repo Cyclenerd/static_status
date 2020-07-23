@@ -484,16 +484,20 @@ function item_ok() {
 	<span class="badge"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
 EOF
 
-	if [[ "$MY_OK_COMMAND" = "ping" ]]; then
-		echo "ping $MY_OK_HOSTNAME"
-	elif [[ "$MY_OK_COMMAND" = "nc" ]]; then
-		echo "$(port_to_name "$MY_OK_PORT") on $MY_OK_HOSTNAME"
-	elif [[ "$MY_OK_COMMAND" = "curl" ]]; then
-		echo "Site $MY_OK_HOSTNAME"
-	elif [[ "$MY_OK_COMMAND" = "grep" ]]; then
-		echo "Grep for \"$MY_OK_PORT\" on  $MY_OK_HOSTNAME"
-	elif [[ "$MY_OK_COMMAND" = "traceroute" ]]; then
-		echo "Route path contains $MY_OK_HOSTNAME"
+	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
+		echo "${MY_DISPLAY_TEXT}"
+	else
+		if [[ "$MY_OK_COMMAND" = "ping" ]]; then
+			echo "ping $MY_OK_HOSTNAME"
+		elif [[ "$MY_OK_COMMAND" = "nc" ]]; then
+			echo "$(port_to_name "$MY_OK_PORT") on $MY_OK_HOSTNAME"
+		elif [[ "$MY_OK_COMMAND" = "curl" ]]; then
+			echo "Site $MY_OK_HOSTNAME"
+		elif [[ "$MY_OK_COMMAND" = "grep" ]]; then
+			echo "Grep for \"$MY_OK_PORT\" on  $MY_OK_HOSTNAME"
+		elif [[ "$MY_OK_COMMAND" = "traceroute" ]]; then
+			echo "Route path contains $MY_OK_HOSTNAME"
+		fi
 	fi
 
 	echo "</li>"
@@ -511,16 +515,20 @@ EOF
 		echo "</span>"
 	fi
 
-	if [[ "$MY_DOWN_COMMAND" = "ping" ]]; then
-		echo "ping $MY_DOWN_HOSTNAME"
-	elif [[ "$MY_DOWN_COMMAND" = "nc" ]]; then
-		echo "$(port_to_name "$MY_DOWN_PORT") on $MY_DOWN_HOSTNAME"
-	elif [[ "$MY_DOWN_COMMAND" = "curl" ]]; then
-		echo "Site $MY_DOWN_HOSTNAME"
-	elif [[ "$MY_DOWN_COMMAND" = "grep" ]]; then
-		echo "Grep for \"$MY_DOWN_PORT\" on  $MY_DOWN_HOSTNAME"
-	elif [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
-		echo "Route path contains $MY_DOWN_HOSTNAME"
+	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
+		echo "${MY_DISPLAY_TEXT}"
+	else
+		if [[ "$MY_DOWN_COMMAND" = "ping" ]]; then
+			echo "ping $MY_DOWN_HOSTNAME"
+		elif [[ "$MY_DOWN_COMMAND" = "nc" ]]; then
+			echo "$(port_to_name "$MY_DOWN_PORT") on $MY_DOWN_HOSTNAME"
+		elif [[ "$MY_DOWN_COMMAND" = "curl" ]]; then
+			echo "Site $MY_DOWN_HOSTNAME"
+		elif [[ "$MY_DOWN_COMMAND" = "grep" ]]; then
+			echo "Grep for \"$MY_DOWN_PORT\" on  $MY_DOWN_HOSTNAME"
+		elif [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
+			echo "Route path contains $MY_DOWN_HOSTNAME"
+		fi
 	fi
 
 	echo "</li>"
@@ -538,16 +546,20 @@ EOF
 		echo "</span>"
 	fi
 
-	if [[ "$MY_HISTORY_COMMAND" = "ping" ]]; then
-		echo "ping $MY_HISTORY_HOSTNAME"
-	elif [[ "$MY_HISTORY_COMMAND" = "nc" ]]; then
-		echo "$(port_to_name "$MY_HISTORY_PORT") on $MY_HISTORY_HOSTNAME"
-	elif [[ "$MY_HISTORY_COMMAND" = "curl" ]]; then
-		echo "Site $MY_HISTORY_HOSTNAME"
-	elif [[ "$MY_HISTORY_COMMAND" = "grep" ]]; then
-		echo "Grep for \"$MY_HISTORY_PORT\" on  $MY_HISTORY_HOSTNAME"
-	elif [[ "$MY_HISTORY_COMMAND" = "traceroute" ]]; then
-		echo "Route path contains $MY_HISTORY_HOSTNAME"
+	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
+		echo "${MY_DISPLAY_TEXT}"
+	else
+		if [[ "$MY_HISTORY_COMMAND" = "ping" ]]; then
+			echo "ping $MY_HISTORY_HOSTNAME"
+		elif [[ "$MY_HISTORY_COMMAND" = "nc" ]]; then
+			echo "$(port_to_name "$MY_HISTORY_PORT") on $MY_HISTORY_HOSTNAME"
+		elif [[ "$MY_HISTORY_COMMAND" = "curl" ]]; then
+			echo "Site $MY_HISTORY_HOSTNAME"
+		elif [[ "$MY_HISTORY_COMMAND" = "grep" ]]; then
+			echo "Grep for \"$MY_HISTORY_PORT\" on  $MY_HISTORY_HOSTNAME"
+		elif [[ "$MY_HISTORY_COMMAND" = "traceroute" ]]; then
+			echo "Route path contains $MY_HISTORY_HOSTNAME"
+		fi
 	fi
 
 	echo '<small class="text-muted">'
@@ -622,7 +634,9 @@ fi
 #
 
 MY_HOSTNAME_COUNT=0
-while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; do
+while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAND" ]]; do
+
+	MY_HOSTNAME="${MY_HOSTNAME_STRING%%|*}" # remove alternative display text
 
 	if [[ "$MY_COMMAND" = "ping" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
@@ -643,12 +657,12 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
-				save_history  "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME" "$MY_DATE_TIME"
+				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
-			save_availability "$MY_COMMAND" "$MY_HOSTNAME" ""
+			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
-			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME"
+			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "nc" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
@@ -656,12 +670,12 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
-				save_history  "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
+				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
-			save_availability "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
-			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
+			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "curl" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
@@ -669,12 +683,12 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
-				save_history  "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME" "$MY_DATE_TIME"
+				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
-			save_availability "$MY_COMMAND" "$MY_HOSTNAME" ""
+			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
-			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "" "$MY_DOWN_TIME"
+			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "grep" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
@@ -682,12 +696,12 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
-				save_history  "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
+				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
-			save_availability "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
-			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
+			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "traceroute" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
@@ -696,12 +710,12 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME MY_PORT || [[ -n "$MY_COMMAND" ]]; 
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
-				save_history  "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
+				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
-			save_availability "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
-			save_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT" "$MY_DOWN_TIME"
+			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
 	fi
 
@@ -719,16 +733,19 @@ MY_ITEMS_JSON=()
 # Get outage
 MY_OUTAGE_COUNT=0
 MY_OUTAGE_ITEMS=()
-while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME MY_DOWN_PORT MY_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
+while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME_STRING MY_DOWN_PORT MY_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
 
 	if [[ "$MY_DOWN_COMMAND" = "ping" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "nc" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "curl" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "grep" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
+		MY_DOWN_HOSTNAME="${MY_DOWN_HOSTNAME_STRING%%|*}"
+		MY_DISPLAY_TEXT="${MY_DOWN_HOSTNAME_STRING/${MY_DOWN_HOSTNAME}/}"
+		MY_DISPLAY_TEXT="${MY_DISPLAY_TEXT:1}"
 		(( MY_OUTAGE_COUNT++ ))
 		MY_OUTAGE_ITEMS+=("$(item_down)")
-		MY_ITEMS_JSON+=("$MY_DOWN_HOSTNAME $MY_DOWN_COMMAND Fail")
+		MY_ITEMS_JSON+=("${MY_DISPLAY_TEXT:-${MY_DOWN_HOSTNAME}};$MY_DOWN_COMMAND;Fail")
 	fi
 
 done <"$MY_HOSTNAME_STATUS_DOWN"
@@ -736,16 +753,19 @@ done <"$MY_HOSTNAME_STATUS_DOWN"
 # Get available systems
 MY_AVAILABLE_COUNT=0
 MY_AVAILABLE_ITEMS=()
-while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME MY_OK_PORT || [[ -n "$MY_OK_COMMAND" ]]; do
+while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME_STRING MY_OK_PORT || [[ -n "$MY_OK_COMMAND" ]]; do
 
 	if [[ "$MY_OK_COMMAND" = "ping" ]] ||
 	   [[ "$MY_OK_COMMAND" = "nc" ]] ||
 	   [[ "$MY_OK_COMMAND" = "curl" ]] ||
 	   [[ "$MY_OK_COMMAND" = "grep" ]] ||
 	   [[ "$MY_OK_COMMAND" = "traceroute" ]]; then
+		MY_OK_HOSTNAME="${MY_OK_HOSTNAME_STRING%%|*}"
+		MY_DISPLAY_TEXT="${MY_OK_HOSTNAME_STRING/${MY_OK_HOSTNAME}/}"
+		MY_DISPLAY_TEXT="${MY_DISPLAY_TEXT:1}"
 		(( MY_AVAILABLE_COUNT++ ))
 		MY_AVAILABLE_ITEMS+=("$(item_ok)")
-		MY_ITEMS_JSON+=("$MY_OK_HOSTNAME $MY_OK_COMMAND OK")
+		MY_ITEMS_JSON+=("${MY_DISPLAY_TEXT:-${MY_OK_HOSTNAME}};$MY_OK_COMMAND;OK")
 	fi
 
 done <"$MY_HOSTNAME_STATUS_OK"
@@ -790,10 +810,10 @@ fi
 if [ -n "$MY_STATUS_JSON" ]; then
 	printf "[\n" > "$MY_STATUS_JSON"
 	for ((position = 0; position < ${#MY_ITEMS_JSON[@]}; ++position)); do
-		read -r -a ITEMS <<< "${MY_ITEMS_JSON[$position]}"
-		MY_OUTAGE_ITEM=${ITEMS[0]}
-		MY_OUTAGE_ITEM_CMD=${ITEMS[1]}
-		MY_OUTAGE_ITEM_STATUS=${ITEMS[2]}
+		IFS=";" read -r -a ITEMS <<< "${MY_ITEMS_JSON[$position]}"
+		MY_OUTAGE_ITEM="${ITEMS[0]}"
+		MY_OUTAGE_ITEM_CMD="${ITEMS[1]}"
+		MY_OUTAGE_ITEM_STATUS="${ITEMS[2]}"
 		printf '  {\n    "site": "%s",\n    "command": "%s",\n    "status": "%s",\n    "updated": "%s"\n  }' \
 				"$MY_OUTAGE_ITEM" "$MY_OUTAGE_ITEM_CMD" "$MY_OUTAGE_ITEM_STATUS" "$MY_DATE_TIME" >> "$MY_STATUS_JSON"
 		if [ "$position" -lt "$(( ${#MY_ITEMS_JSON[@]} - 1 ))" ];	then
@@ -808,13 +828,16 @@ fi
 # Get history (last 10 incidents)
 MY_HISTORY_COUNT=0
 MY_HISTORY_ITEMS=()
-while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME MY_HISTORY_PORT MY_HISTORY_DOWN_TIME MY_HISTORY_DATE_TIME || [[ -n "$MY_HISTORY_COMMAND" ]]; do
+while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME_STRING MY_HISTORY_PORT MY_HISTORY_DOWN_TIME MY_HISTORY_DATE_TIME || [[ -n "$MY_HISTORY_COMMAND" ]]; do
 
 	if [[ "$MY_HISTORY_COMMAND" = "ping" ]] ||
 	   [[ "$MY_HISTORY_COMMAND" = "nc" ]] ||
 	   [[ "$MY_HISTORY_COMMAND" = "curl" ]] ||
 	   [[ "$MY_HISTORY_COMMAND" = "grep" ]] ||
 	   [[ "$MY_HISTORY_COMMAND" = "traceroute"  ]]; then
+		MY_HISTORY_HOSTNAME="${MY_HISTORY_HOSTNAME_STRING%%|*}"
+		MY_DISPLAY_TEXT="${MY_HISTORY_HOSTNAME_STRING/${MY_HISTORY_HOSTNAME}/}"
+		MY_DISPLAY_TEXT="${MY_DISPLAY_TEXT:1}"
 		(( MY_HISTORY_COUNT++ ))
 		MY_HISTORY_ITEMS+=("$(item_history)")
 	fi
