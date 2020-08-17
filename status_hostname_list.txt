@@ -18,6 +18,7 @@
 # HOSTNAME: Hostname for the 'ping', 'nc' or 'traceroute' command
 # IP: IP adress for the 'ping', 'nc' or 'traceroute' command
 # URL: URL called by the command 'curl' and 'grep'. I.e. https://www.heise.de/ping or ftp://ftp.debian.org/debian/README
+# The pipe `|` can be used as a seperator to display a custom text instead of the HOSTNAME/IP/URL (see example below).
 #
 # PORT: Optional port specification. Only for 'nc' command.
 #
@@ -37,6 +38,7 @@ nc;www.heise.de;80
 #
 curl;https://www.heise.de/ping
 curl;ftp://ftp.debian.org/debian/README
+curl;https://example.com/|My secret URL
 
 #
 # grep;<URL>;<ONE WORD>
