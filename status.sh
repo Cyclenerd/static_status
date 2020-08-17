@@ -654,67 +654,67 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 			MY_PING_COMMAND='ping -w'
 		fi
 		if $MY_PING_COMMAND "$MY_PING_TIMEOUT" -c "$MY_PING_COUNT" "$MY_HOSTNAME" &> /dev/null; then
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
 				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
 			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 		else
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "nc" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
 		if nc -z -w "$MY_TIMEOUT" "$MY_HOSTNAME" "$MY_PORT" &> /dev/null; then
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
 				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
 			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 		else
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "curl" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
 		if curl -If --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" &> /dev/null; then
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
 				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
 			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 		else
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" ""
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "grep" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
 		if curl --no-buffer -fs --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" | grep -q "$MY_PORT"  &> /dev/null; then
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
 				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
 			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 		else
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
 	elif [[ "$MY_COMMAND" = "traceroute" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
 		MY_PORT=${MY_PORT:=64}
 		if traceroute -w "$MY_TIMEOUT" -q "$MY_TRACEROUTE_NQUERIES" -m "$MY_PORT" "$MY_TRACEROUTE_HOST" | grep -q "$MY_HOSTNAME"  &> /dev/null; then
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
 				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
 			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 		else
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME" "$MY_PORT"
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
 	fi
