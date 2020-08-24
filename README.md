@@ -59,6 +59,29 @@ https://www.nkn-it.de/static_status_demo/
 ![Screenshot](images/Status-Page-Major_Outage.jpg)
 ![Screenshot](images/Status-Page-Past-Incidents.jpg)
 
+## Custom Text
+
+You can display a custom text instead of the HOSTNAME/IP/URL (see example below).
+
+![Screenshot](images/Status-Page-Custom-Text.png)
+
+status_hostname_list.txt:
+```csv
+ping;192.168.100.1|Orbi
+ping;192.168.100.102|Wohnzimmer
+ping;192.168.221.1|pfSense
+ping;192.168.211.1|DSL Fritz Box
+ping;192.168.212.1|LTE Fritz Box
+ping;192.168.211.80|Synology Keller
+ping;8.8.8.8|Google DNS
+nc;192.168.100.1|DNS @ Orbi;53
+nc;192.168.221.1|DNS @ pfSense;53
+nc;192.168.211.1|DNS @ DSL Fritz Box;53
+nc;8.8.8.8|DNS @ Google;53
+curl;http://www.heise.de/ping|www.heise.de
+traceroute;192.168.211.1|DSL Internet;3
+```
+
 ## Requirements
 
 Only `bash`, `ping`, `traceroute`, `curl` and `nc`. In many *NIX distributions (Ubuntu, macOS) the commands are already included.

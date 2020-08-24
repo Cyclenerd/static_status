@@ -27,11 +27,12 @@
 # ping;<HOSTNAME or IP>
 #
 ping;www.heise.de
-
+ping;www.otto.de|custom text instead of hostname
 #
 # nc;<HOSTNAME or IP>;<PORT>
 #
 nc;www.heise.de;80
+nc;www.bsi.de|My secret Hostname;80
 
 #
 # curl;<URL>;<PORT>
@@ -56,3 +57,4 @@ grep;https://www.nkn-it.de/imprint.html;Nils
 # If the hostname should always be the third hop, enter 3.
 #
 traceroute;your.isp.router;3
+traceroute;your.secret.router|My secret Hostname;2
