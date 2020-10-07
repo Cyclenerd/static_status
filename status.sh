@@ -88,6 +88,7 @@ MY_COMMANDS=(
 	curl
 	grep
 	traceroute
+	script
 )
 
 # if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
@@ -298,7 +299,8 @@ function check_downtime() {
 		   [[ "$MY_DOWN_COMMAND" = "nc" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "grep" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "traceroute" ]] ||
-		   [[ "$MY_DOWN_COMMAND" = "curl" ]]; then
+		   [[ "$MY_DOWN_COMMAND" = "curl" ]] ||
+		   [[ "$MY_DOWN_COMMAND" = "script" ]]; then
 			if 	[[ "$MY_DOWN_HOSTNAME" = "$MY_HOSTNAME" ]]; then
 				if 	[[ "$MY_DOWN_PORT" = "$MY_PORT" ]]; then
 					MY_DOWN_TIME="$((MY_DOWN_TIME+MY_LASTRUN_TIME))"
@@ -496,6 +498,8 @@ EOF
 			echo "Grep for \"$MY_OK_PORT\" on  $MY_OK_HOSTNAME"
 		elif [[ "$MY_OK_COMMAND" = "traceroute" ]]; then
 			echo "Route path contains $MY_OK_HOSTNAME"
+		elif [[ "$MY_OK_COMMAND" = "script" ]]; then
+			echo "Script $MY_OK_HOSTNAME"
 		fi
 	fi
 
@@ -527,6 +531,8 @@ EOF
 			echo "Grep for \"$MY_DOWN_PORT\" on  $MY_DOWN_HOSTNAME"
 		elif [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
 			echo "Route path contains $MY_DOWN_HOSTNAME"
+		elif [[ "$MY_DOWN_COMMAND" = "script" ]]; then
+			echo "Script $MY_DOWN_HOSTNAME"
 		fi
 	fi
 
@@ -558,6 +564,8 @@ EOF
 			echo "Grep for \"$MY_HISTORY_PORT\" on  $MY_HISTORY_HOSTNAME"
 		elif [[ "$MY_HISTORY_COMMAND" = "traceroute" ]]; then
 			echo "Route path contains $MY_HISTORY_HOSTNAME"
+		elif [[ "$MY_HISTORY_COMMAND" = "script" ]]; then
+			echo "Script $MY_HISTORY_HOSTNAME"
 		fi
 	fi
 
@@ -716,6 +724,24 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
+	elif [[ "$MY_COMMAND" = "script" ]]; then
+		(( MY_HOSTNAME_COUNT++ ))
+    if [[ -x "$MY_STATUS_CONFIG_DIR/$MY_HOSTNAME" ]]; then
+				cmd="$MY_STATUS_CONFIG_DIR/$MY_HOSTNAME"
+    else
+				cmd="$MY_HOSTNAME"
+    fi
+		if "$cmd" &> /dev/null; then
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
+			# Check status change
+			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
+				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
+			fi
+			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
+		else
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
+			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
+		fi
 	fi
 
 done <"$MY_HOSTNAME_FILE"
@@ -738,6 +764,7 @@ while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME_STRING MY_DOWN_PORT MY_DO
 	   [[ "$MY_DOWN_COMMAND" = "nc" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "curl" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "grep" ]] ||
+	   [[ "$MY_DOWN_COMMAND" = "script" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "traceroute" ]]; then
 		MY_DOWN_HOSTNAME="${MY_DOWN_HOSTNAME_STRING%%|*}"
 		MY_DISPLAY_TEXT="${MY_DOWN_HOSTNAME_STRING/${MY_DOWN_HOSTNAME}/}"
@@ -758,6 +785,7 @@ while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME_STRING MY_OK_PORT || [[ -n "$
 	   [[ "$MY_OK_COMMAND" = "nc" ]] ||
 	   [[ "$MY_OK_COMMAND" = "curl" ]] ||
 	   [[ "$MY_OK_COMMAND" = "grep" ]] ||
+	   [[ "$MY_OK_COMMAND" = "script" ]] ||
 	   [[ "$MY_OK_COMMAND" = "traceroute" ]]; then
 		MY_OK_HOSTNAME="${MY_OK_HOSTNAME_STRING%%|*}"
 		MY_DISPLAY_TEXT="${MY_OK_HOSTNAME_STRING/${MY_OK_HOSTNAME}/}"
@@ -833,6 +861,7 @@ while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME_STRING MY_HISTORY_P
 	   [[ "$MY_HISTORY_COMMAND" = "nc" ]] ||
 	   [[ "$MY_HISTORY_COMMAND" = "curl" ]] ||
 	   [[ "$MY_HISTORY_COMMAND" = "grep" ]] ||
+	   [[ "$MY_HISTORY_COMMAND" = "script" ]] ||
 	   [[ "$MY_HISTORY_COMMAND" = "traceroute"  ]]; then
 		MY_HISTORY_HOSTNAME="${MY_HISTORY_HOSTNAME_STRING%%|*}"
 		MY_DISPLAY_TEXT="${MY_HISTORY_HOSTNAME_STRING/${MY_HISTORY_HOSTNAME}/}"

@@ -4,7 +4,7 @@
 # What should be monitored? Each line one entry.
 #
 # Structure:
-# <COMMAND>;<HOSTNAME, IP or URL>;<PORT>
+# <COMMAND>;<HOSTNAME, IP or URL,PATH>;<PORT>
 #
 # COMMAND: Command to run. Can be ping, curl or nc.
 #          ping       = send ICMP ECHO_REQUEST packets to network hosts
@@ -14,10 +14,12 @@
 #                       curl downloads the webpage and pipes it to grep,
 #                       that checks if the keyword is in the page.
 #          traceroute = check if host or ip exists in route path to MY_TRACEROUTE_HOST
+#          script     = execute a script which returns 0 on success
 #
 # HOSTNAME: Hostname for the 'ping', 'nc' or 'traceroute' command
 # IP: IP adress for the 'ping', 'nc' or 'traceroute' command
 # URL: URL called by the command 'curl' and 'grep'. I.e. https://www.heise.de/ping or ftp://ftp.debian.org/debian/README
+# PATH: PATH of the script called by the command 'script', eg. check.sh
 # The pipe `|` can be used as a seperator to display a custom text instead of the HOSTNAME/IP/URL (see example below).
 #
 # PORT: Optional port specification. Only for 'nc' command.
@@ -58,3 +60,9 @@ grep;https://www.nkn-it.de/imprint.html;Nils
 #
 traceroute;your.isp.router;3
 traceroute;your.secret.router|My secret Hostname;2
+
+#
+# script;<PATH>
+#
+script;./check.sh|My secret Name
+script;/bin/true|always up
