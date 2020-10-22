@@ -88,7 +88,6 @@ MY_COMMANDS=(
 	curl
 	grep
 	traceroute
-	script
 )
 
 # if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
