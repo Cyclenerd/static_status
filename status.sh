@@ -386,8 +386,7 @@ function page_header() {
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="$MY_STATUS_STYLESHEET">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/solid.min.css" rel="stylesheet">
+<link href="$MY_STATUS_FONTAWESOME" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -511,12 +510,6 @@ EOF
 function item_down() {
 	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
 
-	if [[ "$MY_DOWN_TIME" -gt "1" ]]; then
-		printf "%.0f min</span>" "$((MY_DOWN_TIME/60))"
-	else
-		echo "</span>"
-	fi
-
 	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
 		echo "${MY_DISPLAY_TEXT}"
 	else
@@ -535,15 +528,17 @@ function item_down() {
 		fi
 	fi
 
-	cat <<EOF
-	<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i></span>
-</li>
-EOF
+	printf '<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i> &nbsp;'
+	if [[ "$MY_DOWN_TIME" -gt "1" ]]; then
+		printf "%.0f min</span>" "$((MY_DOWN_TIME/60))"
+	else
+		echo "</span>"
+	fi
+	echo "</li>"
 }
 
 function item_history() {
 	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
-
 
 	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
 		echo "${MY_DISPLAY_TEXT}"
