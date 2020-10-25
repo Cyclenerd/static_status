@@ -431,7 +431,7 @@ EOF
 
 function page_alert_success() {
 	cat >> "$MY_STATUS_HTML" << EOF
-<div class="alert alert-success" role="alert">
+<div class="alert alert-success my-3" role="alert">
 	<i class="fas fa-thumbs-up"></i>
 	All Systems Operational
 </div>
@@ -441,7 +441,7 @@ EOF
 
 function page_alert_warning() {
 	cat >> "$MY_STATUS_HTML" << EOF
-<div class="alert alert-warning" role="alert">
+<div class="alert alert-warning my-3" role="alert">
 	<i class="fas fa-exclamation-triangle"></i>
 	Outage
 </div>
@@ -451,7 +451,7 @@ EOF
 
 function page_alert_danger() {
 	cat >> "$MY_STATUS_HTML" << EOF
-<div class="alert alert-danger" role="alert">
+<div class="alert alert-danger my-3" role="alert">
 	<i class="fas fa-fire"></i>
 	Major Outage
 </div>
