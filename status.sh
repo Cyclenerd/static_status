@@ -415,7 +415,7 @@ EOF
 
 function page_footer() {
 	cat >> "$MY_STATUS_HTML" << EOF
-<hr>
+<hr class="mt-4">
 <footer>
 	<p>$MY_STATUS_FOOTER</p>
 	<p class="text-muted">$MY_DATE_TIME</p>
@@ -528,7 +528,7 @@ function item_down() {
 		fi
 	fi
 
-	printf '<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i> &nbsp;'
+	printf '<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i> '
 	if [[ "$MY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_DOWN_TIME/60))"
 	else
@@ -562,7 +562,7 @@ function item_history() {
 	echo "$MY_HISTORY_DATE_TIME"
 	echo '</small>'
 
-	printf '<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i> &nbsp;'
+	printf '<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i> '
 	if [[ "$MY_HISTORY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_HISTORY_DOWN_TIME/60))"
 	else
