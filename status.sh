@@ -62,6 +62,10 @@ MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT="/tmp/status_hostname_history_sort.txt"
 
 # CSS Stylesheet for the status page
 MY_STATUS_STYLESHEET="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+
+# FontAwesome for the status page
+MY_STATUS_FONTAWESOME="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+
 # A footer
 MY_STATUS_FOOTER='Powered by <a href="https://github.com/Cyclenerd/static_status">static_status</a>'
 
