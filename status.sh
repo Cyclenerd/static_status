@@ -61,7 +61,7 @@ MY_HOSTNAME_STATUS_HISTORY="$MY_STATUS_CONFIG_DIR/status_hostname_history.txt"
 MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT="/tmp/status_hostname_history_sort.txt"
 
 # CSS Stylesheet for the status page
-MY_STATUS_STYLESHEET="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+MY_STATUS_STYLESHEET="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
 # A footer
 MY_STATUS_FOOTER='Powered by <a href="https://github.com/Cyclenerd/static_status">static_status</a>'
 
@@ -383,31 +383,33 @@ function page_header() {
 <head>
 <meta charset="utf-8">
 <title>$MY_STATUS_TITLE</title>
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="$MY_STATUS_STYLESHEET">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/solid.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
 
-<div class="page-header">
+<div class="pb-2 mt-5 mb-2 border-bottom">
 	<h1>
 		$MY_STATUS_TITLE
-		<span class="pull-right hidden-xs hidden-sm">
+		<span class="float-right d-none d-sm-block">
 			<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button">
-				<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+				<i class="fas fa-home"></i>
 				$MY_HOMEPAGE_TITLE
 			</a>
 		</span>
 	</h1>
 </div>
 
-<p class="hidden-md hidden-lg">
+<div class="d-sm-none d-md-none d-lg-none d-xl-none my-3">
 	<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button">
-		<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+		<i class="fas fa-home"></i>
 		$MY_HOMEPAGE_TITLE
 	</a>
-</p>
+</div>
 
 EOF
 }
@@ -431,7 +433,7 @@ EOF
 function page_alert_success() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-success" role="alert">
-	<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+	<i class="fas fa-thumbs-up"></i>
 	All Systems Operational
 </div>
 
@@ -441,7 +443,7 @@ EOF
 function page_alert_warning() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-warning" role="alert">
-	<span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+	<i class="fas fa-exclamation-triangle"></i>
 	Outage
 </div>
 
@@ -451,7 +453,7 @@ EOF
 function page_alert_danger() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-danger" role="alert">
-	<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+	<i class="fas fa-fire"></i>
 	Major Outage
 </div>
 
@@ -460,11 +462,12 @@ EOF
 
 function page_alert_maintenance() {
 	cat >> "$MY_STATUS_HTML" << EOF
-<div class="panel panel-default">
-	<div class="panel-heading">
-		<h3 class="panel-title"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Maintenance</h3>
+<div class="card my-3">
+	<div class="card-header">
+		<i class="fas fa-wrench"></i>
+		Maintenance
 	</div>
-	<div class="panel-body">
+	<div class="card-body">
 EOF
 	if [ -r "$MY_MAINTENANCE_TEXT_FILE" ]; then
 		cat "$MY_MAINTENANCE_TEXT_FILE" >> "$MY_STATUS_HTML"
@@ -479,10 +482,7 @@ EOF
 }
 
 function item_ok() {
-	cat << EOF
-<li class="list-group-item">
-	<span class="badge"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></span>
-EOF
+	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
 
 	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
 		echo "${MY_DISPLAY_TEXT}"
@@ -502,14 +502,14 @@ EOF
 		fi
 	fi
 
-	echo "</li>"
+	cat <<EOF
+	<span class="badge badge-pill badge-dark"><i class="fas fa-check"></i></span>
+</li>
+EOF
 }
 
 function item_down() {
-	cat << EOF
-<li class="list-group-item">
-	<span class="badge"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-EOF
+	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
 
 	if [[ "$MY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_DOWN_TIME/60))"
@@ -535,20 +535,15 @@ EOF
 		fi
 	fi
 
-	echo "</li>"
+	cat <<EOF
+	<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i></span>
+</li>
+EOF
 }
 
 function item_history() {
-	cat << EOF
-<li class="list-group-item">
-	<span class="badge"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-EOF
+	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
 
-	if [[ "$MY_HISTORY_DOWN_TIME" -gt "1" ]]; then
-		printf "%.0f min</span>" "$((MY_HISTORY_DOWN_TIME/60))"
-	else
-		echo "</span>"
-	fi
 
 	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
 		echo "${MY_DISPLAY_TEXT}"
@@ -572,6 +567,12 @@ EOF
 	echo "$MY_HISTORY_DATE_TIME"
 	echo '</small>'
 
+	printf '<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i> &nbsp;'
+	if [[ "$MY_HISTORY_DOWN_TIME" -gt "1" ]]; then
+		printf "%.0f min</span>" "$((MY_HISTORY_DOWN_TIME/60))"
+	else
+		echo "</span>"
+	fi
 	echo "</li>"
 }
 
@@ -811,25 +812,27 @@ fi
 # Outage to HTML
 if [[ "$MY_OUTAGE_COUNT" -gt "0" ]]; then
 	cat >> "$MY_STATUS_HTML" << EOF
-<ul class="list-group">
-	<li class="list-group-item list-group-item-danger">Outage</li>
+<div class="my-3">
+	<ul class="list-group">
+		<li class="list-group-item list-group-item-danger">Outage</li>
 EOF
 	for MY_OUTAGE_ITEM in "${MY_OUTAGE_ITEMS[@]}"; do
 		echo "$MY_OUTAGE_ITEM" >> "$MY_STATUS_HTML"
 	done
-	echo "</ul>" >> "$MY_STATUS_HTML"
+	echo "</ul></div>" >> "$MY_STATUS_HTML"
 fi
 
 # Operational to HTML
 if [[ "$MY_AVAILABLE_COUNT" -gt "0" ]]; then
 	cat >> "$MY_STATUS_HTML" << EOF
-<ul class="list-group">
-	<li class="list-group-item list-group-item-success">Operational</li>
+<div class="my-3">
+	<ul class="list-group">
+		<li class="list-group-item list-group-item-success">Operational</li>
 EOF
 	for MY_AVAILABLE_ITEM in "${MY_AVAILABLE_ITEMS[@]}"; do
 		echo "$MY_AVAILABLE_ITEM" >> "$MY_STATUS_HTML"
 	done
-	echo "</ul>" >> "$MY_STATUS_HTML"
+	echo "</ul></div>" >> "$MY_STATUS_HTML"
 fi
 
 # Outage and operational to JSON
@@ -877,7 +880,7 @@ done <"$MY_HOSTNAME_STATUS_HISTORY"
 # History to HTML
 if [[ "$MY_HISTORY_COUNT" -gt "0" ]]; then
 	cat >> "$MY_STATUS_HTML" << EOF
-<div class="page-header">
+<div class="pb-2 mt-5 mb-3 border-bottom">
 	<h2>Past Incidents</h2>
 </div>
 <ul class="list-group">
