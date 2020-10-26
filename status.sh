@@ -543,6 +543,7 @@ function item_down() {
 
 function item_history() {
 	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
+	echo '<span>'
 
 	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
 		echo "${MY_DISPLAY_TEXT}"
@@ -565,6 +566,7 @@ function item_history() {
 	echo '<small class="text-muted">'
 	echo "$MY_HISTORY_DATE_TIME"
 	echo '</small>'
+	echo '</span>'
 
 	printf '<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i> '
 	if [[ "$MY_HISTORY_DOWN_TIME" -gt "1" ]]; then
