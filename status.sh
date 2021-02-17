@@ -24,6 +24,9 @@ MY_HOMEPAGE_URL="https://github.com/Cyclenerd/static_status"
 # Text for the homepage button
 MY_HOMEPAGE_TITLE="Homepage"
 
+# Auto refresh interval in seconds 0 is no refresh
+MY_AUTOREFRESH="0"
+
 # Shortcut to place the configuration file in a folder.
 # Save it without / at the end.
 MY_STATUS_CONFIG_DIR="$HOME/status"
@@ -391,6 +394,13 @@ function save_history() {
 ################################################################################
 
 function page_header() {
+	# check for autorefresh
+	if [ $MY_AUTOREFRESH -gt 0 ]
+	then
+		MY_AUTOREFRESH_TEXT="<meta http-equiv=\"refresh\" content=\"$MY_AUTOREFRESH\">"
+	else
+		MY_AUTOREFRESH_TEXT=""
+	fi
 	cat > "$MY_STATUS_HTML" << EOF
 <!DOCTYPE HTML>
 <html lang="en">
@@ -399,6 +409,7 @@ function page_header() {
 <title>$MY_STATUS_TITLE</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
+$MY_AUTOREFRESH_TEXT
 <link rel="stylesheet" href="$MY_STATUS_STYLESHEET">
 <link href="$MY_STATUS_FONTAWESOME" rel="stylesheet">
 </head>
