@@ -883,7 +883,7 @@ if [ -n "$MY_STATUS_JSON" ]; then
 	printf "[\n" > "$MY_STATUS_JSON"
 	for ((position = 0; position < ${#MY_ITEMS_JSON[@]}; ++position)); do
 		IFS=";" read -r -a ITEMS <<< "${MY_ITEMS_JSON[$position]}"
-		MY_OUTAGE_ITEM="${ITEMS[0]}"
+		MY_OUTAGE_ITEM=$(sed -e 's/<[^>]*>//g' <<< "${ITEMS[0]}")
 		MY_OUTAGE_ITEM_CMD="${ITEMS[1]}"
 		MY_OUTAGE_ITEM_STATUS="${ITEMS[2]}"
 		printf '  {\n    "site": "%s",\n    "command": "%s",\n    "status": "%s",\n    "updated": "%s"\n  }' \
