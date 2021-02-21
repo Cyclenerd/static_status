@@ -1,0 +1,28 @@
+name: "Update status page"
+on:
+  schedule:
+    - cron: "10 * * * *"
+  push:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install the dependencies 🔧
+        run: sudo apt-get install curl iputils-ping traceroute netcat-openbsd grep sed
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+      - name: Check status 🚦
+        run: |
+          mkdir "build"
+          echo 'MY_STATUS_CONFIG_DIR="/tmp"' > config
+          echo 'MY_STATUS_HTML="build/index.html"' > config
+          echo 'MY_STATUS_JSON="build/status.json"' > config
+          echo 'MY_HOSTNAME_FILE="status_hostname_list.txt"' > config
+          echo 'curl;https://www.heise.de/ping|<a href="https://www.heise.de/">heise online</a>' > status_hostname_list.txt
+          bash status.sh loud
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build # The folder the action should deploy.
