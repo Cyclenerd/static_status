@@ -84,9 +84,15 @@ traceroute;192.168.211.1|DSL Internet;3
 
 ## Requirements
 
-Only `bash`, `ping`, `traceroute`, `curl` and `nc`. In many *NIX distributions (Ubuntu, macOS) the commands are already included.
+Only `bash`, `ping`, `traceroute`, `curl`, `nc` and `grep`.
+In many *NIX distributions (Ubuntu, macOS) the commands are already included.
 If not, the missing packages can be installed quickly.
-On a debian-based system (Ubuntu), just run `sudo apt-get install curl iputils-ping traceroute netcat-openbsd`.
+
+On a debian-based system (Ubuntu), just run:
+
+```bash
+sudo apt install curl iputils-ping traceroute netcat-openbsd grep
+```
 
 ## TODO
 
