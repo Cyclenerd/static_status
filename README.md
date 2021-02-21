@@ -12,44 +12,70 @@ Checking the route path is useful, for instance, if you have a backup mobile int
 
 ## Installation
 
-Download `status.sh` and configuration file:
+Download Bash script `status.sh` and configuration file `status_hostname_list.txt`:
 
-	$ curl -f https://raw.githubusercontent.com/Cyclenerd/static_status/master/status.sh -o status.sh
-	$ curl -f https://raw.githubusercontent.com/Cyclenerd/static_status/master/status_hostname_list.txt -o status_hostname_list.txt
+```bash
+curl \
+  -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status.sh" \
+  -o "status.sh" && \
+curl \
+  -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status_hostname_list.txt" \
+  -o "status_hostname_list.txt"
+```
 
-Customize the `status.sh` script and the services to be monitored:
+Customize the `status_hostname_list.txt` configuration file and define what you want to monitor:
 
-	$ vi status.sh
-	$ vi status_hostname_list.txt
+```bash
+vi "status_hostname_list.txt"
+```
+
+Optional:
+Edit the script `status.sh` or better add more configuration to the configuration file `config`:
+
+```bash
+curl \
+  -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/config-example" \
+  -o "config" && \
+vi "config"
+```
 
 Run:
 
-	$ bash status.sh
+```bash
+bash "status.sh"
+```
 
 ## Usage
 
-	Usage: status.sh [OPTION]:
-		OPTION is one of the following:
-			silent	 no output from faulty connections to stout (default: no)
-			loud	 output from successful and faulty connections to stout (default: no)
-			help	 displays help (this message)
+```text
+Usage: status.sh [OPTION]:
+	OPTION is one of the following:
+		silent	 no output from faulty connections to stout (default: no)
+		loud	 output from successful and faulty connections to stout (default: no)
+		help	 displays help (this message)
+```
 
 Example:
 
-	$ bash status.sh loud
+```bash
+bash "status.sh" loud
+```
 
 Execute a cron job every minute:
 
-	$ crontab -e
+```bash
+crontab -e
+```
 
 Add:
 
-	*/1 * * * * bash /path/to/status.sh silent >> /dev/null
-
+```
+*/1 * * * * bash "/path/to/status.sh" silent >> /dev/null
+```
 
 ## Demo
 
-https://www.nkn-it.de/static_status_demo/
+<https://www.nkn-it.de/static_status_demo/>
 
 ### Screenshots
 
@@ -66,6 +92,7 @@ You can display a custom text instead of the HOSTNAME/IP/URL (see example below)
 ![Screenshot](images/Status-Page-Custom-Text.png)
 
 status_hostname_list.txt:
+
 ```csv
 ping;192.168.100.1|Orbi
 ping;192.168.100.102|Wohnzimmer
@@ -104,4 +131,4 @@ Help is welcome 👍
 ## License
 
 GNU Public License version 3.
-Please feel free to fork and modify this on GitHub (https://github.com/Cyclenerd/static_shell).
+Please feel free to fork and modify this on GitHub (<https://github.com/Cyclenerd/static_shell>).
