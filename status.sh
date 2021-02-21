@@ -95,6 +95,7 @@ MY_COMMANDS=(
 	curl
 	grep
 	traceroute
+	sed
 )
 
 # if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
@@ -883,6 +884,7 @@ if [ -n "$MY_STATUS_JSON" ]; then
 	printf "[\n" > "$MY_STATUS_JSON"
 	for ((position = 0; position < ${#MY_ITEMS_JSON[@]}; ++position)); do
 		IFS=";" read -r -a ITEMS <<< "${MY_ITEMS_JSON[$position]}"
+		# shellcheck disable=SC2001
 		MY_OUTAGE_ITEM=$(sed -e 's/<[^>]*>//g' <<< "${ITEMS[0]}")
 		MY_OUTAGE_ITEM_CMD="${ITEMS[1]}"
 		MY_OUTAGE_ITEM_STATUS="${ITEMS[2]}"
