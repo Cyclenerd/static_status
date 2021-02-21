@@ -1,8 +1,20 @@
 [
   {
+    "site": "ftp://ftp.debian.org/debian/README",
+    "command": "curl",
+    "status": "Fail",
+    "updated": "2021-02-21 21:29:09 UTC"
+  },
+  {
     "site": "heise online",
     "command": "curl",
     "status": "OK",
-    "updated": "2021-02-21 21:24:19 UTC"
+    "updated": "2021-02-21 21:29:09 UTC"
+  },
+  {
+    "site": "DNS @ Google",
+    "command": "nc",
+    "status": "OK",
+    "updated": "2021-02-21 21:29:09 UTC"
   }
 ]
