@@ -89,12 +89,12 @@ Add:
 
 You can display a custom text instead of the HOSTNAME/IP/URL (see example below).
 
-![Screenshot](images/Status-Page-Custom-Text.png)
+![Screenshot](images/Status-Page-Custom-Text.png?v2)
 
 status_hostname_list.txt:
 
 ```csv
-ping;192.168.100.1|Orbi
+ping;192.168.100.1|<a href="http://192.168.100.1/">Orbi</a>
 ping;192.168.100.102|Wohnzimmer
 ping;192.168.221.1|pfSense
 ping;192.168.211.1|DSL Fritz Box
@@ -111,14 +111,14 @@ traceroute;192.168.211.1|DSL Internet;3
 
 ## Requirements
 
-Only `bash`, `ping`, `traceroute`, `curl`, `nc` and `grep`.
+Only `bash`, `ping`, `traceroute`, `curl`, `nc`, `grep` and `sed`.
 In many *NIX distributions (Ubuntu, macOS) the commands are already included.
 If not, the missing packages can be installed quickly.
 
 On a debian-based system (Ubuntu), just run:
 
 ```bash
-sudo apt install curl iputils-ping traceroute netcat-openbsd grep
+sudo apt install curl iputils-ping traceroute netcat-openbsd grep sed
 ```
 
 ## TODO
