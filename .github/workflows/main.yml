@@ -12,15 +12,20 @@ jobs:
         run: sudo apt-get install curl iputils-ping traceroute netcat-openbsd grep sed
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
-      - name: Check status 🚦
+      - name: Create configuration 🖊️
         run: |
-          mkdir "build"
+          mkdir "build/"
           echo 'MY_STATUS_CONFIG_DIR="/tmp"' > config
           echo 'MY_STATUS_HTML="build/index.html"' > config
           echo 'MY_STATUS_JSON="build/status.json"' > config
           echo 'MY_HOSTNAME_FILE="status_hostname_list.txt"' > config
           echo 'curl;https://www.heise.de/ping|<a href="https://www.heise.de/">heise online</a>' > status_hostname_list.txt
-          bash status.sh loud
+          echo "config"
+          cat config
+          echo "status_hostname_list.txt"
+          cat status_hostname_list.txt
+      - name: Check status 🚦
+        run: bash status.sh loud
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
