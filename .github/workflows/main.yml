@@ -8,11 +8,11 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Install the dependencies 🔧
+      - name: Dependencies 🔧
         run: sudo apt-get install curl iputils-ping traceroute netcat-openbsd grep sed
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
-      - name: Create configuration 🖊️
+      - name: Install 🛎️
+        run: curl -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status.sh" -o "status.sh"
+      - name: Configuration 🖊️
         run: |
           mkdir -p "build/"
           mkdir -p "$HOME/status/"
@@ -31,7 +31,7 @@ jobs:
           cat status_maintenance_text.txt
           echo "status_hostname_list.txt"
           cat status_hostname_list.txt
-      - name: Check status 🚦
+      - name: Status 🚦
         run: bash status.sh loud
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.0.0
