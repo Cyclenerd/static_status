@@ -16,9 +16,9 @@ jobs:
         run: |
           mkdir "build/"
           echo 'MY_STATUS_CONFIG_DIR="/tmp"' > config
-          echo 'MY_STATUS_HTML="build/index.html"' > config
-          echo 'MY_STATUS_JSON="build/status.json"' > config
-          echo 'MY_HOSTNAME_FILE="status_hostname_list.txt"' > config
+          echo 'MY_STATUS_HTML="build/index.html"' >> config
+          echo 'MY_STATUS_JSON="build/status.json"' >> config
+          echo 'MY_HOSTNAME_FILE="status_hostname_list.txt"' >> config
           echo 'curl;https://www.heise.de/ping|<a href="https://www.heise.de/">heise online</a>' > status_hostname_list.txt
           echo "config"
           cat config
