@@ -75,7 +75,7 @@ Add:
 
 ## Demo
 
-This [demo page](https://cyclenerd.github.io/static_status/) is automatically generated every hour with [GitHub Action](https://github.com/Cyclenerd/static_status/blob/master/.github/workflows/main.yml):
+This [demo page](https://cyclenerd.github.io/static_status/) is generated with [GitHub Action](https://github.com/Cyclenerd/static_status/blob/master/.github/workflows/main.yml):
 <https://cyclenerd.github.io/static_status/>
 
 ### Screenshots
