@@ -3,18 +3,18 @@
     "site": "ftp://ftp.debian.org/debian/README",
     "command": "curl",
     "status": "Fail",
-    "updated": "2021-02-22 01:55:00 UTC"
+    "updated": "2021-02-22 02:34:11 UTC"
   },
   {
     "site": "heise online",
     "command": "curl",
     "status": "OK",
-    "updated": "2021-02-22 01:55:00 UTC"
+    "updated": "2021-02-22 02:34:11 UTC"
   },
   {
     "site": "DNS @ Google",
     "command": "nc",
     "status": "OK",
-    "updated": "2021-02-22 01:55:00 UTC"
+    "updated": "2021-02-22 02:34:11 UTC"
   }
 ]
