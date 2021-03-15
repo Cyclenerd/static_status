@@ -12,12 +12,17 @@ Checking the route path is useful, for instance, if you have a backup mobile int
 
 ## Installation
 
-Download Bash script `status.sh` and configuration file `status_hostname_list.txt`:
+Download Bash script `status.sh`:
 
-```bash
+```shell
 curl \
   -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status.sh" \
-  -o "status.sh" && \
+  -o "status.sh"
+```
+
+Download configuration file `status_hostname_list.txt`:
+
+```shell
 curl \
   -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status_hostname_list.txt" \
   -o "status_hostname_list.txt"
@@ -25,23 +30,31 @@ curl \
 
 Customize the `status_hostname_list.txt` configuration file and define what you want to monitor:
 
-```bash
+```shell
 vi "status_hostname_list.txt"
 ```
 
-Optional:
+### Optional
+
 Edit the script `status.sh` or better add more configuration to the configuration file `config`:
 
-```bash
+Download example configuration file:
+
+```shell
 curl \
   -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/config-example" \
-  -o "config" && \
-vi "config"
+  -o "config"
 ```
 
-Run:
+Customize configuration file:
 
-```bash
+```
+nano "config"
+```
+
+### Run
+
+```shell
 bash "status.sh"
 ```
 
@@ -57,13 +70,13 @@ Usage: status.sh [OPTION]:
 
 Example:
 
-```bash
+```shell
 bash "status.sh" loud
 ```
 
 Execute a cron job every minute:
 
-```bash
+```shell
 crontab -e
 ```
 
@@ -118,7 +131,7 @@ If not, the missing packages can be installed quickly.
 
 On a debian-based system (Ubuntu), just run:
 
-```bash
+```shell
 sudo apt install curl iputils-ping traceroute netcat-openbsd grep sed
 ```
 
