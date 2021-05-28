@@ -77,6 +77,15 @@ MY_STATUS_FOOTER='Powered by <a href="https://github.com/Cyclenerd/static_status
 # If something has gone wrong and the file has not been deleted automatically, you can delete it.
 MY_STATUS_LOCKFILE="/tmp/STATUS_SH_IS_RUNNING.lock"
 
+# Date format for the web page.
+# UTC (`-u`) is the default.
+# Example: 2021-12-23 12:34:55 UTC
+MY_DATE_TIME=$(date -u "+%Y-%m-%d %H:%M:%S %Z")
+# Can be changed. Example with system time:
+# MY_DATE_TIME=$(date "+%Y-%m-%d %H:%M:%S")
+# Avoid semicolons.
+# More details can be found in `man date`.
+
 ################################################################################
 #### END Configuration Section
 ################################################################################
@@ -84,7 +93,6 @@ MY_STATUS_LOCKFILE="/tmp/STATUS_SH_IS_RUNNING.lock"
 ME=$(basename "$0")
 BASE_PATH=$(dirname "$0") # TODO: Resolv symlinks https://stackoverflow.com/questions/59895
 MY_TIMESTAMP=$(date -u "+%s")
-MY_DATE_TIME=$(date -u "+%Y-%m-%d %H:%M:%S %Z")
 MY_LASTRUN_TIME="0"
 BE_LOUD="no"
 BE_QUIET="no"
