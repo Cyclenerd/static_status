@@ -25,8 +25,8 @@ jobs:
           echo 'curl;https://www.heise.de/ping|<a href="https://www.heise.de/">heise online</a>' > status_hostname_list.txt
           echo 'curl;ftp://ftp.debian.org/debian/README' >> status_hostname_list.txt
           echo 'nc;8.8.8.8|DNS @ Google;53' >> status_hostname_list.txt
-          echo 'script;/bin/true|Always up (<code>/bin/true(</code>)' >> status_hostname_list.txt
-          echo 'script;/bin/false|Always down (<code>/bin/false(</code>)' >> status_hostname_list.txt
+          echo 'script;/bin/true|Always up (<code>/bin/true</code>)' >> status_hostname_list.txt
+          echo 'script;/bin/false|Always down (<code>/bin/false</code>)' >> status_hostname_list.txt
           echo "config"
           cat config
           echo "status_maintenance_text.txt"
