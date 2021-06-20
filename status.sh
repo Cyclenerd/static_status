@@ -778,11 +778,11 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		fi
 	elif [[ "$MY_COMMAND" = "script" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
-	if [[ -x "$MY_STATUS_CONFIG_DIR/$MY_HOSTNAME" ]]; then
-				cmd="$MY_STATUS_CONFIG_DIR/$MY_HOSTNAME"
-	else
-				cmd="$MY_HOSTNAME"
-	fi
+		if [[ -x "$MY_STATUS_CONFIG_DIR/$MY_HOSTNAME" ]]; then
+			cmd="$MY_STATUS_CONFIG_DIR/$MY_HOSTNAME"
+		else
+			cmd="$MY_HOSTNAME"
+		fi
 		if "$cmd" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			# Check status change
