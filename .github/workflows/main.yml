@@ -23,7 +23,7 @@ jobs:
           echo 'This is a demo page of <a href="https://github.com/Cyclenerd/static_status">static_status</a>.' > status_maintenance_text.txt
           echo 'There is also a <a href="status.json">JSON version</a> of this status page.' >> status_maintenance_text.txt
           echo 'This status page was generated with GitHub Action.' >> status_maintenance_text.txt
-          echo 'curl;https://www.heise.de/ping|<a href="https://www.heise.de/">heise online</a> (curl)' > status_hostname_list.txt
+          echo 'curl;https://www.heise.de/ping|www.heise.de (curl)' > status_hostname_list.txt
           echo 'curl;ftp://ftp.usa.openbsd.org/pub/OpenBSD/timestamp|ftp.usa.openbsd.org (curl)' >> status_hostname_list.txt
           echo 'nc;8.8.8.8|DNS @ Google (nc);53' >> status_hostname_list.txt
           echo 'script;/bin/true|Always up (/bin/true)' >> status_hostname_list.txt
