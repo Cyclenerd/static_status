@@ -119,9 +119,9 @@ function usage {
 	returnCode="$1"
 	echo -e "Usage: $ME [OPTION]:
 	OPTION is one of the following:
-	\\tsilent\\t no output from faulty connections to stout (default: $BE_QUIET)
-	\\tloud\\t output from successful and faulty connections to stout (default: $BE_LOUD)
-	\\thelp\\t displays help (this message)"
+	\\tsilent  no output from faulty connections to stout (default: $BE_QUIET)
+	\\tloud    output from successful and faulty connections to stout (default: $BE_LOUD)
+	\\thelp    displays help (this message)"
 	exit "$returnCode"
 }
 
