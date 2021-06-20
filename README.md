@@ -8,7 +8,7 @@ You can also easily check more complicated things with this script.
 For example if a text is present in a web page or if a host appears in the route path (traceroute).
 Checking the route path is useful, for instance, if you have a backup mobile internet connection in addition to your cable connection.
 
-![Screenshot](images/Status-Page-Past-Incidents.jpg)
+![Screenshot](images/Status-Page-Screenshot.jpg)
 
 ## Installation
 
