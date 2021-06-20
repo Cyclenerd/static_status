@@ -121,6 +121,7 @@ nc;192.168.211.1|DNS @ DSL Fritz Box;53
 nc;8.8.8.8|DNS @ Google;53
 curl;http://www.heise.de/ping|www.heise.de
 traceroute;192.168.211.1|DSL Internet;3
+script;/bin/true|always up
 ```
 
 ## Requirements

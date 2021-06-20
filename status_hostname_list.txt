@@ -71,6 +71,8 @@ traceroute;your.secret.router|My secret Hostname;2
 
 #
 # script;<PATH>
+# 
+# Note: Outage if returncode is not 0
 #
 script;./check.sh|My secret Name
 script;/bin/true|always up
