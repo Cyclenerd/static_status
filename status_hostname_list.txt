@@ -21,7 +21,7 @@
 # IP: IP adress for the 'ping', 'nc' or 'traceroute' command
 # URL: URL called by the command 'curl', 'http-status' and 'grep'. I.e. https://www.heise.de/ping or ftp://ftp.debian.org/debian/README
 # PATH: PATH of the script called by the command 'script', eg. check.sh
-# The pipe `|` can be used as a seperator to display a custom text instead of the HOSTNAME/IP/URL (see example below).
+# The pipe `|` can be used as a separator to display a custom text instead of the HOSTNAME/IP/URL (see example below).
 #
 # PORT: Optional port specification. Only for 'nc' command.
 # GREP TEXT: Text to look for when using the 'grep' command.
@@ -75,4 +75,4 @@ traceroute;your.secret.router|My secret Hostname;2
 # Note: Outage if returncode is not 0
 #
 script;./check.sh|My secret Name
-script;/bin/true|always up
+script;true|always up
