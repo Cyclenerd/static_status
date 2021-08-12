@@ -783,16 +783,18 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		else
 			cmd="$MY_HOSTNAME"
 		fi
-		if "$cmd" &> /dev/null; then
+        $cmd
+		exitCode=$?
+		if [ $exitCode -ne 0 ]; then
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
+			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
+		else
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
 				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
 			fi
 			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
-		else
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
-			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
 		fi
 	fi
 
