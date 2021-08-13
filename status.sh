@@ -783,7 +783,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		else
 			cmd="$MY_HOSTNAME"
 		fi
-		$cmd
+		$cmd &> /dev/null
 		MY_EXIT_CODE=$?
 		if [ $MY_EXIT_CODE -ne 0 ]; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
