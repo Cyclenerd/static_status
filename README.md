@@ -150,6 +150,8 @@ script;/path/to/your/script_a|see symbolic link example
 Please note that you do not pass any parameters. You can work with symbolic links. Example:
 
 ```
+$ ln -sf script.sh script_a
+$ ln -sf script.sh script_b
 $ ls -lah
 script_a -> script.sh
 script_b -> script.sh
