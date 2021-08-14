@@ -10,9 +10,11 @@ Checking the route path is useful, for instance, if you have a backup mobile int
 
 ![Screenshot](images/Status-Page-Screenshot.jpg)
 
+In addition to the status web page, there is also a JSON version and an SVG icon.
+
 ## Installation
 
-Download Bash script `status.sh`:
+1️⃣ Download Bash script `status.sh`:
 
 ```shell
 curl \
@@ -20,7 +22,9 @@ curl \
   -o "status.sh"
 ```
 
-Download configuration file `status_hostname_list.txt`:
+> 💡 Tip: Update works exactly the same way as the installation. Simply download the latest version of `status.sh`.
+
+2️⃣ Download configuration file `status_hostname_list.txt`:
 
 ```shell
 curl \
@@ -28,10 +32,10 @@ curl \
   -o "status_hostname_list.txt"
 ```
 
-Customize the `status_hostname_list.txt` configuration file and define what you want to monitor:
+3️⃣ Customize the `status_hostname_list.txt` configuration file and define what you want to monitor:
 
 ```shell
-vi "status_hostname_list.txt"
+vi status_hostname_list.txt
 ```
 
 ### Optional
@@ -49,13 +53,13 @@ curl \
 Customize configuration file:
 
 ```
-nano "config"
+vi config
 ```
 
 ### Run
 
 ```shell
-bash "status.sh"
+bash status.sh
 ```
 
 ## Usage
@@ -71,7 +75,7 @@ Usage: status.sh [OPTION]:
 Example:
 
 ```shell
-bash "status.sh" loud
+bash status.sh loud
 ```
 
 Execute a cron job every minute:
@@ -108,20 +112,25 @@ You can display a custom text instead of the HOSTNAME/IP/URL (see example below)
 status_hostname_list.txt:
 
 ```csv
-ping;192.168.100.1|<a href="http://192.168.100.1/">Orbi</a>
-ping;192.168.100.102|Wohnzimmer
-ping;192.168.221.1|pfSense
-ping;192.168.211.1|DSL Fritz Box
-ping;192.168.212.1|LTE Fritz Box
-ping;192.168.211.80|Synology Keller
 ping;8.8.8.8|Google DNS
-nc;192.168.100.1|DNS @ Orbi;53
-nc;192.168.221.1|DNS @ pfSense;53
-nc;192.168.211.1|DNS @ DSL Fritz Box;53
 nc;8.8.8.8|DNS @ Google;53
 curl;http://www.heise.de/ping|www.heise.de
 traceroute;192.168.211.1|DSL Internet;3
 script;/bin/true|always up
+```
+
+## SVG Icon
+
+If you want to signal directly if everything is fine or if something is wrong in the infrastructure, you can insert the SVG icon into your websites.
+
+Please remember to include the image with a cache breaker URL (eg. an appended timestamp:
+```
+<a href="status.html">Status <img src="status.svg?{{ timestamp }}"></a>
+```
+
+Static websites needs to fallback to render the icon with javascript, eg with:
+```
+document.write('<img src="status.svg?' + Date.now() + '">')
 ```
 
 ## Requirements
@@ -135,6 +144,9 @@ On a debian-based system (Ubuntu), just run:
 ```shell
 sudo apt install curl iputils-ping traceroute netcat-openbsd grep sed
 ```
+
+> 💡 Tip: You can disable the `traceroute` dependency. Add `MY_TRACEROUTE_HOST=''` to your config.
+
 
 ## TODO
 
