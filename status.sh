@@ -110,9 +110,12 @@ MY_COMMANDS=(
 	nc
 	curl
 	grep
-	traceroute
 	sed
 )
+# Add traceroute optional if MY_TRACEROUTE_HOST is set
+if [[ -n "$MY_TRACEROUTE_HOST" ]]; then
+	MY_COMMANDS+=("traceroute")
+fi
 
 # if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
 if [[ -z "$MY_STATUS_CONFIG" ]]; then
