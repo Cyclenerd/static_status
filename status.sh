@@ -104,18 +104,6 @@ MY_TIMESTAMP=$(date -u "+%s")
 MY_LASTRUN_TIME="0"
 BE_LOUD="no"
 BE_QUIET="no"
-# Commands we need
-MY_COMMANDS=(
-	ping
-	nc
-	curl
-	grep
-	sed
-)
-# Add traceroute optional if MY_TRACEROUTE_HOST is set
-if [[ -n "$MY_TRACEROUTE_HOST" ]]; then
-	MY_COMMANDS+=("traceroute")
-fi
 
 # if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
 if [[ -z "$MY_STATUS_CONFIG" ]]; then
@@ -142,9 +130,14 @@ function usage {
 
 # debug_variables() print all script global variables to ease debugging
 debug_variables() {
-	echo "USERNAME: $USERNAME"
+	echo "USER: $USER"
 	echo "SHELL: $SHELL"
 	echo "BASH_VERSION: $BASH_VERSION"
+	echo
+	echo "MY_COMMANDS:"
+	for MY_COMMAND in "${MY_COMMANDS[@]}"; do
+	echo "    $MY_COMMAND"
+	done
 	echo
 	echo "MY_TIMEOUT: $MY_TIMEOUT"
 	echo "MY_STATUS_CONFIG: $MY_STATUS_CONFIG"
@@ -157,6 +150,7 @@ debug_variables() {
 	echo
 	echo "MY_STATUS_HTML: $MY_STATUS_HTML"
 	echo "MY_STATUS_ICON: $MY_STATUS_ICON"
+	echo "MY_STATUS_JSON: $MY_STATUS_JSON"
 	echo "MY_MAINTENANCE_TEXT_FILE: $MY_MAINTENANCE_TEXT_FILE"
 	echo "MY_HOMEPAGE_URL: $MY_HOMEPAGE_URL"
 	echo "MY_HOMEPAGE_TITLE: $MY_HOMEPAGE_TITLE"
@@ -165,6 +159,12 @@ debug_variables() {
 	echo "MY_STATUS_FOOTER: $MY_STATUS_FOOTER"
 	echo
 	echo "MY_STATUS_LOCKFILE: $MY_STATUS_LOCKFILE"
+	echo
+	echo "MY_TIMEOUT: $MY_TIMEOUT"
+	echo "MY_PING_TIMEOUT: $MY_PING_TIMEOUT"
+	echo "MY_PING_COUNT: $MY_PING_COUNT"
+	echo "MY_TRACEROUTE_HOST: $MY_TRACEROUTE_HOST"
+	echo "MY_TRACEROUTE_NQUERIES: $MY_TRACEROUTE_NQUERIES"
 	echo
 	echo "MY_TIMESTAMP: $MY_TIMESTAMP"
 	echo "MY_DATE_TIME: $MY_DATE_TIME"
@@ -631,6 +631,8 @@ function item_history() {
 # MAIN
 ################################################################################
 
+check_bash
+
 case "$1" in
 "")
 	# called without arguments
@@ -640,6 +642,9 @@ case "$1" in
 	;;
 "loud")
 	BE_LOUD="yes"
+	;;
+"debug")
+	ONLY_OUTPUT_DEBUG_VARIABLES="yes"
 	;;
 "h" | "help" | "-h" | "-help" | "-?" | *)
 	usage 0
@@ -655,7 +660,23 @@ if [ -e "$MY_STATUS_CONFIG" ]; then
 	source "$MY_STATUS_CONFIG"
 fi
 
-check_bash
+# Commands we need
+MY_COMMANDS=(
+	ping
+	nc
+	curl
+	grep
+	sed
+)
+# Add traceroute optional if MY_TRACEROUTE_HOST is set
+if [[ -n "$MY_TRACEROUTE_HOST" ]]; then
+	MY_COMMANDS+=("traceroute")
+fi
+
+if [[ -n "$ONLY_OUTPUT_DEBUG_VARIABLES" ]]; then
+	debug_variables
+	exit
+fi
 
 for MY_COMMAND in "${MY_COMMANDS[@]}"; do
 	check_command "$MY_COMMAND"
