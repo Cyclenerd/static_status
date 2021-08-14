@@ -690,7 +690,13 @@ check_file "$MY_HOSTNAME_STATUS_LASTRUN"
 check_file "$MY_HOSTNAME_STATUS_HISTORY"
 check_file "$MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT"
 check_file "$MY_STATUS_HTML"
-check_file "$MY_STATUS_ICON"
+# Optional checks
+if [ -n "$MY_STATUS_ICON" ]; then
+	check_file "$MY_STATUS_ICON" # status.svg
+fi
+if [ -n "$MY_STATUS_JSON" ]; then
+	check_file "$MY_STATUS_JSON" # status.json
+fi
 
 if cp "$MY_HOSTNAME_STATUS_DOWN" "$MY_HOSTNAME_STATUS_LASTRUN"; then
 	get_lastrun_time
