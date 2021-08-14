@@ -24,6 +24,13 @@ MY_HOSTNAME_FILE="$MY_STATUS_CONFIG_DIR/status_hostname_list.txt"
 # Where should the HTML status page be stored?
 MY_STATUS_HTML="$HOME/status_index.html"
 
+# Where should the SVG status icon be stored?
+MY_STATUS_ICON="$HOME/status.svg"
+# Icon colors
+MY_STATUS_ICON_COLOR_SUCCESS="lime"
+MY_STATUS_ICON_COLOR_WARNING="orange"
+MY_STATUS_ICON_COLOR_DANGER="red"
+
 # Where should the JSON status page be stored? Set to "" to disable JSON output
 MY_STATUS_JSON="$HOME/status.json"
 
