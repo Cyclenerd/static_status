@@ -37,6 +37,9 @@ MY_HOSTNAME_FILE="$MY_STATUS_CONFIG_DIR/status_hostname_list.txt"
 # Where should the HTML status page be stored?
 MY_STATUS_HTML="$HOME/status_index.html"
 
+# Where should the SVG status icon be stored?
+MY_STATUS_ICON="$HOME/status.svg"
+
 # Where should the JSON status page be stored? Set to "" to disable JSON output
 MY_STATUS_JSON="$HOME/status.json"
 
@@ -145,6 +148,7 @@ debug_variables() {
 	echo "MY_HOSTNAME_STATUS_HISTORY: $MY_HOSTNAME_STATUS_HISTORY"
 	echo
 	echo "MY_STATUS_HTML: $MY_STATUS_HTML"
+	echo "MY_STATUS_ICON: $MY_STATUS_ICON"
 	echo "MY_MAINTENANCE_TEXT_FILE: $MY_MAINTENANCE_TEXT_FILE"
 	echo "MY_HOMEPAGE_URL: $MY_HOMEPAGE_URL"
 	echo "MY_HOMEPAGE_TITLE: $MY_HOMEPAGE_TITLE"
@@ -657,6 +661,7 @@ check_file "$MY_HOSTNAME_STATUS_LASTRUN"
 check_file "$MY_HOSTNAME_STATUS_HISTORY"
 check_file "$MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT"
 check_file "$MY_STATUS_HTML"
+check_file "$MY_STATUS_ICON"
 
 if cp "$MY_HOSTNAME_STATUS_DOWN" "$MY_HOSTNAME_STATUS_LASTRUN"; then
 	get_lastrun_time
@@ -887,6 +892,17 @@ EOF
 		echo "$MY_AVAILABLE_ITEM" >> "$MY_STATUS_HTML"
 	done
 	echo "</ul></div>" >> "$MY_STATUS_HTML"
+fi
+
+# Outage and operational to SVG
+if [ -n "$MY_STATUS_ICON" ]; then
+	MY_ICON_COLOR="#22d828"
+	if [[ "$MY_OUTAGE_COUNT" -gt "$MY_AVAILABLE_COUNT" ]]; then
+		MY_ICON_COLOR="red"
+	elif [[ "$MY_OUTAGE_COUNT" -gt "0" ]]; then
+		MY_ICON_COLOR="orange"
+	fi
+	printf '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><circle cx="256" cy="256" r="248" fill="%s"/></svg>' "$MY_ICON_COLOR" > "$MY_STATUS_ICON"
 fi
 
 # Outage and operational to JSON
