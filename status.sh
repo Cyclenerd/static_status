@@ -39,6 +39,11 @@ MY_STATUS_HTML="$HOME/status_index.html"
 
 # Where should the SVG status icon be stored?
 MY_STATUS_ICON="$HOME/status.svg"
+# Icon colors
+MY_STATUS_ICON_COLOR_SUCCESS="lime"
+MY_STATUS_ICON_COLOR_WARNING="orange"
+MY_STATUS_ICON_COLOR_DANGER="red"
+
 
 # Where should the JSON status page be stored? Set to "" to disable JSON output
 MY_STATUS_JSON="$HOME/status.json"
@@ -896,13 +901,13 @@ fi
 
 # Outage and operational to SVG
 if [ -n "$MY_STATUS_ICON" ]; then
-	MY_ICON_COLOR="#22d828"
+	MY_STATUS_ICON_COLOR="$MY_STATUS_ICON_COLOR_SUCCESS"
 	if [[ "$MY_OUTAGE_COUNT" -gt "$MY_AVAILABLE_COUNT" ]]; then
-		MY_ICON_COLOR="red"
+		MY_STATUS_ICON_COLOR="$MY_STATUS_ICON_COLOR_DANGER"
 	elif [[ "$MY_OUTAGE_COUNT" -gt "0" ]]; then
-		MY_ICON_COLOR="orange"
+		MY_STATUS_ICON_COLOR="$MY_STATUS_ICON_COLOR_WARNING"
 	fi
-	printf '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><circle cx="256" cy="256" r="248" fill="%s"/></svg>' "$MY_ICON_COLOR" > "$MY_STATUS_ICON"
+	printf '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><circle cx="256" cy="256" r="248" fill="%s"/></svg>' "$MY_STATUS_ICON_COLOR" > "$MY_STATUS_ICON"
 fi
 
 # Outage and operational to JSON
