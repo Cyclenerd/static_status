@@ -99,7 +99,7 @@ MY_DATE_TIME=$(date -u "+%Y-%m-%d %H:%M:%S %Z")
 ################################################################################
 
 ME=$(basename "$0")
-BASE_PATH=$(dirname "$0") # TODO: Resolv symlinks https://stackoverflow.com/questions/59895
+BASE_PATH=$(dirname "$0")
 MY_TIMESTAMP=$(date -u "+%s")
 MY_LASTRUN_TIME="0"
 BE_LOUD="no"
