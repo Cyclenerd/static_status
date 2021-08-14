@@ -133,6 +133,46 @@ Static websites needs to fallback to render the icon with javascript, eg with:
 document.write('<img src="status.svg?' + Date.now() + '">')
 ```
 
+## Custom Script Checks
+
+You can extend the checks of `status.sh` with your own custom shell scripts.
+
+If the shell script outputs a return code 0 it is evaluated as available. With other return codes it is a failure (outage, down).
+
+Add your script to the `status_hostname_list.txt` configuration file. Example:
+
+```
+script;script.sh
+script;/path/to/your/script.sh|Custom Text
+script;/path/to/your/script_a|see symbolic link example
+```
+
+Please note that you do not pass any parameters. You can work with symbolic links. Example:
+
+```
+$ ls -lah
+script_a -> script.sh
+script_b -> script.sh
+```
+
+Example `script.sh`:
+```
+#!/bin/bash
+
+MY_NAME=$(basename "$0")
+
+case "$MY_NAME" in
+"script_a")
+  echo "A"
+  exit 0
+  ;;
+"script_b")
+  echo "B"
+  exit 0
+  ;;
+esac
+```
+
 ## Requirements
 
 Only `bash`, `ping`, `traceroute`, `curl`, `nc`, `grep` and `sed`.
