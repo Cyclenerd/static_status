@@ -18,8 +18,8 @@ With the script `alert.sh` you can be alerted by email, SMS or Pushover in case 
 By default, it is best to place everything in your home directory in a new `status` directory:
 
 ```
-mkdir status
-cd status
+mkdir ~/status
+cd ~/status
 ```
 
 1️⃣ Download Bash script `status.sh`:
