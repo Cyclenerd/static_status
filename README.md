@@ -11,6 +11,7 @@ Checking the route path is useful, for instance, if you have a backup mobile int
 ![Screenshot](images/Status-Page-Screenshot.jpg)
 
 In addition to the status web page, there is also a JSON version and an SVG icon.
+With the script `alert.sh` you can be alerted by email, SMS or Pushover in case of a downtime.
 
 ## Installation
 
@@ -89,6 +90,21 @@ Add:
 ```
 */1 * * * * bash "/path/to/status.sh" silent >> /dev/null
 ```
+
+## Requirements
+
+Only `bash`, `ping`, `traceroute`, `curl`, `nc`, `grep` and `sed`.
+In many *NIX distributions (Ubuntu, macOS) the commands are already included.
+If not, the missing packages can be installed quickly.
+
+On a debian-based system (Ubuntu), just run:
+
+```shell
+sudo apt install curl iputils-ping traceroute netcat-openbsd grep sed
+```
+
+> 💡 Tip: You can disable the `traceroute` dependency. Add `MY_TRACEROUTE_HOST=''` to your config.
+
 
 ## Demo
 
@@ -174,21 +190,6 @@ case "$MY_NAME" in
   ;;
 esac
 ```
-
-## Requirements
-
-Only `bash`, `ping`, `traceroute`, `curl`, `nc`, `grep` and `sed`.
-In many *NIX distributions (Ubuntu, macOS) the commands are already included.
-If not, the missing packages can be installed quickly.
-
-On a debian-based system (Ubuntu), just run:
-
-```shell
-sudo apt install curl iputils-ping traceroute netcat-openbsd grep sed
-```
-
-> 💡 Tip: You can disable the `traceroute` dependency. Add `MY_TRACEROUTE_HOST=''` to your config.
-
 
 ## TODO
 
