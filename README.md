@@ -15,7 +15,7 @@ With the script `alert.sh` you can be alerted by email, SMS or Pushover in case 
 
 ## Installation
 
-By default, it is best to place everything in your home folder in a new `status` folder:
+By default, it is best to place everything in your home directory in a new `status` directory:
 
 ```
 mkdir status
