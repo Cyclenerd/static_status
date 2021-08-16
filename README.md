@@ -15,6 +15,13 @@ With the script `alert.sh` you can be alerted by email, SMS or Pushover in case 
 
 ## Installation
 
+By default, it is best to place everything in your home folder in a new `status` folder:
+
+```
+mkdir status
+cd status
+```
+
 1️⃣ Download Bash script `status.sh`:
 
 ```shell
