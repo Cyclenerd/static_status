@@ -202,11 +202,11 @@ if [ -f "$MY_HOSTNAME_STATUS_ALERT" ]; then
 	# Send notification and safe alert
 	if [[ "$MY_MAIL_TO" == "SMS" ]]; then
 		perl "$HOME/sipgate-sms.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by SMS)" && \
-		echo -n "$MY_DOWN_SEC" > "$MY_HOSTNAME_STATUS_ALERT"
+		rm -f "$MY_HOSTNAME_STATUS_ALERT"
 	# Pushover : https://github.com/Cyclenerd/toolbox/blob/master/pushover.pl
 	elif [[ "$MY_MAIL_TO" == "Pushover" ]]; then
 		perl "$HOME/pushover.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by Pushover)" && \
-		echo -n "$MY_DOWN_SEC" > "$MY_HOSTNAME_STATUS_ALERT"
+		rm -f "$MY_HOSTNAME_STATUS_ALERT"
 	# Email : mutt
 	else
 		echo "$MY_CHECK is up again" | mutt -s "UP: $MY_CHECK" "$MY_MAIL_TO" && echo "(notified)" && \
