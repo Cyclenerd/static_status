@@ -21,9 +21,9 @@
 # For notification by email the program 'mutt' is used.
 #
 # For notification by SMS the Perl script 'sipgate-sms.pl' is used.
-# Please see: https://github.com/Cyclenerd/toolbox/blob/master/sipgate-sms.pl
+# Please see: https://github.com/Cyclenerd/notify-me/blob/master/sipgate-sms.pl
 # For notification by Pushover the Perl script 'pushover.pl' is used.
-# Please see: https://github.com/Cyclenerd/toolbox/blob/master/pushover.pl
+# Please see: https://github.com/Cyclenerd/notify-me/blob/master/pushover.pl
 # If you use the Perl scripts always create the necessary configuration file. Only '--msg' is passed as parameter.
 #
 # Test notification without real check if downtime is present:
@@ -130,14 +130,14 @@ command -v mutt >/dev/null 2>&1 || { echo >&2 "!!! mutt it's not installed. Plea
 
 # Check scripts for alternative notification methods
 if [[ "$MY_MAIL_TO" == "SMS" && ! -r "$HOME/sipgate-sms.pl" ]]; then
-	# SMS : https://github.com/Cyclenerd/toolbox/blob/master/sipgate-sms.pl
+	# SMS : https://github.com/Cyclenerd/notify-me/blob/master/sipgate-sms.pl
 	echo "!!! Can not read Perl script '$HOME/sipgate-sms.pl'."
 	echo "    Please download 'sipgate-sms.pl' and save it in your home folder:"
 	echo '    curl -f "https://raw.githubusercontent.com/Cyclenerd/toolbox/master/sipgate-sms.pl" -o ~/sipgate-sms.pl'
 	exit 9
 fi
 if [[ "$MY_MAIL_TO" == "Pushover" && ! -r "$HOME/pushover.pl" ]]; then
-	# Pushover : https://github.com/Cyclenerd/toolbox/blob/master/pushover.pl
+	# Pushover : https://github.com/Cyclenerd/notify-me/blob/master/pushover.pl
 	echo "!!! Can not read Perl script '$HOME/pushover.pl'."
 	echo "    Please download 'pushover.pl' and save it in your home folder:"
 	echo '    curl -f "https://raw.githubusercontent.com/Cyclenerd/toolbox/master/pushover.pl" -o ~/pushover.pl'
@@ -203,7 +203,7 @@ if [ -f "$MY_HOSTNAME_STATUS_ALERT" ]; then
 	if [[ "$MY_MAIL_TO" == "SMS" ]]; then
 		perl "$HOME/sipgate-sms.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by SMS)" && \
 		rm -f "$MY_HOSTNAME_STATUS_ALERT"
-	# Pushover : https://github.com/Cyclenerd/toolbox/blob/master/pushover.pl
+	# Pushover : https://github.com/Cyclenerd/notify-me/blob/master/pushover.pl
 	elif [[ "$MY_MAIL_TO" == "Pushover" ]]; then
 		perl "$HOME/pushover.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by Pushover)" && \
 		rm -f "$MY_HOSTNAME_STATUS_ALERT"
