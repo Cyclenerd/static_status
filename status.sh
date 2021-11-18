@@ -728,16 +728,16 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		(( MY_HOSTNAME_COUNT++ ))
 		# Detect ping Version
 		ping &> /dev/null
-		# FreeBSD: 64 = ping -t TIMEOUT
-		# macOS:   64 = ping -t TIMEOUT
-		# GNU:      2 = ping -w TIMEOUT (-t TTL)
-		# OpenBSD:  1 = ping -w TIMEOUT (-t TTL)
+		# FreeBSD: 64 = ping -n -t TIMEOUT
+		# macOS:   64 = ping -n -t TIMEOUT
+		# GNU:      2 = ping -n -w TIMEOUT (-t TTL)
+		# OpenBSD:  1 = ping -n -w TIMEOUT (-t TTL)
 		if [ $? -gt 2 ]; then
 			# BSD ping
-			MY_PING_COMMAND='ping -t'
+			MY_PING_COMMAND='ping -n -t'
 		else
 			# GNU or OpenBSD ping
-			MY_PING_COMMAND='ping -w'
+			MY_PING_COMMAND='ping -n -w'
 		fi
 		if $MY_PING_COMMAND "$MY_PING_TIMEOUT" -c "$MY_PING_COUNT" "$MY_HOSTNAME" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
