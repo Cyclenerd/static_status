@@ -25,9 +25,7 @@ cd ~/status
 1️⃣ Download Bash script `status.sh`:
 
 ```shell
-curl \
-  -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status.sh" \
-  -o "status.sh"
+curl -O "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status.sh"
 ```
 
 > 💡 Tip: Update works exactly the same way as the installation. Simply download the latest version of `status.sh`.
@@ -35,9 +33,7 @@ curl \
 2️⃣ Download configuration file `status_hostname_list.txt`:
 
 ```shell
-curl \
-  -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status_hostname_list.txt" \
-  -o "status_hostname_list.txt"
+curl -O "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status_hostname_list.txt"
 ```
 
 3️⃣ Customize the `status_hostname_list.txt` configuration file and define what you want to monitor:
@@ -60,7 +56,7 @@ curl \
 
 Customize configuration file:
 
-```
+```shell
 vi config
 ```
 
