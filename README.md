@@ -1,5 +1,8 @@
 # status.sh
 
+[![ShellCheck](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml)
+[![Ubuntu 20.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2004.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2004.yml)
+
 Simple Bash script to generate a static status page. Displays status of websites, services (HTTP, SAP, MySQL...) and ping. Everything easy to customize. 🤓
 
 You can also easily check more complicated things with this script.
