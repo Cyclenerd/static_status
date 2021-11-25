@@ -1,4 +1,4 @@
-name: "Update status page"
+name: "Update status demo page"
 on:
   schedule:
     - cron: "* 6 15 * *"
