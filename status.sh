@@ -71,8 +71,8 @@ MY_HOSTNAME_STATUS_LASTRUN="$MY_STATUS_CONFIG_DIR/status_hostname_last.txt"
 MY_HOSTNAME_STATUS_HISTORY="$MY_STATUS_CONFIG_DIR/status_hostname_history.txt"
 MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT="/tmp/status_hostname_history_sort.txt"
 
-# Minimum downtime in minutes to display in past incidents
-MY_MIN_DOWN_TIME="1"
+# Minimum downtime in seconds to display in past incidents
+MY_MIN_DOWN_TIME="60"
 
 # CSS Stylesheet for the status page
 MY_STATUS_STYLESHEET="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
@@ -970,7 +970,7 @@ MY_HISTORY_ITEMS=()
 MY_SHOW_INCIDENTS="false"
 while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME_STRING MY_HISTORY_PORT MY_HISTORY_DOWN_TIME MY_HISTORY_DATE_TIME || [[ -n "$MY_HISTORY_COMMAND" ]]; do
 
-	if [[ "$((MY_HISTORY_DOWN_TIME/60))" -gt "$MY_MIN_DOWN_TIME" ]]; then
+	if [[ "$MY_HISTORY_DOWN_TIME" -ge "$MY_MIN_DOWN_TIME" ]]; then
 		
 		MY_SHOW_INCIDENTS="true"
 
