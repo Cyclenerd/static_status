@@ -71,6 +71,9 @@ MY_HOSTNAME_STATUS_LASTRUN="$MY_STATUS_CONFIG_DIR/status_hostname_last.txt"
 MY_HOSTNAME_STATUS_HISTORY="$MY_STATUS_CONFIG_DIR/status_hostname_history.txt"
 MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT="/tmp/status_hostname_history_sort.txt"
 
+# Minimum downtime in minutes to display in past incidents
+MY_MIN_DOWN_TIME="1"
+
 # CSS Stylesheet for the status page
 MY_STATUS_STYLESHEET="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
 
@@ -590,6 +593,7 @@ function item_down() {
 }
 
 function item_history() {
+
 	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
 	echo '<span>'
 
@@ -963,29 +967,35 @@ fi
 # Get history (last 10 incidents)
 MY_HISTORY_COUNT=0
 MY_HISTORY_ITEMS=()
+MY_SHOW_INCIDENTS="false"
 while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME_STRING MY_HISTORY_PORT MY_HISTORY_DOWN_TIME MY_HISTORY_DATE_TIME || [[ -n "$MY_HISTORY_COMMAND" ]]; do
 
-	if [[ "$MY_HISTORY_COMMAND" = "ping" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "nc" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "curl" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "http-status" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "grep" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "script" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "traceroute"  ]]; then
-		MY_HISTORY_HOSTNAME="${MY_HISTORY_HOSTNAME_STRING%%|*}"
-		MY_DISPLAY_TEXT="${MY_HISTORY_HOSTNAME_STRING/${MY_HISTORY_HOSTNAME}/}"
-		MY_DISPLAY_TEXT="${MY_DISPLAY_TEXT:1}"
-		(( MY_HISTORY_COUNT++ ))
-		MY_HISTORY_ITEMS+=("$(item_history)")
-	fi
-	if [[ "$MY_HISTORY_COUNT" -gt "9" ]]; then
-		break
+	if [[ "$((MY_HISTORY_DOWN_TIME/60))" -gt "$MY_MIN_DOWN_TIME" ]]; then
+		
+		MY_SHOW_INCIDENTS="true"
+
+		if [[ "$MY_HISTORY_COMMAND" = "ping" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "nc" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "curl" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "http-status" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "grep" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "script" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "traceroute"  ]]; then
+			MY_HISTORY_HOSTNAME="${MY_HISTORY_HOSTNAME_STRING%%|*}"
+			MY_DISPLAY_TEXT="${MY_HISTORY_HOSTNAME_STRING/${MY_HISTORY_HOSTNAME}/}"
+			MY_DISPLAY_TEXT="${MY_DISPLAY_TEXT:1}"
+			(( MY_HISTORY_COUNT++ ))
+			MY_HISTORY_ITEMS+=("$(item_history)")
+		fi
+		if [[ "$MY_HISTORY_COUNT" -gt "9" ]]; then
+			break
+		fi
 	fi
 
 done <"$MY_HOSTNAME_STATUS_HISTORY"
 
 # History to HTML
-if [[ "$MY_HISTORY_COUNT" -gt "0" ]]; then
+if [[ "$MY_SHOW_INCIDENTS" == "true" ]]; then
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="pb-2 mt-5 mb-3 border-bottom">
 	<h2>Past Incidents</h2>
