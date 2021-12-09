@@ -33,6 +33,7 @@
 #
 ping;www.heise.de
 ping;www.otto.de|custom text instead of hostname
+ping6;www.google.com|www.google.com (IPv6)
 #
 # nc;<HOSTNAME or IP>;<PORT>
 #
