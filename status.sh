@@ -1105,7 +1105,7 @@ while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME_STRING MY_HISTORY_P
 		MY_SHOW_INCIDENTS="true"
 
 		if [[ "$MY_HISTORY_COMMAND" = "ping" ]] ||
-       [[ "$MY_HISTORY_COMMAND" = "ping6" ]] ||
+    		   [[ "$MY_HISTORY_COMMAND" = "ping6" ]] ||
 		   [[ "$MY_HISTORY_COMMAND" = "nc" ]] ||
 		   [[ "$MY_HISTORY_COMMAND" = "curl" ]] ||
 		   [[ "$MY_HISTORY_COMMAND" = "http-status" ]] ||
