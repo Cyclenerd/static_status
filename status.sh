@@ -67,9 +67,13 @@ MY_TRACEROUTE_NQUERIES="1"
 # Location for the status files. Please do not edit created files.
 MY_HOSTNAME_STATUS_OK="$MY_STATUS_CONFIG_DIR/status_hostname_ok.txt"
 MY_HOSTNAME_STATUS_DOWN="$MY_STATUS_CONFIG_DIR/status_hostname_down.txt"
+MY_HOSTNAME_STATUS_DEGRADE="$MY_STATUS_CONFIG_DIR/status_hostname_degrade.txt"
 MY_HOSTNAME_STATUS_LASTRUN="$MY_STATUS_CONFIG_DIR/status_hostname_last.txt"
 MY_HOSTNAME_STATUS_HISTORY="$MY_STATUS_CONFIG_DIR/status_hostname_history.txt"
 MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT="/tmp/status_hostname_history_sort.txt"
+
+# Minimum downtime in seconds to display in past incidents
+MY_MIN_DOWN_TIME="60"
 
 # CSS Stylesheet for the status page
 MY_STATUS_STYLESHEET="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
@@ -145,6 +149,7 @@ debug_variables() {
 	echo "MY_HOSTNAME_FILE: $MY_HOSTNAME_FILE"
 	echo "MY_HOSTNAME_STATUS_OK: $MY_HOSTNAME_STATUS_OK"
 	echo "MY_HOSTNAME_STATUS_DOWN: $MY_HOSTNAME_STATUS_DOWN"
+	echo "MY_HOSTNAME_STATUS_DEGRADE: $MY_HOSTNAME_STATUS_DEGRADE"
 	echo "MY_HOSTNAME_STATUS_LASTRUN: $MY_HOSTNAME_STATUS_LASTRUN"
 	echo "MY_HOSTNAME_STATUS_HISTORY: $MY_HOSTNAME_STATUS_HISTORY"
 	echo
@@ -235,6 +240,7 @@ function echo_do_not_edit() {
 	echo "# To reset everything, delete the files:"
 	echo "#     $MY_HOSTNAME_STATUS_OK"
 	echo "#     $MY_HOSTNAME_STATUS_DOWN"
+	echo "#     $MY_HOSTNAME_STATUS_DEGRADE"
 	echo "#     $MY_HOSTNAME_STATUS_LASTRUN"
 	echo "#     $MY_HOSTNAME_STATUS_HISTORY"
 	echo "#"
@@ -341,6 +347,23 @@ function check_downtime() {
 		fi
 	done <"$MY_HOSTNAME_STATUS_LASTRUN" # MY_HOSTNAME_STATUS_DOWN is copied to MY_HOSTNAME_STATUS_LASTRUN
 }
+# check_degradetime() check whether a degradation has already been documented
+#   and determine the duration
+function check_degradetime() {
+	MY_COMMAND="$1"
+	MY_HOSTNAME="$2"
+	MY_DEGRADE_TIME="0"
+
+	while IFS=';' read -r MY_DEGRADE_COMMAND MY_DEGRADE_HOSTNAME MY_DEGRADE_TIME || [[ -n "$MY_DEGRADE_COMMAND" ]]; do
+		if [[ "$MY_DEGRADE_COMMAND" = "script" ]]; then
+			if 	[[ "$MY_DEGRADE_HOSTNAME" = "$MY_HOSTNAME" ]]; then
+					MY_DEGRADE_TIME="$((MY_DEGRADE_TIME+MY_LASTRUN_TIME))"
+					break  # Skip entire rest of loop.
+			fi
+		fi
+	done <"$MY_HOSTNAME_STATUS_LASTRUN" # MY_HOSTNAME_STATUS_DEGRADE is copied to MY_HOSTNAME_STATUS_LASTRUN
+}
+
 
 # save_downtime()
 function save_downtime() {
@@ -362,6 +385,17 @@ function save_downtime() {
 		fi
 	fi
 }
+# save_degratetime()
+function save_degradetime() {
+	MY_COMMAND="$1"
+	MY_HOSTNAME="$2"
+	MY_DEGRADE_TIME="$3"
+	printf "\\n%s;%s;%s" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_DEGRADE_TIME" >> "$MY_HOSTNAME_STATUS_DEGRADE"
+	if [[ "$BE_LOUD" = "yes" ]] || [[ "$BE_QUIET" = "no" ]]; then
+		printf "\\n%-5s %-4s %s" "DEGRADE:" "$MY_COMMAND" "$MY_HOSTNAME"
+	fi
+}
+
 
 # save_availability()
 function save_availability() {
@@ -482,7 +516,7 @@ function page_alert_success() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-success my-3" role="alert">
 	<i class="fas fa-thumbs-up"></i>
-	All Systems Operational
+	All systems are operational
 </div>
 
 EOF
@@ -492,7 +526,7 @@ function page_alert_warning() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-warning my-3" role="alert">
 	<i class="fas fa-exclamation-triangle"></i>
-	Outage
+	Some systems are experiencing problems	
 </div>
 
 EOF
@@ -555,7 +589,7 @@ function item_ok() {
 	fi
 
 	cat <<EOF
-	<span class="badge badge-pill badge-dark"><i class="fas fa-check"></i></span>
+	<span class="badge badge-pill badge-success"><i class="fas fa-check"></i></span>
 </li>
 EOF
 }
@@ -585,7 +619,7 @@ function item_down() {
 		fi
 	fi
 
-	printf '<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i> '
+	printf '<span class="badge badge-pill badge-danger"><i class="fas fa-times"></i> '
 	if [[ "$MY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_DOWN_TIME/60))"
 	else
@@ -593,8 +627,27 @@ function item_down() {
 	fi
 	echo "</li>"
 }
+function item_degrade() {
+	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
+
+	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
+		echo "${MY_DISPLAY_TEXT}"
+	else
+		echo "Script $MY_DEGRADE_HOSTNAME"
+	fi
+
+	printf '<span class="badge badge-pill badge-warning badge"><i class="fas fa-times"></i> '
+	if [[ "$MY_DEGRADE_TIME" -gt "1" ]]; then
+		printf "%.0f min</span>" "$((MY_DEGRADE_TIME/60))"
+	else
+		echo "</span>"
+	fi
+	echo "</li>"
+}
+
 
 function item_history() {
+
 	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
 	echo '<span>'
 
@@ -694,6 +747,7 @@ check_lock
 set_lock
 check_config "$MY_HOSTNAME_FILE"
 check_file "$MY_HOSTNAME_STATUS_DOWN"
+check_file "$MY_HOSTNAME_STATUS_DEGRADE"
 check_file "$MY_HOSTNAME_STATUS_LASTRUN"
 check_file "$MY_HOSTNAME_STATUS_HISTORY"
 check_file "$MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT"
@@ -708,14 +762,21 @@ fi
 
 if cp "$MY_HOSTNAME_STATUS_DOWN" "$MY_HOSTNAME_STATUS_LASTRUN"; then
 	get_lastrun_time
+elif cp "$MY_HOSTNAME_STATUS_DEGRADE" "$MY_HOSTNAME_STATUS_LASTRUN"; then
+	get_lastrun_time
 else
-	exit_with_failure "Can not copy file '$MY_HOSTNAME_STATUS_DOWN' to '$MY_HOSTNAME_STATUS_LASTRUN'"
+	exit_with_failure "Can not copy file '$MY_HOSTNAME_STATUS_DOWN' or '$MY_HOSTNAME_STATUS_DEGRADE' to '$MY_HOSTNAME_STATUS_LASTRUN'"
 fi
 
 {
 	echo "# $MY_DATE_TIME"
 	echo_do_not_edit
 } > "$MY_HOSTNAME_STATUS_OK"
+{
+	echo "# $MY_DATE_TIME"
+	echo_do_not_edit
+	echo "timestamp;$MY_TIMESTAMP"
+} > "$MY_HOSTNAME_STATUS_DEGRADE"
 {
 	echo "# $MY_DATE_TIME"
 	echo_do_not_edit
@@ -730,7 +791,7 @@ fi
 MY_HOSTNAME_COUNT=0
 while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAND" ]]; do
 
-	MY_HOSTNAME="${MY_HOSTNAME_STRING%%|*}" # remove alternative display text
+	MY_HOSTNAME="${MY_HOSTNAME_STRING%%|*}" # remove alternative display textS
 
 	if [[ "$MY_COMMAND" = "ping" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
@@ -857,17 +918,25 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		else
 			cmd="$MY_HOSTNAME"
 		fi
-		if "$cmd" &> /dev/null; then
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
-			# Check status change
-			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
-				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
-			fi
-			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
-		else
-			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
-			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
-		fi
+		"$cmd" > /dev/null
+		case "$?" in
+			"0")
+				check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
+				# Check status change
+				if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
+					save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME" "$MY_DATE_TIME"
+				fi
+				save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
+				;;
+			"80")
+				check_degradetime "$MY_COMMAND" "$MY_HOSTNAME_STRING"
+				save_degradetime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_DOWN_TIME"
+				;;
+			*)
+				check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
+				save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT" "$MY_DOWN_TIME"
+				;;
+		esac
 	fi
 
 done <"$MY_HOSTNAME_FILE"
@@ -904,6 +973,21 @@ while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME_STRING MY_DOWN_PORT MY_DO
 
 done <"$MY_HOSTNAME_STATUS_DOWN"
 
+# Get degrades 
+MY_DEGRADE_COUNT=0
+MY_DEGRADE_ITEMS=()
+while IFS=';' read -r MY_DEGRADE_COMMAND MY_DEGRADE_HOSTNAME_STRING MY_DEGRADE_TIME || [[ -n "$MY_DEGRADE_COMMAND" ]]; do
+	   if [[ "$MY_DEGRADE_COMMAND" = "script" ]]; then
+		MY_DEGRADE_HOSTNAME="${MY_DEGRADE_HOSTNAME_STRING%%|*}"
+		MY_DISPLAY_TEXT="${MY_DEGRADE_HOSTNAME_STRING/${MY_DEGRADE_HOSTNAME}/}"
+		MY_DISPLAY_TEXT="${MY_DISPLAY_TEXT:1}"
+		(( MY_DEGRADE_COUNT++ ))
+		MY_DEGRADE_ITEMS+=("$(item_degrade)")
+		MY_ITEMS_JSON+=("${MY_DISPLAY_TEXT:-${MY_DEGRADE_HOSTNAME}};$MY_DEGRADE_COMMAND;Degraded")
+	fi
+
+done <"$MY_HOSTNAME_STATUS_DEGRADE"
+
 # Get available systems
 MY_AVAILABLE_COUNT=0
 MY_AVAILABLE_ITEMS=()
@@ -927,13 +1011,14 @@ while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME_STRING MY_OK_PORT || [[ -n "$
 
 done <"$MY_HOSTNAME_STATUS_OK"
 
+MY_OUTAGEDEGRADE_COUNT=$((MY_OUTAGE_COUNT + MY_DEGRADE_COUNT))
 # Maintenance text
 if [ -s "$MY_MAINTENANCE_TEXT_FILE" ]; then
 	page_alert_maintenance
 # or status alert
-elif [[ "$MY_OUTAGE_COUNT" -gt "$MY_AVAILABLE_COUNT" ]]; then
+elif [[ "$MY_OUTAGEDEGRADE_COUNT" -gt "$MY_AVAILABLE_COUNT" ]]; then
 	page_alert_danger
-elif [[ "$MY_OUTAGE_COUNT" -gt "0" ]]; then
+elif [[ "$MY_OUTAGEDEGRADE_COUNT" -gt "0" ]]; then
 	page_alert_warning
 else
 	page_alert_success
@@ -951,6 +1036,19 @@ EOF
 	done
 	echo "</ul></div>" >> "$MY_STATUS_HTML"
 fi
+# Degraded to HTML
+if [[ "$MY_DEGRADE_COUNT" -gt "0" ]]; then
+	cat >> "$MY_STATUS_HTML" << EOF
+<div class="my-3">
+	<ul class="list-group">
+		<li class="list-group-item list-group-item-warning">Degraded</li>
+EOF
+	for MY_DEGRADE_ITEM in "${MY_DEGRADE_ITEMS[@]}"; do
+		echo "$MY_DEGRADE_ITEM" >> "$MY_STATUS_HTML"
+	done
+	echo "</ul></div>" >> "$MY_STATUS_HTML"
+fi
+
 
 # Operational to HTML
 if [[ "$MY_AVAILABLE_COUNT" -gt "0" ]]; then
@@ -1007,7 +1105,7 @@ while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME_STRING MY_HISTORY_P
 		MY_SHOW_INCIDENTS="true"
 
 		if [[ "$MY_HISTORY_COMMAND" = "ping" ]] ||
-		   [[ "$MY_HISTORY_COMMAND" = "ping6" ]] ||
+       [[ "$MY_HISTORY_COMMAND" = "ping6" ]] ||
 		   [[ "$MY_HISTORY_COMMAND" = "nc" ]] ||
 		   [[ "$MY_HISTORY_COMMAND" = "curl" ]] ||
 		   [[ "$MY_HISTORY_COMMAND" = "http-status" ]] ||

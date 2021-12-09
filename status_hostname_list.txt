@@ -73,6 +73,7 @@ traceroute;your.secret.router|My secret Hostname;2
 #
 # script;<PATH>
 # 
-# Note: Outage if returncode is not 0
+# Note: Outage if returncode is not 0, Degraded if returncode is 80
 #
 script;/path/to/your/script.sh|My secret Name
+script;scripts/check-websites.sh|Multiple Websites
