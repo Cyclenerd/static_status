@@ -325,6 +325,7 @@ function check_downtime() {
 
 	while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME MY_DOWN_PORT MY_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
 		if [[ "$MY_DOWN_COMMAND" = "ping" ]] ||
+		   [[ "$MY_DOWN_COMMAND" = "ping6" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "nc" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "grep" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "traceroute" ]] ||
@@ -536,6 +537,8 @@ function item_ok() {
 	else
 		if [[ "$MY_OK_COMMAND" = "ping" ]]; then
 			echo "ping $MY_OK_HOSTNAME"
+		elif [[ "$MY_OK_COMMAND" = "ping6" ]]; then
+			echo "ping6 $MY_OK_HOSTNAME"
 		elif [[ "$MY_OK_COMMAND" = "nc" ]]; then
 			echo "$(port_to_name "$MY_OK_PORT") on $MY_OK_HOSTNAME"
 		elif [[ "$MY_OK_COMMAND" = "curl" ]]; then
@@ -565,6 +568,8 @@ function item_down() {
 	else
 		if [[ "$MY_DOWN_COMMAND" = "ping" ]]; then
 			echo "ping $MY_DOWN_HOSTNAME"
+		elif [[ "$MY_DOWN_COMMAND" = "ping6" ]]; then
+			echo "ping6 $MY_DOWN_HOSTNAME"
 		elif [[ "$MY_DOWN_COMMAND" = "nc" ]]; then
 			echo "$(port_to_name "$MY_DOWN_PORT") on $MY_DOWN_HOSTNAME"
 		elif [[ "$MY_DOWN_COMMAND" = "curl" ]]; then
@@ -598,6 +603,8 @@ function item_history() {
 	else
 		if [[ "$MY_HISTORY_COMMAND" = "ping" ]]; then
 			echo "ping $MY_HISTORY_HOSTNAME"
+		elif [[ "$MY_HISTORY_COMMAND" = "ping6" ]]; then
+			echo "ping6 $MY_HISTORY_HOSTNAME"
 		elif [[ "$MY_HISTORY_COMMAND" = "nc" ]]; then
 			echo "$(port_to_name "$MY_HISTORY_PORT") on $MY_HISTORY_HOSTNAME"
 		elif [[ "$MY_HISTORY_COMMAND" = "curl" ]]; then
@@ -663,6 +670,7 @@ fi
 # Commands we need
 MY_COMMANDS=(
 	ping
+	ping6
 	nc
 	curl
 	grep
@@ -740,6 +748,32 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 			MY_PING_COMMAND='ping -n -w'
 		fi
 		if $MY_PING_COMMAND "$MY_PING_TIMEOUT" -c "$MY_PING_COUNT" "$MY_HOSTNAME" &> /dev/null; then
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
+			# Check status change
+			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
+				save_history  "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME" "$MY_DATE_TIME"
+			fi
+			save_availability "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
+		else
+			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
+			save_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "" "$MY_DOWN_TIME"
+		fi
+	elif [[ "$MY_COMMAND" = "ping6" ]]; then
+		(( MY_HOSTNAME_COUNT++ ))
+		# Detect ping6 Version
+		ping6 &> /dev/null
+		# FreeBSD: 64 = ping6 -n -t TIMEOUT
+		# macOS:   64 = ping6 -n -t TIMEOUT
+		# GNU:      2 = ping6 -n -w TIMEOUT (-t TTL)
+		# OpenBSD:  1 = ping6 -n -w TIMEOUT (-t TTL)
+		if [ $? -gt 2 ]; then
+			# BSD ping6
+			MY_PING6_COMMAND='ping6 -n -t'
+		else
+			# GNU or OpenBSD ping6
+			MY_PING6_COMMAND='ping6 -n -w'
+		fi
+		if $MY_PING6_COMMAND "$MY_PING_TIMEOUT" -c "$MY_PING_COUNT" "$MY_HOSTNAME" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
@@ -853,6 +887,7 @@ MY_OUTAGE_ITEMS=()
 while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME_STRING MY_DOWN_PORT MY_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
 
 	if [[ "$MY_DOWN_COMMAND" = "ping" ]] ||
+	   [[ "$MY_DOWN_COMMAND" = "ping6" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "nc" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "curl" ]] ||
 	   [[ "$MY_DOWN_COMMAND" = "http-status" ]] ||
@@ -875,6 +910,7 @@ MY_AVAILABLE_ITEMS=()
 while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME_STRING MY_OK_PORT || [[ -n "$MY_OK_COMMAND" ]]; do
 
 	if [[ "$MY_OK_COMMAND" = "ping" ]] ||
+	   [[ "$MY_OK_COMMAND" = "ping6" ]] ||
 	   [[ "$MY_OK_COMMAND" = "nc" ]] ||
 	   [[ "$MY_OK_COMMAND" = "curl" ]] ||
 	   [[ "$MY_OK_COMMAND" = "http-status" ]] ||
@@ -963,29 +999,36 @@ fi
 # Get history (last 10 incidents)
 MY_HISTORY_COUNT=0
 MY_HISTORY_ITEMS=()
+MY_SHOW_INCIDENTS="false"
 while IFS=';' read -r MY_HISTORY_COMMAND MY_HISTORY_HOSTNAME_STRING MY_HISTORY_PORT MY_HISTORY_DOWN_TIME MY_HISTORY_DATE_TIME || [[ -n "$MY_HISTORY_COMMAND" ]]; do
 
-	if [[ "$MY_HISTORY_COMMAND" = "ping" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "nc" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "curl" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "http-status" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "grep" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "script" ]] ||
-	   [[ "$MY_HISTORY_COMMAND" = "traceroute"  ]]; then
-		MY_HISTORY_HOSTNAME="${MY_HISTORY_HOSTNAME_STRING%%|*}"
-		MY_DISPLAY_TEXT="${MY_HISTORY_HOSTNAME_STRING/${MY_HISTORY_HOSTNAME}/}"
-		MY_DISPLAY_TEXT="${MY_DISPLAY_TEXT:1}"
-		(( MY_HISTORY_COUNT++ ))
-		MY_HISTORY_ITEMS+=("$(item_history)")
-	fi
-	if [[ "$MY_HISTORY_COUNT" -gt "9" ]]; then
-		break
+	if [[ "$MY_HISTORY_DOWN_TIME" -ge "$MY_MIN_DOWN_TIME" ]]; then
+		
+		MY_SHOW_INCIDENTS="true"
+
+		if [[ "$MY_HISTORY_COMMAND" = "ping" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "ping6" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "nc" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "curl" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "http-status" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "grep" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "script" ]] ||
+		   [[ "$MY_HISTORY_COMMAND" = "traceroute"  ]]; then
+			MY_HISTORY_HOSTNAME="${MY_HISTORY_HOSTNAME_STRING%%|*}"
+			MY_DISPLAY_TEXT="${MY_HISTORY_HOSTNAME_STRING/${MY_HISTORY_HOSTNAME}/}"
+			MY_DISPLAY_TEXT="${MY_DISPLAY_TEXT:1}"
+			(( MY_HISTORY_COUNT++ ))
+			MY_HISTORY_ITEMS+=("$(item_history)")
+		fi
+		if [[ "$MY_HISTORY_COUNT" -gt "9" ]]; then
+			break
+		fi
 	fi
 
 done <"$MY_HOSTNAME_STATUS_HISTORY"
 
 # History to HTML
-if [[ "$MY_HISTORY_COUNT" -gt "0" ]]; then
+if [[ "$MY_SHOW_INCIDENTS" == "true" ]]; then
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="pb-2 mt-5 mb-3 border-bottom">
 	<h2>Past Incidents</h2>
