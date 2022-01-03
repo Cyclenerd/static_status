@@ -11,11 +11,11 @@
 # an notification is triggered by email (mutt). The script is easily customizable to your own needs.
 # Alternative notification methods like SMS and Pushover are possible.
 #
-# Usage: alert.sh [-c <CHECK>] [-m <MAIL_TO>] [-s <SEC>] [-h]:
+# Usage: alert.sh [-c <CHECK>] [-m <MAIL_TO>] [-d <SEC>] [-h]:
 #         [-c <CHECK>]   Check downtime file (default: www.nkn-it.de)
 #         [-m <MAIL_TO>] Send notification to email address (default: root@localhost)
 #                        Alternatively, 'SMS' and 'Pushover' can be passed for alternative notification methods
-#         [-s <SEC>]     Notify if downtime is greater than N seconds (default: 300)
+#         [-d <SEC>]     Notify if downtime is greater than N seconds (default: 300)
 #         [-h]           Displays help (this message)
 #
 # For notification by email the program 'mutt' is used.
@@ -33,7 +33,7 @@
 # ./alert.sh -c "test notification" -m "Pushover"
 #
 # Add this script to your crontab. Example:
-# */1 8-22 * * * bash alarm.sh -c "127.0.0.1" -m "nils@localhost" -s 60
+# */1 8-22 * * * bash alarm.sh -c "127.0.0.1" -m "nils@localhost" -d 60
 # */1    * * * * bash alarm.sh -c "nc;www.heise.de" -m "other@email.local"
 #
 # Tip! Combine checks. Alert only if the Google DNS server is reachable (Internet available):
@@ -83,11 +83,11 @@ fi
 
 function usage {
 	MY_RETURN_CODE="$1"
-	echo -e "Usage: $MY_SCRIPT_NAME [-c <CHECK>] [-m <MAIL_TO>] [-s <SEC>] [-h]:
+	echo -e "Usage: $MY_SCRIPT_NAME [-c <CHECK>] [-m <MAIL_TO>] [-d <SEC>] [-h]:
 	[-c <CHECK>]   Check downtime file (default: $MY_CHECK)
 	[-m <MAIL_TO>] Send notification to email address (default: $MY_MAIL_TO)
 	               Alternatively, 'SMS' and 'Pushover' can be passed for alternative notification methods
-	[-s <SEC>]     Notify if downtime is greater than N seconds (default: $MY_ALERT_SEC)
+	[-d <SEC>]     Notify if downtime is greater than N seconds (default: $MY_ALERT_SEC)
 	[-h]           Displays help (this message)"
 	exit "$MY_RETURN_CODE"
 }
@@ -103,7 +103,7 @@ if [ -e "$MY_STATUS_CONFIG" ]; then
 	source "$MY_STATUS_CONFIG"
 fi
 
-while getopts ":test:c:m:s:h" opt; do
+while getopts ":test:c:m:d:h" opt; do
 	case $opt in
 	c)
 		MY_CHECK="$OPTARG"
@@ -111,7 +111,7 @@ while getopts ":test:c:m:s:h" opt; do
 	m)
 		MY_MAIL_TO="$OPTARG"
 		;;
-	s)
+	d)
 		MY_ALERT_SEC="$OPTARG"
 		;;
 	h)
