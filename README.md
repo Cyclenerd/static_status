@@ -164,35 +164,8 @@ Add your script to the `status_hostname_list.txt` configuration file. Example:
 ```
 script;script.sh
 script;/path/to/your/script.sh|Custom Text
-script;/path/to/your/script_a|see symbolic link example
-```
+script;/path/to/your/script.sh parameterA parameterB|Custom Text
 
-Please note that you do not pass any parameters. You can work with symbolic links. Example:
-
-```
-$ ln -sf script.sh script_a
-$ ln -sf script.sh script_b
-$ ls -lah
-script_a -> script.sh
-script_b -> script.sh
-```
-
-Example `script.sh`:
-```
-#!/bin/bash
-
-MY_NAME=$(basename "$0")
-
-case "$MY_NAME" in
-"script_a")
-  echo "A"
-  exit 0
-  ;;
-"script_b")
-  echo "B"
-  exit 0
-  ;;
-esac
 ```
 
 ## TODO
