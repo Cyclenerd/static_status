@@ -7,6 +7,7 @@
 #
 # The MY_HOSTNAME_STATUS_DOWN downtime file is searched with grep.
 # If the check term MY_CHECK is found, the seconds of the downtime are detected.
+# The term MY_CHECK has to be the full or the end of the check string.
 # If the seconds of the downtime are greater than or equal to the defined seconds MY_ALERT_SEC,
 # an notification is triggered by email (mutt). The script is easily customizable to your own needs.
 # Alternative notification methods like SMS and Pushover are possible.
@@ -153,7 +154,7 @@ fi
 # Check term with grep
 MY_CHECK_MD5=$(echo "$MY_CHECK" | md5sum | grep -E -o '[a-z,0-9]*')
 MY_HOSTNAME_STATUS_ALERT="/tmp/status_hostname_alert_$MY_CHECK_MD5"
-MY_DOWN_SEC=$(grep "$MY_CHECK" < "$MY_HOSTNAME_STATUS_DOWN" | grep -E -o '[0-9]*$')
+MY_DOWN_SEC=$(grep "$MY_CHECK;" < "$MY_HOSTNAME_STATUS_DOWN" | grep -E -o '[0-9]+$')
 
 # Test to check setup
 if [[ "$MY_CHECK" == "test notification" ]]; then
