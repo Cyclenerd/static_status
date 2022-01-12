@@ -98,6 +98,9 @@ MY_DATE_TIME=$(date -u "+%Y-%m-%d %H:%M:%S %Z")
 # Avoid semicolons.
 # More details can be found in `man date`.
 
+# Allow tweak curl parameters (for instance '-k' to ignore self generated certificates)
+MY_CURL_PARAMETERS=""
+
 ################################################################################
 #### END Configuration Section
 ################################################################################
@@ -860,7 +863,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		fi
 	elif [[ "$MY_COMMAND" = "curl" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
-		if curl -If --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" &> /dev/null; then
+		if curl "$MY_CURL_PARAMETERS" -If --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
@@ -873,7 +876,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		fi
 	elif [[ "$MY_COMMAND" = "http-status" ]]; then
 		(( MY_HOSTNAME_COUNT++))
-		if [[ $(curl -s -o /dev/null -I --max-time "$MY_TIMEOUT" -w "%{http_code}" "$MY_HOSTNAME" 2>/dev/null) == "$MY_PORT" ]]; then
+		if [[ $(curl "$MY_CURL_PARAMETERS" -s -o /dev/null -I --max-time "$MY_TIMEOUT" -w "%{http_code}" "$MY_HOSTNAME" 2>/dev/null) == "$MY_PORT" ]]; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then

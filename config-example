@@ -80,3 +80,6 @@ MY_STATUS_LOCKFILE="/tmp/STATUS_SH_IS_RUNNING.lock"
 # More details can be found in `man date`.
 # Avoid semicolons.
 MY_DATE_TIME=$(date -u "+%Y-%m-%d %H:%M:%S %Z")
+
+# Allow tweak curl parameters (for instance '-k' to ignore self generated certificates)
+MY_CURL_PARAMETERS=""
