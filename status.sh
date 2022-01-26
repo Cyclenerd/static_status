@@ -111,7 +111,6 @@ MY_TIMESTAMP=$(date -u "+%s")
 MY_LASTRUN_TIME="0"
 BE_LOUD="no"
 BE_QUIET="no"
-OS_ID=$(awk -F= '$1=="ID" { print $2 ;}' /etc/os-release) # Source: https://unix.stackexchange.com/a/432819 - Author: Archemar
 
 # if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
 if [[ -z "$MY_STATUS_CONFIG" ]]; then
@@ -804,7 +803,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		# macOS:   64 = ping -n -t TIMEOUT
 		# GNU:      2 = ping -n -w TIMEOUT (-t TTL)
 		# OpenBSD:  1 = ping -n -w TIMEOUT (-t TTL)
-		if [ $? -gt 2 ] || [ "$OS_ID" = "freebsd" ]; then
+		if [ $? -gt 2 ] || [[ "$OSTYPE" == "freebsd"* ]]; then
 			# BSD ping
 			MY_PING_COMMAND='ping -n -t'
 		else
@@ -829,7 +828,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		# macOS:   64 = ping6 -n -t TIMEOUT
 		# GNU:      2 = ping6 -n -w TIMEOUT (-t TTL)
 		# OpenBSD:  1 = ping6 -n -w TIMEOUT (-t TTL)
-		if [ $? -gt 2 ] || [ "$OS_ID" = "freebsd" ]; then
+		if [ $? -gt 2 ] || [[ "$OSTYPE" == "freebsd"* ]]; then
 			# BSD ping6
 			MY_PING6_COMMAND='ping6 -n -t'
 		else
