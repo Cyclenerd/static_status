@@ -98,8 +98,18 @@ MY_DATE_TIME=$(date -u "+%Y-%m-%d %H:%M:%S %Z")
 # Avoid semicolons.
 # More details can be found in `man date`.
 
-# Allow tweak curl parameters (for instance '-k' to ignore self generated certificates)
-MY_CURL_PARAMETERS=""
+# Tip: You can tweak curl parameters via .curlrc config file.
+# The default curl config file is checked for in the following places in this order:
+#   1. "$CURL_HOME/.curlrc"
+#   2. "$HOME/.curlrc"
+#
+#   ~~~ Example .curlrc file ~~~
+#   # this is a comment
+#   # change the useragent string
+#   -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0"
+#   # ok if certification validation fails
+#   --insecure
+#   ~~~ End of example file ~~~
 
 ################################################################################
 #### END Configuration Section
@@ -861,7 +871,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		fi
 	elif [[ "$MY_COMMAND" = "curl" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
-		if curl "$MY_CURL_PARAMETERS" -If --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" &> /dev/null; then
+		if curl -If --max-time "$MY_TIMEOUT" "$MY_HOSTNAME" &> /dev/null; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" ""
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then
@@ -874,7 +884,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		fi
 	elif [[ "$MY_COMMAND" = "http-status" ]]; then
 		(( MY_HOSTNAME_COUNT++))
-		if [[ $(curl "$MY_CURL_PARAMETERS" -s -o /dev/null -I --max-time "$MY_TIMEOUT" -w "%{http_code}" "$MY_HOSTNAME" 2>/dev/null) == "$MY_PORT" ]]; then
+		if [[ $(curl -s -o /dev/null -I --max-time "$MY_TIMEOUT" -w "%{http_code}" "$MY_HOSTNAME" 2>/dev/null) == "$MY_PORT" ]]; then
 			check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
 			# Check status change
 			if [[ "$MY_DOWN_TIME" -gt "0" ]]; then

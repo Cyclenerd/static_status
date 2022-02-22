@@ -13,7 +13,7 @@ jobs:
     name: Test Ubuntu 20.04 LTS
     runs-on: ubuntu-20.04
     steps:
-      - name: Install dependencies 🔧
+      - name: 🔧 Install dependencies
         run: |
           sudo apt-get install  \
             curl                \
@@ -24,22 +24,32 @@ jobs:
             sed
 
       # Test commands
-      - name: Test ping 🐧
+      - name: 🐧 Test ping
         run: ping -w 5 -c 2 '127.0.0.1'
-      - name: Test nc 🐧
+      - name: 🐧 Test nc
         run: nc -z -w 5 'www.nkn-it.de' '443'
-      - name: Test curl 🐧
+      - name: 🐧 Test curl
         run: curl -Is --max-time 5 'https://www.nkn-it.de/ci.txt'
-      - name: Test dig 🐧
+      - name: 🐧 Test curl (http-status)
+        run: curl -s -o /dev/null -I --max-time "5" -w "%{http_code}" "https://www.nkn-it.de/ci.txt"
+      - name: 🐧 Test dig
         run: dig ns 'nkn-it.de'
 
       # git clone
-      - name: Checkout 🛎️
+      - name: 🛎️ Checkout
         uses: actions/checkout@v2
 
-      - name: Get assert.sh 🎁
+      - name: 🎁 Get assert.sh
         run: curl -f "https://raw.githubusercontent.com/lehmannro/assert.sh/v1.1/assert.sh" -o assert.sh
 
       # Run tests
-      - name: Test 🛠️
+      - name: 🛠️ Test
         run: bash test.sh
+
+      # View files
+      - name: 📃 status_hostname_list.txt
+        run: cat $HOME/status/status_hostname_list.txt
+      - name: 📃 status_hostname_ok.txt
+        run: cat $HOME/status/status_hostname_ok.txt
+      - name: 📃 status_hostname_down.txt
+        run: cat $HOME/status/status_hostname_down.txt
