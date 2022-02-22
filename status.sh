@@ -99,17 +99,17 @@ MY_DATE_TIME=$(date -u "+%Y-%m-%d %H:%M:%S %Z")
 # More details can be found in `man date`.
 
 # Tip: You can tweak curl parameters via .curlrc config file.
-# The default curl config file is checked for in the following places in this order:
-#   1. "$CURL_HOME/.curlrc"
-#   2. "$HOME/.curlrc"
-#
-#   ~~~ Example .curlrc file ~~~
-#   # this is a comment
-#   # change the useragent string
-#   -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0"
-#   # ok if certification validation fails
-#   --insecure
-#   ~~~ End of example file ~~~
+#      The default curl config file is checked for in the following places in this order:
+#        1. "$CURL_HOME/.curlrc"
+#        2. "$HOME/.curlrc"
+#      
+#      ~~~ Example .curlrc file ~~~
+#      # this is a comment
+#      # change the useragent string
+#      -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0"
+#      # ok if certification validation fails
+#      --insecure
+#      ~~~ End of example file ~~~
 
 ################################################################################
 #### END Configuration Section
