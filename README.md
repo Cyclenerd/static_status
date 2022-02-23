@@ -1,8 +1,5 @@
 # status.sh
 
-[![ShellCheck](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml)
-[![Ubuntu 20.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2004.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2004.yml)
-
 Simple Bash script to generate a static status page. Displays status of websites, services (HTTP, SAP, MySQL...) and ping. Everything easy to customize. 🤓
 
 You can also easily check more complicated things with this script.
@@ -14,41 +11,46 @@ Checking the route path is useful, for instance, if you have a backup mobile int
 In addition to the status web page, there is also a JSON version and an SVG icon.
 With the script `alert.sh` you can be alerted by email, SMS or Pushover in case of a downtime.
 
+[![ShellCheck](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml)
+[![Ubuntu 20.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2004.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2004.yml)
+[![GitHub](https://img.shields.io/github/license/cyclenerd/static_status)](https://github.com/Cyclenerd/static_status/blob/master/LICENSE)
+
 ## Installation
 
 By default, it is best to place everything in your home directory in a new `status` directory:
-
 ```
 mkdir ~/status
 cd ~/status
 ```
 
-1️⃣ Download Bash script `status.sh`:
+### 1️⃣ Download Script
 
+Download Bash script `status.sh`:
 ```shell
 curl -O "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status.sh"
 ```
 
 > 💡 Tip: Update works exactly the same way as the installation. Simply download the latest version of `status.sh`.
 
-2️⃣ Download configuration file `status_hostname_list.txt`:
+### 2️⃣ Download Configuration
 
+Download configuration file `status_hostname_list.txt`:
 ```shell
 curl -O "https://raw.githubusercontent.com/Cyclenerd/static_status/master/status_hostname_list.txt"
 ```
 
-3️⃣ Customize the `status_hostname_list.txt` configuration file and define what you want to monitor:
+### 3️⃣ Customize
 
+Customize the `status_hostname_list.txt` configuration file and define what you want to monitor:
 ```shell
 vi status_hostname_list.txt
 ```
 
 ### Optional
 
-Edit the script `status.sh` or better add more configuration to the configuration file `config`:
+Edit the script `status.sh` or better add more configuration to the configuration file `config`.
 
 Download example configuration file:
-
 ```shell
 curl \
   -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/config-example" \
@@ -56,7 +58,6 @@ curl \
 ```
 
 Customize configuration file:
-
 ```shell
 vi config
 ```
