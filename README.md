@@ -179,4 +179,4 @@ Help is welcome 👍
 ## License
 
 GNU Public License version 3.
-Please feel free to fork and modify this on GitHub (<https://github.com/Cyclenerd/static_shell>).
+Please feel free to fork and modify this on GitHub (<https://github.com/Cyclenerd/static_status>).
