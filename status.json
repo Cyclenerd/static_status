@@ -3,30 +3,30 @@
     "site": "Always down (/bin/false)",
     "command": "script",
     "status": "Fail",
-    "updated": "2022-11-15 06:50:45 UTC"
+    "updated": "2022-11-15 06:58:54 UTC"
   },
   {
     "site": "www.heise.de (curl)",
     "command": "curl",
     "status": "OK",
-    "updated": "2022-11-15 06:50:45 UTC"
+    "updated": "2022-11-15 06:58:54 UTC"
   },
   {
     "site": "ftp.usa.openbsd.org (curl)",
     "command": "curl",
     "status": "OK",
-    "updated": "2022-11-15 06:50:45 UTC"
+    "updated": "2022-11-15 06:58:54 UTC"
   },
   {
     "site": "DNS @ Google (nc)",
     "command": "nc",
     "status": "OK",
-    "updated": "2022-11-15 06:50:45 UTC"
+    "updated": "2022-11-15 06:58:54 UTC"
   },
   {
     "site": "Always up (/bin/true)",
     "command": "script",
     "status": "OK",
-    "updated": "2022-11-15 06:50:45 UTC"
+    "updated": "2022-11-15 06:58:54 UTC"
   }
 ]
