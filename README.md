@@ -143,6 +143,31 @@ traceroute;192.168.211.1|DSL Internet;3
 script;/bin/true|always up
 ```
 
+## JSON
+
+You can also create a JSON status page.
+Configure the varaible `MY_STATUS_JSON` with the location where the JSON file should be stored.
+
+Example JSON:
+```json
+[
+  {
+    "site": "https://www.nkn-it.de/gibtesnicht",
+    "command": "curl",
+    "status": "Fail",
+    "time_sec": "282",
+    "updated": "2023-04-19 14:01:23 UTC"
+  },
+  {
+    "site": "https://www.heise.de/ping",
+    "command": "curl",
+    "status": "OK",
+    "time_sec": "0",
+    "updated": "2023-04-19 14:01:23 UTC"
+  }
+]
+```
+
 ## SVG Icon
 
 If you want to signal directly if everything is fine or if something is wrong in the infrastructure, you can insert the SVG icon into your websites.
