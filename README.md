@@ -131,7 +131,7 @@ This [demo page](https://cyclenerd.github.io/static_status/) is generated with [
 
 You can display a custom text instead of the HOSTNAME/IP/URL (see example below).
 
-![Screenshot](images/Status-Page-Custom-Text.png?v2)
+![Screenshot](images/Status-Page-Custom-Text.png)
 
 status_hostname_list.txt:
 
