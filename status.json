@@ -4,34 +4,34 @@
     "command": "script",
     "status": "Fail",
     "time_sec": "",
-    "updated": "2023-06-15 06:12:46 UTC"
+    "updated": "2023-06-15 06:28:38 UTC"
   },
   {
     "site": "www.heise.de (curl)",
     "command": "curl",
     "status": "OK",
     "time_sec": "0",
-    "updated": "2023-06-15 06:12:46 UTC"
+    "updated": "2023-06-15 06:28:38 UTC"
   },
   {
     "site": "ftp.usa.openbsd.org (curl)",
     "command": "curl",
     "status": "OK",
     "time_sec": "0",
-    "updated": "2023-06-15 06:12:46 UTC"
+    "updated": "2023-06-15 06:28:38 UTC"
   },
   {
     "site": "DNS @ Google (nc)",
     "command": "nc",
     "status": "OK",
     "time_sec": "0",
-    "updated": "2023-06-15 06:12:46 UTC"
+    "updated": "2023-06-15 06:28:38 UTC"
   },
   {
     "site": "Always up (/bin/true)",
     "command": "script",
     "status": "OK",
     "time_sec": "0",
-    "updated": "2023-06-15 06:12:46 UTC"
+    "updated": "2023-06-15 06:28:38 UTC"
   }
 ]
