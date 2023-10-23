@@ -67,8 +67,9 @@ MY_TRACEROUTE_NQUERIES="1"
 # Location for the status files. Please do not edit created files.
 MY_HOSTNAME_STATUS_OK="$MY_STATUS_CONFIG_DIR/status_hostname_ok.txt"
 MY_HOSTNAME_STATUS_DOWN="$MY_STATUS_CONFIG_DIR/status_hostname_down.txt"
-MY_HOSTNAME_STATUS_DEGRADE="$MY_STATUS_CONFIG_DIR/status_hostname_degrade.txt"
 MY_HOSTNAME_STATUS_LASTRUN="$MY_STATUS_CONFIG_DIR/status_hostname_last.txt"
+MY_HOSTNAME_STATUS_DEGRADE="$MY_STATUS_CONFIG_DIR/status_hostname_degrade.txt"
+MY_HOSTNAME_STATUS_LASTRUN_DEGRADE="$MY_STATUS_CONFIG_DIR/status_hostname_last_degrade.txt"
 MY_HOSTNAME_STATUS_HISTORY="$MY_STATUS_CONFIG_DIR/status_hostname_history.txt"
 MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT="/tmp/status_hostname_history_sort.txt"
 
@@ -162,8 +163,9 @@ debug_variables() {
 	echo "MY_HOSTNAME_FILE: $MY_HOSTNAME_FILE"
 	echo "MY_HOSTNAME_STATUS_OK: $MY_HOSTNAME_STATUS_OK"
 	echo "MY_HOSTNAME_STATUS_DOWN: $MY_HOSTNAME_STATUS_DOWN"
-	echo "MY_HOSTNAME_STATUS_DEGRADE: $MY_HOSTNAME_STATUS_DEGRADE"
 	echo "MY_HOSTNAME_STATUS_LASTRUN: $MY_HOSTNAME_STATUS_LASTRUN"
+	echo "MY_HOSTNAME_STATUS_DEGRADE: $MY_HOSTNAME_STATUS_DEGRADE"
+	echo "MY_HOSTNAME_STATUS_LASTRUN_DEGRADE: $MY_HOSTNAME_STATUS_LASTRUN_DEGRADE"
 	echo "MY_HOSTNAME_STATUS_HISTORY: $MY_HOSTNAME_STATUS_HISTORY"
 	echo
 	echo "MY_STATUS_HTML: $MY_STATUS_HTML"
@@ -253,8 +255,9 @@ function echo_do_not_edit() {
 	echo "# To reset everything, delete the files:"
 	echo "#     $MY_HOSTNAME_STATUS_OK"
 	echo "#     $MY_HOSTNAME_STATUS_DOWN"
-	echo "#     $MY_HOSTNAME_STATUS_DEGRADE"
 	echo "#     $MY_HOSTNAME_STATUS_LASTRUN"
+	echo "#     $MY_HOSTNAME_STATUS_DEGRADE"
+	echo "#     $MY_HOSTNAME_STATUS_LASTRUN_DEGRADE"
 	echo "#     $MY_HOSTNAME_STATUS_HISTORY"
 	echo "#"
 }
@@ -374,7 +377,7 @@ function check_degradetime() {
 					break  # Skip entire rest of loop.
 			fi
 		fi
-	done <"$MY_HOSTNAME_STATUS_LASTRUN" # MY_HOSTNAME_STATUS_DEGRADE is copied to MY_HOSTNAME_STATUS_LASTRUN
+	done <"$MY_HOSTNAME_STATUS_LASTRUN_DEGRADE" # MY_HOSTNAME_STATUS_DEGRADE is copied to MY_HOSTNAME_STATUS_LASTRUN_DEGRADE
 }
 
 
@@ -398,14 +401,14 @@ function save_downtime() {
 		fi
 	fi
 }
-# save_degratetime()
+# save_degradetime()
 function save_degradetime() {
 	MY_COMMAND="$1"
 	MY_HOSTNAME="$2"
 	MY_DEGRADE_TIME="$3"
 	printf "\\n%s;%s;%s" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_DEGRADE_TIME" >> "$MY_HOSTNAME_STATUS_DEGRADE"
 	if [[ "$BE_LOUD" = "yes" ]] || [[ "$BE_QUIET" = "no" ]]; then
-		printf "\\n%-5s %-4s %s" "DEGRADE:" "$MY_COMMAND" "$MY_HOSTNAME"
+		printf "\\n%-5s %-4s %s" "DEGRADED:" "$MY_COMMAND" "$MY_HOSTNAME"
 	fi
 }
 
@@ -760,8 +763,9 @@ check_lock
 set_lock
 check_config "$MY_HOSTNAME_FILE"
 check_file "$MY_HOSTNAME_STATUS_DOWN"
-check_file "$MY_HOSTNAME_STATUS_DEGRADE"
 check_file "$MY_HOSTNAME_STATUS_LASTRUN"
+check_file "$MY_HOSTNAME_STATUS_DEGRADE"
+check_file "$MY_HOSTNAME_STATUS_LASTRUN_DEGRADE"
 check_file "$MY_HOSTNAME_STATUS_HISTORY"
 check_file "$MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT"
 check_file "$MY_STATUS_HTML"
@@ -773,9 +777,7 @@ if [ -n "$MY_STATUS_JSON" ]; then
 	check_file "$MY_STATUS_JSON" # status.json
 fi
 
-if cp "$MY_HOSTNAME_STATUS_DOWN" "$MY_HOSTNAME_STATUS_LASTRUN"; then
-	get_lastrun_time
-elif cp "$MY_HOSTNAME_STATUS_DEGRADE" "$MY_HOSTNAME_STATUS_LASTRUN"; then
+if cp "$MY_HOSTNAME_STATUS_DOWN" "$MY_HOSTNAME_STATUS_LASTRUN" && cp "$MY_HOSTNAME_STATUS_DEGRADE" "$MY_HOSTNAME_STATUS_LASTRUN_DEGRADE"; then
 	get_lastrun_time
 else
 	exit_with_failure "Can not copy file '$MY_HOSTNAME_STATUS_DOWN' or '$MY_HOSTNAME_STATUS_DEGRADE' to '$MY_HOSTNAME_STATUS_LASTRUN'"
@@ -941,7 +943,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 				;;
 			"80")
 				check_degradetime "$MY_COMMAND" "$MY_HOSTNAME_STRING"
-				save_degradetime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_DOWN_TIME"
+				save_degradetime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_DEGRADE_TIME"
 				;;
 			*)
 				check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
@@ -1022,14 +1024,14 @@ while IFS=';' read -r MY_OK_COMMAND MY_OK_HOSTNAME_STRING MY_OK_PORT || [[ -n "$
 
 done <"$MY_HOSTNAME_STATUS_OK"
 
-MY_OUTAGEDEGRADE_COUNT=$((MY_OUTAGE_COUNT + MY_DEGRADE_COUNT))
+MY_DEGRADE_COUNT=$((MY_OUTAGE_COUNT + MY_DEGRADE_COUNT))
 # Maintenance text
 if [ -s "$MY_MAINTENANCE_TEXT_FILE" ]; then
 	page_alert_maintenance
 # or status alert
-elif [[ "$MY_OUTAGEDEGRADE_COUNT" -gt "$MY_AVAILABLE_COUNT" ]]; then
+elif [[ "$MY_DEGRADE_COUNT" -gt "$MY_AVAILABLE_COUNT" ]]; then
 	page_alert_danger
-elif [[ "$MY_OUTAGEDEGRADE_COUNT" -gt "0" ]]; then
+elif [[ "$MY_DEGRADE_COUNT" -gt "0" ]]; then
 	page_alert_warning
 else
 	page_alert_success
