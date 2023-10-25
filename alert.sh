@@ -41,6 +41,9 @@
 #
 # Tested with Ubuntu 20.04
 
+MY_SCRIPT_NAME=$(basename "$0")
+BASE_PATH=$(dirname "$0")
+
 ################################################################################
 #### Configuration Section
 ################################################################################
@@ -48,35 +51,38 @@
 # Tip: You can also outsource configuration to an extra configuration file.
 #      Just create a file named 'config' at the location of this script.
 
+# if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
+if [[ -z "$MY_STATUS_CONFIG" ]]; then
+	MY_STATUS_CONFIG="$BASE_PATH/config"
+fi
+if [ -e "$MY_STATUS_CONFIG" ]; then
+	# ignore SC1090
+	# shellcheck source=/dev/null
+	source "$MY_STATUS_CONFIG"
+fi
+
 # Check if term MY_CHECK can be found in the MY_HOSTNAME_STATUS_DOWN downtime file for failures
-MY_CHECK="www.nkn-it.de"
+MY_CHECK=${MY_CHECK:-"www.nkn-it.de"}
 # Example:
 #   Check if 'nkn-it.de' can be found and save the 805 seconds in MY_DOWN_SEC variable
 #   status_hostname_down.txt:
 #       curl;https://www.nkn-it.de/file_not_found;;805
 
 # Send notification to email address (program 'mutt' is used)
-MY_MAIL_TO="root@localhost"
+MY_MAIL_TO=${MY_MAIL_TO:-"root@localhost"}
 
 # Send notification if downtime is greater than
-MY_ALERT_SEC="300" # 5 Minutes
+MY_ALERT_SEC=${MY_ALERT_SEC:-"300"} # 5 Minutes
 
 # Location for the downtime status file
-MY_STATUS_CONFIG_DIR="$HOME/status"
-MY_HOSTNAME_STATUS_DOWN="$MY_STATUS_CONFIG_DIR/status_hostname_down.txt"
-MY_HOSTNAME_STATUS_DEGRADE="$MY_STATUS_CONFIG_DIR/status_hostname_degrade.txt"
+MY_STATUS_CONFIG_DIR=${MY_STATUS_CONFIG_DIR:-"$HOME/status"}
+MY_HOSTNAME_STATUS_DOWN=${MY_HOSTNAME_STATUS_DOWN:-"$MY_STATUS_CONFIG_DIR/status_hostname_down.txt"}
+MY_HOSTNAME_STATUS_DEGRADE=${MY_HOSTNAME_STATUS_DEGRADE:-"$MY_STATUS_CONFIG_DIR/status_hostname_degrade.txt"}
 
 ################################################################################
 #### END Configuration Section
 ################################################################################
 
-MY_SCRIPT_NAME=$(basename "$0")
-BASE_PATH=$(dirname "$0")
-
-# if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
-if [[ -z "$MY_STATUS_CONFIG" ]]; then
-	MY_STATUS_CONFIG="$BASE_PATH/config"
-fi
 
 ################################################################################
 # Usage
@@ -96,13 +102,6 @@ function usage {
 ################################################################################
 # MAIN
 ################################################################################
-
-# Read config file
-if [ -e "$MY_STATUS_CONFIG" ]; then
-	# ignore SC1090
-	# shellcheck source=/dev/null
-	source "$MY_STATUS_CONFIG"
-fi
 
 while getopts ":test:c:m:d:h" opt; do
 	case $opt in
@@ -183,9 +182,9 @@ fi
 
 # MY_CHECK is down now and was degraded before
 if grep -q "$MY_CHECK" "$MY_HOSTNAME_STATUS_DOWN" && [ -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE" ]; then
-        MY_DEGRADED_BEFORE="true"
-        MY_ALERT_TYPE="DOWN"
-        MY_ALERT_NOW="true"
+	MY_DEGRADED_BEFORE="true"
+	MY_ALERT_TYPE="DOWN"
+	MY_ALERT_NOW="true"
 fi
 
 # When downtime or degradatime is greater than MY_ALERT_SEC, we have to notify
@@ -226,7 +225,7 @@ if [ "$MY_ALERT_NOW" == "true" ]; then
 			perl "$HOME/pushover.pl" --msg="$MY_CHECK is $MY_ALERT_TYPE_LC from $HOSTNAME" && echo "(notified by Pushover)"
 		else
 			echo "$MY_CHECK is $MY_ALERT_TYPE_LC" | mutt -s "$MY_ALERT_TYPE: $MY_CHECK" "$MY_MAIL_TO" && echo "(notified by email)"
-		fi		
+		fi
 	fi
 	exit # Exit program to prevent further checks
 fi
@@ -244,7 +243,7 @@ if [[ -f "$MY_HOSTNAME_STATUS_ALERT" || -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE" ]
 	if [ -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE" ]; then
 		rm -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE"
 	fi
-	
+
 	# Send notification and safe alert
 	if [[ "$MY_MAIL_TO" == "SMS" ]]; then
 		perl "$HOME/sipgate-sms.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by SMS)"
