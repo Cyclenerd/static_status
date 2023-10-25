@@ -41,6 +41,9 @@
 #
 # Tested with Ubuntu 20.04
 
+MY_SCRIPT_NAME=$(basename "$0")
+BASE_PATH=$(dirname "$0")
+
 ################################################################################
 #### Configuration Section
 ################################################################################
@@ -48,34 +51,38 @@
 # Tip: You can also outsource configuration to an extra configuration file.
 #      Just create a file named 'config' at the location of this script.
 
+# if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
+if [[ -z "$MY_STATUS_CONFIG" ]]; then
+	MY_STATUS_CONFIG="$BASE_PATH/config"
+fi
+if [ -e "$MY_STATUS_CONFIG" ]; then
+	# ignore SC1090
+	# shellcheck source=/dev/null
+	source "$MY_STATUS_CONFIG"
+fi
+
 # Check if term MY_CHECK can be found in the MY_HOSTNAME_STATUS_DOWN downtime file for failures
-MY_CHECK="www.nkn-it.de"
+MY_CHECK=${MY_CHECK:-"www.nkn-it.de"}
 # Example:
 #   Check if 'nkn-it.de' can be found and save the 805 seconds in MY_DOWN_SEC variable
 #   status_hostname_down.txt:
 #       curl;https://www.nkn-it.de/file_not_found;;805
 
 # Send notification to email address (program 'mutt' is used)
-MY_MAIL_TO="root@localhost"
+MY_MAIL_TO=${MY_MAIL_TO:-"root@localhost"}
 
 # Send notification if downtime is greater than
-MY_ALERT_SEC="300" # 5 Minutes
+MY_ALERT_SEC=${MY_ALERT_SEC:-"300"} # 5 Minutes
 
 # Location for the downtime status file
-MY_STATUS_CONFIG_DIR="$HOME/status"
-MY_HOSTNAME_STATUS_DOWN="$MY_STATUS_CONFIG_DIR/status_hostname_down.txt"
+MY_STATUS_CONFIG_DIR=${MY_STATUS_CONFIG_DIR:-"$HOME/status"}
+MY_HOSTNAME_STATUS_DOWN=${MY_HOSTNAME_STATUS_DOWN:-"$MY_STATUS_CONFIG_DIR/status_hostname_down.txt"}
+MY_HOSTNAME_STATUS_DEGRADE=${MY_HOSTNAME_STATUS_DEGRADE:-"$MY_STATUS_CONFIG_DIR/status_hostname_degrade.txt"}
 
 ################################################################################
 #### END Configuration Section
 ################################################################################
 
-MY_SCRIPT_NAME=$(basename "$0")
-BASE_PATH=$(dirname "$0")
-
-# if a config file has been specified with MY_STATUS_CONFIG=myfile use this one, otherwise default to config
-if [[ -z "$MY_STATUS_CONFIG" ]]; then
-	MY_STATUS_CONFIG="$BASE_PATH/config"
-fi
 
 ################################################################################
 # Usage
@@ -95,13 +102,6 @@ function usage {
 ################################################################################
 # MAIN
 ################################################################################
-
-# Read config file
-if [ -e "$MY_STATUS_CONFIG" ]; then
-	# ignore SC1090
-	# shellcheck source=/dev/null
-	source "$MY_STATUS_CONFIG"
-fi
 
 while getopts ":test:c:m:d:h" opt; do
 	case $opt in
@@ -150,10 +150,20 @@ if [ ! -r "$MY_HOSTNAME_STATUS_DOWN" ]; then
 	exit 9
 fi
 
+# Check downgrade file
+if [ ! -r "$MY_HOSTNAME_STATUS_DEGRADE" ]; then
+	echo "Can not read downgrade file '$MY_HOSTNAME_STATUS_DEGRADE'"
+	exit 9
+fi
+
 # Check term with grep
-MY_CHECK_MD5=$(echo "$MY_CHECK" | md5sum | grep -E -o '[a-z,0-9]*')
+MY_CHECK_MD5=$(echo "$MY_CHECK" | md5sum | grep -E -o '[a-z,0-9]+')
 MY_HOSTNAME_STATUS_ALERT="/tmp/status_hostname_alert_$MY_CHECK_MD5"
-MY_DOWN_SEC=$(grep "$MY_CHECK" < "$MY_HOSTNAME_STATUS_DOWN" | grep -E -o '[0-9]*$')
+MY_HOSTNAME_STATUS_ALERT_DEGRADE="/tmp/status_hostname_alert_degrade_$MY_CHECK_MD5"
+MY_DOWN_SEC=$(grep "$MY_CHECK" < "$MY_HOSTNAME_STATUS_DOWN" | grep -E -o '[0-9]+$')
+MY_DEGRADE_SEC=$(grep "$MY_CHECK" < "$MY_HOSTNAME_STATUS_DEGRADE" | grep -E -o '[0-9]+$')
+MY_DEGRADED_BEFORE="false"
+MY_ALERT_NOW="false"
 
 # Test to check setup
 if [[ "$MY_CHECK" == "test notification" ]]; then
@@ -170,25 +180,51 @@ if [[ "$MY_CHECK" == "test notification" ]]; then
 	exit
 fi
 
+# MY_CHECK is down now and was degraded before
+if grep -q "$MY_CHECK" "$MY_HOSTNAME_STATUS_DOWN" && [ -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE" ]; then
+	MY_DEGRADED_BEFORE="true"
+	MY_ALERT_TYPE="DOWN"
+	MY_ALERT_NOW="true"
+fi
+
+# When downtime or degradatime is greater than MY_ALERT_SEC, we have to notify
+if [[ -n "$MY_DOWN_SEC" && "$MY_DOWN_SEC" -ge "$MY_ALERT_SEC" ]]; then
+	MY_ALERT_TIME="$MY_DOWN_SEC"
+	MY_ALERT_TYPE="DOWN"
+	MY_ALERT_NOW="true"
+elif [[ -n "$MY_DEGRADE_SEC" && "$MY_DEGRADE_SEC" -ge "$MY_ALERT_SEC" ]]; then
+	MY_ALERT_TIME="$MY_DEGRADE_SEC"
+	MY_ALERT_TYPE="DEGRADED"
+	MY_ALERT_NOW="true"
+fi
+
 # Check if downtime is greater than MY_ALERT_SEC
-if [[ "$MY_DOWN_SEC" && "$MY_DOWN_SEC" -ge "$MY_ALERT_SEC" ]]; then
-	echo -n "DOWN: $MY_CHECK is down for $MY_DOWN_SEC sec "
-	# Check if MY_HOSTNAME_STATUS_ALERT file exists, notification then was already send
-	if [ -f "$MY_HOSTNAME_STATUS_ALERT" ]; then
+if [ "$MY_ALERT_NOW" == "true" ]; then
+	MY_ALERT_TYPE_LC=$(echo "$MY_ALERT_TYPE" | tr '[:upper:]' '[:lower:]')
+	echo -n "$MY_ALERT_TYPE: $MY_CHECK is $MY_ALERT_TYPE_LC for $MY_ALERT_TIME sec."
+	# Check if either MY_HOSTNAME_STATUS_ALERT or MY_HOSTNAME_STATUS_ALERT_DEGRADE (without MY_DEGRADED_BEFORE), then notification was sent already
+	if [[ -f "$MY_HOSTNAME_STATUS_ALERT" ]]; then
 		echo "(already notified)"
 		# Update downtime
 		echo -n "$MY_DOWN_SEC" > "$MY_HOSTNAME_STATUS_ALERT"
+	elif [[ -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE" && "$MY_DEGRADED_BEFORE" == "false" ]]; then
+		echo "(already notified)"
+		# Update degradetime
+		echo -n "$MY_DEGRADE_SEC" > "$MY_HOSTNAME_STATUS_ALERT_DEGRADE"
 	else
+		# Update degradetime or downtime
+		if [ -n "$MY_DEGRADE_SEC" ]; then
+			echo -n "$MY_DEGRADE_SEC" > "$MY_HOSTNAME_STATUS_ALERT_DEGRADE"
+		else
+			echo -n "$MY_DOWN_SEC" > "$MY_HOSTNAME_STATUS_ALERT"
+		fi
 		# Send notification and safe alert
 		if [[ "$MY_MAIL_TO" == "SMS" ]]; then
-			perl "$HOME/sipgate-sms.pl" --msg="$MY_CHECK is down from $HOSTNAME" && echo "(notified by SMS)" && \
-			echo -n "$MY_DOWN_SEC" > "$MY_HOSTNAME_STATUS_ALERT"
+			perl "$HOME/sipgate-sms.pl" --msg="$MY_CHECK is $MY_ALERT_TYPE_LC from $HOSTNAME" && echo "(notified by SMS)"
 		elif [[ "$MY_MAIL_TO" == "Pushover" ]]; then
-			perl "$HOME/pushover.pl" --msg="$MY_CHECK is down from $HOSTNAME" && echo "(notified by Pushover)" && \
-			echo -n "$MY_DOWN_SEC" > "$MY_HOSTNAME_STATUS_ALERT"
+			perl "$HOME/pushover.pl" --msg="$MY_CHECK is $MY_ALERT_TYPE_LC from $HOSTNAME" && echo "(notified by Pushover)"
 		else
-			echo "$MY_CHECK is down" | mutt -s "DOWN: $MY_CHECK" "$MY_MAIL_TO" && echo "(notified by email)" && \
-			echo -n "$MY_DOWN_SEC" > "$MY_HOSTNAME_STATUS_ALERT"
+			echo "$MY_CHECK is $MY_ALERT_TYPE_LC" | mutt -s "$MY_ALERT_TYPE: $MY_CHECK" "$MY_MAIL_TO" && echo "(notified by email)"
 		fi
 	fi
 	exit # Exit program to prevent further checks
@@ -197,19 +233,25 @@ fi
 # Check if MY_HOSTNAME_STATUS_ALERT file exists.
 # This means that an notification was already send.
 # When the program gets here, the MY_CHECK term is no longer in the MY_HOSTNAME_STATUS_DOWN file and the alert can be deleted.
-if [ -f "$MY_HOSTNAME_STATUS_ALERT" ]; then
-	echo -n "UP: $MY_CHECK is up again "
+if [[ -f "$MY_HOSTNAME_STATUS_ALERT" || -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE" ]]; then
+	echo -n "UP: $MY_CHECK is up again."
+
+	# Remove downtime and degradetime alert
+	if [ -f "$MY_HOSTNAME_STATUS_ALERT" ]; then
+		rm -f "$MY_HOSTNAME_STATUS_ALERT"
+	fi
+	if [ -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE" ]; then
+		rm -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE"
+	fi
+
 	# Send notification and safe alert
 	if [[ "$MY_MAIL_TO" == "SMS" ]]; then
-		perl "$HOME/sipgate-sms.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by SMS)" && \
-		rm -f "$MY_HOSTNAME_STATUS_ALERT"
+		perl "$HOME/sipgate-sms.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by SMS)"
 	# Pushover : https://github.com/Cyclenerd/notify-me/blob/master/pushover.pl
 	elif [[ "$MY_MAIL_TO" == "Pushover" ]]; then
-		perl "$HOME/pushover.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by Pushover)" && \
-		rm -f "$MY_HOSTNAME_STATUS_ALERT"
+		perl "$HOME/pushover.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by Pushover)"
 	# Email : mutt
 	else
-		echo "$MY_CHECK is up again" | mutt -s "UP: $MY_CHECK" "$MY_MAIL_TO" && echo "(notified)" && \
-		rm -f "$MY_HOSTNAME_STATUS_ALERT"
+		echo "$MY_CHECK is up again" | mutt -s "UP: $MY_CHECK" "$MY_MAIL_TO" && echo "(notified)"
 	fi
 fi
