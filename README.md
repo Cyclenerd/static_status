@@ -146,7 +146,7 @@ script;/bin/true|always up
 ## JSON
 
 You can also create a JSON status page.
-Configure the varaible `MY_STATUS_JSON` with the location where the JSON file should be stored.
+Configure the variable `MY_STATUS_JSON` with the location where the JSON file should be stored.
 
 Example JSON:
 ```json
