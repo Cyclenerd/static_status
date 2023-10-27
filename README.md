@@ -5,10 +5,10 @@
 [![Bagde: Ubuntu 22.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml)
 [![Bagde: GitHub](https://img.shields.io/github/license/cyclenerd/static_status)](https://github.com/Cyclenerd/static_status/blob/master/LICENSE)
 
-Simple Bash script to generate a static status page. Displays status of websites, services (HTTP, SAP, MySQL...) and ping. Everything easy to customize. 🤓
+Simple Bash script to generate a static status page. Displays the status of websites, services (HTTP, SAP, MySQL...), and ping. Everything is easy to customize. 🤓
 
 You can also easily check more complicated things with this script.
-For example if a text is present in a web page or if a host appears in the route path (traceroute).
+For example, if a text is present in a web page or if a host appears in the route path (traceroute).
 Checking the route path is useful, for instance, if you have a backup mobile internet connection in addition to your cable connection.
 
 ![Screenshot](images/Status-Page-Screenshot.jpg)
@@ -53,7 +53,7 @@ vi status_hostname_list.txt
 
 Edit the script `status.sh` or better add more configuration to the configuration file `config`.
 
-Download example configuration file:
+Download the example configuration file:
 ```shell
 curl \
   -f "https://raw.githubusercontent.com/Cyclenerd/static_status/master/config-example" \
@@ -170,14 +170,14 @@ Example JSON:
 
 ## SVG Icon
 
-If you want to signal directly if everything is fine or if something is wrong in the infrastructure, you can insert the SVG icon into your websites.
+If you want to signal directly if everything is fine or if something is wrong in the infrastructure, you can insert the SVG icon into your website.
 
 Please remember to include the image with a cache breaker URL (eg. an appended timestamp:
 ```
 <a href="status.html">Status <img src="status.svg?{{ timestamp }}"></a>
 ```
 
-Static websites needs to fallback to render the icon with javascript, eg with:
+Static websites need to fallback to render the icon with javascript, eg with:
 ```
 document.write('<img src="status.svg?' + Date.now() + '">')
 ```
@@ -186,7 +186,7 @@ document.write('<img src="status.svg?' + Date.now() + '">')
 
 You can extend the checks of `status.sh` with your own custom shell scripts.
 
-If the shell script outputs a return code 0 it is evaluated as available. With other return codes it is a failure (outage, down).
+If the shell script outputs a return code 0 it is evaluated as available. With other return codes, it is a failure (outage, down).
 
 Add your script to the `status_hostname_list.txt` configuration file. Example:
 
