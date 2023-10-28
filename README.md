@@ -199,9 +199,55 @@ script;/path/to/your/script.sh parameterA parameterB|Custom Text
 
 ## TODO
 
-* More and better documentation
+### 1. Improve Documentation
 
-Help is welcome 👍
+Our documentation can always be more detailed and comprehensive. We should aim to provide clear instructions on how to use the script, configure it, and troubleshoot any issues. This includes adding more comments in the code for better code-level documentation.
+
+### 2. Welcome Contributions
+
+We encourage contributions from the community to make this project even better. If you have ideas, bug fixes, or feature enhancements, don't hesitate to submit a pull request. We value and welcome your contributions.
+
+### 3. Enhance Error Handling
+
+Improving the error handling in the script can help users better understand and resolve issues. Consider implementing more descriptive error messages and suggestions for troubleshooting.
+
+### 4. Expand Custom Script Checks
+
+Let's make it even more versatile by expanding custom script checks. Users should be able to easily integrate their own shell scripts for customized monitoring. Document how to do this effectively.
+
+### 5. Streamline Installation
+
+Simplify the installation process by providing clear step-by-step instructions for various environments. Consider creating installation scripts or packages for different systems to make it even more user-friendly.
+
+### 6. Create Video Tutorials
+
+Some users may prefer visual guides. Consider creating video tutorials that walk users through the installation and configuration process, making it even more accessible.
+
+### 7. Improve UI and UX
+
+Enhance the visual appearance and user experience of the status page and JSON output. A clean and user-friendly interface can make a big difference.
+
+### 8. Test in Different Environments
+
+Ensure the script works seamlessly in various environments and operating systems. Extensive testing can help identify and resolve any compatibility issues.
+
+### 9. Set Up Continuous Integration
+
+Implement a CI/CD pipeline to automate testing and deployment processes. This can help maintain the script's quality and reliability.
+
+### 10. Localization
+
+Consider adding support for multiple languages to make the script accessible to a broader audience.
+
+### 11. Security Enhancements
+
+Explore ways to make the script even more secure, especially if it's handling sensitive data.
+
+### 12. Performance Optimization
+
+Optimize the script for better performance, especially when monitoring a large number of services.
+
+These enhancements will make our script more robust, user-friendly, and accessible to a wider audience. Contributions and ideas are highly encouraged.
 
 
 ## License
