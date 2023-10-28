@@ -199,9 +199,13 @@ script;/path/to/your/script.sh parameterA parameterB|Custom Text
 
 ## TODO
 
-* More and better documentation
+1. **Bug Fixes and Enhancements**: Address any reported issues and consider adding new features to improve the script's functionality.
 
-Help is welcome 👍
+2. **Comprehensive Documentation**: Create detailed documentation covering script configuration, customization, and advanced usage.
+
+3. **Code Cleanup**: Enhance code readability and performance for better maintainability.
+
+4. **Security**: Review and enhance security measures to protect against vulnerabilities.
 
 
 ## License
