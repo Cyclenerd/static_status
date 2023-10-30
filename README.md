@@ -20,7 +20,7 @@ With the script `alert.sh` you can be alerted by email, SMS or Pushover in case 
 
 ## Installation
 
-By default, it is best to place everything in your home directory in a new `status` directory:
+By default, it's a good practice to create a `status` directory within your home directory and place everything in it :
 ```
 mkdir ~/status
 cd ~/status
