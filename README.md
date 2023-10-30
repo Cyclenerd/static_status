@@ -212,3 +212,12 @@ script;/path/to/your/script.sh parameterA parameterB|Custom Text
 
 GNU Public License version 3.
 Please feel free to fork and modify this on GitHub (<https://github.com/Cyclenerd/static_status>).
+
+## All Thanks To Our Contributors
+
+Thank you to the following contributors who have helped improve this project:
+
+- [Your Name](https://github.com/yourgithubusername)
+
+Your contributions make this project better for everyone. If you'd like to contribute, please feel free to fork and submit pull requests.
+
