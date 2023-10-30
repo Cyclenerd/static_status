@@ -14,13 +14,13 @@ This guide will help you get started with the contribution process.
 7. [Coding Style](#coding-style)
 8. [Keep It Simple](#keep-it-simple)
 
-## 1. Fork the Repository 🍴
+## Fork the Repository 🍴
 
 Start by forking the repository. You can do this by clicking the "Fork" button in the
 upper right corner of the repository page. This will create a copy of the repository
 in your GitHub account.
 
-## 2. Clone Your Fork 📥
+## Clone Your Fork 📥
 
 Clone your newly created fork of the repository to your local machine with the following command:
 
