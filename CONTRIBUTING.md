@@ -5,14 +5,13 @@ This guide will help you get started with the contribution process.
 
 ## Table of Contents
 
-1. [Fork the Repository](#fork-the-repository)
-2. [Clone Your Fork](#clone-your-fork)
-3. [Create a New Branch](#create-a-new-branch)
-4. [Submitting Changes](#submitting-changes)
-5. [Push Your Changes](#push-your-changes)
-6. [Create a Pull Request](#create-a-pull-request)
-7. [Coding Style](#coding-style)
-8. [Keep It Simple](#keep-it-simple)
+1. [Fork the Repository](#fork-the-repository-🍴)
+2. [Clone Your Fork](#clone-your-fork-📥)
+3. [Create a New Branch](#create-a-new-branch-🌿)
+4. [Submitting Changes](#submitting-changes-🚀)
+5. [Create a Pull Request](#create-a-pull-request-🌟)
+6. [Coding Style](#coding-style-📝)
+7. [Keep It Simple](#keep-it-simple-👍)
 
 ## Fork the Repository 🍴
 
@@ -55,12 +54,12 @@ Go to your forked repository on GitHub and click on the "New Pull Request" butto
 This will open a new pull request to the original repository.
 
 ## Coding Style 📝
-When contributing to the project, please adhere to the following coding style guidelines:
+Start reading the code, and you'll get the hang of it. It is optimized for readability:
 
--Variables must be in uppercase and should begin with MY_.
--Functions should be in lowercase.
--Before submitting shell scripts, check them with ShellCheck to ensure quality.
--Please use tabs for indentation.
+- Variables must be uppercase and should begin with MY\_.
+- Functions must be lowercase.
+- Check your shell scripts with ShellCheck before submitting.
+- Please use tabs to indent.
 
 ## Keep It Simple 👍
 Simplicity is key. When making changes, aim for clean, easy-to-understand code that benefits all users.
