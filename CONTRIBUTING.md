@@ -1,66 +1,71 @@
-# How to Contribute
+# Contributing to the Project
 
-First off, thanks for taking the time to contribute!👏
+Thank you for considering contributing to our project! Your help and involvement are highly appreciated.
+This guide will help you get started with the contribution process.
 
-## Fork the Repository 🍴
+## Table of Contents
 
-1. Start by forking the repository. You can do this by clicking the "Fork" button in the upper right corner of the repository page. This will create a copy of the repository in your GitHub account.
+1. [Fork the Repository](#fork-the-repository)
+2. [Clone Your Fork](#clone-your-fork)
+3. [Create a New Branch](#create-a-new-branch)
+4. [Submitting Changes](#submitting-changes)
+5. [Push Your Changes](#push-your-changes)
+6. [Create a Pull Request](#create-a-pull-request)
+7. [Coding Style](#coding-style)
+8. [Keep It Simple](#keep-it-simple)
 
-## Clone Your Fork 📥
+## 1. Fork the Repository 🍴
 
-2. Clone your newly created fork of the repository to your local machine with the following command:
+Start by forking the repository. You can do this by clicking the "Fork" button in the
+upper right corner of the repository page. This will create a copy of the repository
+in your GitHub account.
 
-   ```bash
-   git clone https://github.com/your-username/static_status.git
-   ```
+## 2. Clone Your Fork 📥
 
+Clone your newly created fork of the repository to your local machine with the following command:
+
+```bash
+git clone https://github.com/your-username/static_status.git
+```
 ## Create a New Branch 🌿
 
-3. Create a new branch for the specific issue or feature you are working on. Use a descriptive branch name:
+Create a new branch for the specific issue or feature you are working on.
+Use a descriptive branch name:
 
-   ```bash
-   git checkout -b "branch_name"
-   ```
+```bash
+git checkout -b "feature-or-issue-name"
+```
 
 ## Submitting Changes 🚀
+Make your desired changes to the codebase.
 
-4. Make your desired changes to the codebase.
+Stage your changes using the following command:
 
-5. Stage your changes using the following command:
+```bash
+git add .
+```
+Commit your changes with a clear and concise commit message:
 
-   ```bash
-   git add .
-   ```
-
-6. Commit your changes with a clear and concise commit message:
-
-   ```bash
-   git commit -m "A brief summary of the commit."
-   ```
-
-## Push Your Changes 🚢
-
-7. Push your local commits to your remote repository:
-
-   ```bash
-   git push origin "branch_name"
-   ```
+```bash
+git commit -m "A brief summary of the commit."
+```
 
 ## Create a Pull Request 🌟
-
-8. Go to your forked repository on GitHub and click on the "New Pull Request" button. This will open a new pull request to the original repository.
+Go to your forked repository on GitHub and click on the "New Pull Request" button.
+This will open a new pull request to the original repository.
 
 ## Coding Style 📝
+When contributing to the project, please adhere to the following coding style guidelines:
 
-Start reading the code, and you'll get the hang of it. It is optimized for readability:
+-Variables must be in uppercase and should begin with MY_.
+-Functions should be in lowercase.
+-Before submitting shell scripts, check them with ShellCheck to ensure quality.
+-Please use tabs for indentation.
 
-- Variables must be uppercase and should begin with MY\_.
-- Functions must be lowercase.
-- Check your shell scripts with ShellCheck before submitting.
-- Please use tabs to indent.
+## Keep It Simple 👍
+Simplicity is key. When making changes, aim for clean, easy-to-understand code that benefits all users.
 
-One more thing:
+Thank you for your contribution! ❤️
 
-Keep it simple! 👍
 
-Thanks! ❤️❤️❤️
+
