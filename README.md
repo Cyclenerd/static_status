@@ -8,13 +8,13 @@
 Simple Bash script to generate a static status page. Displays the status of websites, services (HTTP, SAP, MySQL...), and ping. Everything is easy to customize. 🤓
 
 You can also easily check more complicated things with this script.
-For example, if a text is present in a web page or if a host appears in the route path (traceroute).
+For example, if a text is present on a web page or if a host appears in the route path (traceroute).
 Checking the route path is useful, for instance, if you have a backup mobile internet connection in addition to your cable connection.
 
 ![Screenshot](images/Status-Page-Screenshot.jpg)
 
 In addition to the status web page, there is also a JSON version and an SVG icon.
-With the script `alert.sh` you can be alerted by email, SMS or Pushover in case of a downtime.
+With the script `alert.sh`, you can be alerted by email, SMS or Pushover in case of a downtime.
 
 
 
@@ -51,7 +51,7 @@ vi status_hostname_list.txt
 
 ### Optional
 
-Edit the script `status.sh` or better add more configuration to the configuration file `config`.
+Edit the script `status.sh`, or better add more configuration to the configuration file `config`.
 
 Download the example configuration file:
 ```shell
@@ -60,7 +60,7 @@ curl \
   -o "config"
 ```
 
-Customize configuration file:
+Customize the configuration file:
 ```shell
 vi config
 ```
