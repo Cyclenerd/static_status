@@ -1,9 +1,11 @@
-# status.sh
+#  status.sh 🚀
 
 [![Badge: GNU Bash](https://img.shields.io/badge/GNU%20Bash-4EAA25.svg?logo=gnubash&logoColor=white)](#readme)
 [![Badge: ShellCheck](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml)
 [![Badge: Ubuntu 22.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml)
 [![Badge: GitHub](https://img.shields.io/github/license/cyclenerd/static_status)](https://github.com/Cyclenerd/static_status/blob/master/LICENSE)
+
+##  Description 📝
 
 Simple Bash script to generate a static status page. Displays the status of websites, services (HTTP, SAP, MySQL...), and ping. Everything is easy to customize. 🤓
 
@@ -16,9 +18,7 @@ Checking the route path is useful, for instance, if you have a backup mobile int
 In addition to the status web page, there is also a JSON version and an SVG icon.
 With the script `alert.sh`, you can be alerted by email, SMS or Pushover in case of a downtime.
 
-
-
-## Installation
+##  Installation 📦
 
 By default, it's a good practice to create a `status` directory within your home directory and place everything in it :
 ```
@@ -71,7 +71,7 @@ vi config
 bash status.sh
 ```
 
-## Usage
+## Usage 📋
 
 ```text
 Usage: status.sh [OPTION]:
@@ -99,7 +99,7 @@ Add:
 */1 * * * * bash "/path/to/status.sh" silent >> /dev/null
 ```
 
-## Requirements
+## Requirements ⚙️
 
 Only `bash`, `ping`, `traceroute`, `curl`, `nc`, `grep` and `sed`.
 In many *NIX distributions (Ubuntu, macOS) the commands are already included.
@@ -114,12 +114,12 @@ sudo apt install curl iputils-ping traceroute netcat-openbsd grep sed
 > 💡 Tip: You can disable the `traceroute` dependency. Add `MY_TRACEROUTE_HOST=''` to your config.
 
 
-## Demo
+## Demo 🌐
 
 This [demo page](https://cyclenerd.github.io/static_status/) is generated with [GitHub Action](https://github.com/Cyclenerd/static_status/blob/master/.github/workflows/main.yml):
 <https://cyclenerd.github.io/static_status/>
 
-### Screenshots
+### Screenshots 📷
 
 ![Screenshot](images/Status-Page-Maintenance.jpg)
 ![Screenshot](images/Status-Page-OK.jpg)
@@ -127,7 +127,7 @@ This [demo page](https://cyclenerd.github.io/static_status/) is generated with [
 ![Screenshot](images/Status-Page-Major_Outage.jpg)
 ![Screenshot](images/Status-Page-Past-Incidents.jpg)
 
-## Custom Text
+## Custom Text 📄
 
 You can display a custom text instead of the HOSTNAME/IP/URL (see example below).
 
@@ -143,7 +143,7 @@ traceroute;192.168.211.1|DSL Internet;3
 script;/bin/true|always up
 ```
 
-## JSON
+## JSON 📊
 
 You can also create a JSON status page.
 Configure the variable `MY_STATUS_JSON` with the location where the JSON file should be stored.
@@ -168,7 +168,7 @@ Example JSON:
 ]
 ```
 
-## SVG Icon
+## SVG Icon 🖼️
 
 If you want to signal directly if everything is fine or if something is wrong in the infrastructure, you can insert the SVG icon into your website.
 
@@ -182,7 +182,7 @@ Static websites need to fallback to render the icon with javascript, eg with:
 document.write('<img src="status.svg?' + Date.now() + '">')
 ```
 
-## Custom Script Checks
+## Custom Script Checks 🛠️ 
 
 You can extend the checks of `status.sh` with your own custom shell scripts.
 
@@ -197,7 +197,7 @@ script;/path/to/your/script.sh parameterA parameterB|Custom Text
 
 ```
 
-## TODO
+## TODO ✅
 
 1. **Bug Fixes and Enhancements**: Address any reported issues and consider adding new features to improve the script's functionality.
 
@@ -208,7 +208,7 @@ script;/path/to/your/script.sh parameterA parameterB|Custom Text
 4. **Security**: Review and enhance security measures to protect against vulnerabilities.
 
 
-## License
+## License 📜
 
 GNU Public License version 3.
 Please feel free to fork and modify this on GitHub (<https://github.com/Cyclenerd/static_status>).
