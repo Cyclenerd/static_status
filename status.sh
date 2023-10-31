@@ -236,7 +236,7 @@ function check_command() {
 	fi
 }
 
-# check_config() check if the configuration file is readble
+# check_config() check if the configuration file is readable
 function check_config() {
 	if [ ! -r "$1" ]; then
 		exit_with_failure "Can not read required configuration file '$1'"
@@ -295,7 +295,7 @@ function set_lock() {
 	fi
 }
 
-# del_lock() delets lock file
+# del_lock() deletes lock file
 function del_lock() {
 	rm "$MY_STATUS_LOCKFILE" &> /dev/null
 }
