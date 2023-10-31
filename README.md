@@ -1,9 +1,9 @@
 # status.sh
 
-[![Bagde: GNU Bash](https://img.shields.io/badge/GNU%20Bash-4EAA25.svg?logo=gnubash&logoColor=white)](#readme)
-[![Bagde: ShellCheck](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml)
-[![Bagde: Ubuntu 22.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml)
-[![Bagde: GitHub](https://img.shields.io/github/license/cyclenerd/static_status)](https://github.com/Cyclenerd/static_status/blob/master/LICENSE)
+[![Badge: GNU Bash](https://img.shields.io/badge/GNU%20Bash-4EAA25.svg?logo=gnubash&logoColor=white)](#readme)
+[![Badge: ShellCheck](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml)
+[![Badge: Ubuntu 22.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml)
+[![Badge: GitHub](https://img.shields.io/github/license/cyclenerd/static_status)](https://github.com/Cyclenerd/static_status/blob/master/LICENSE)
 
 Simple Bash script to generate a static status page. Displays the status of websites, services (HTTP, SAP, MySQL...), and ping. Everything is easy to customize. 🤓
 
