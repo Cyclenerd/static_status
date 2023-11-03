@@ -1028,7 +1028,7 @@ MY_DEGRADE_COUNT=$((MY_OUTAGE_COUNT + MY_DEGRADE_COUNT))
 if [ -s "$MY_MAINTENANCE_TEXT_FILE" ]; then
 	page_alert_maintenance
 # or status alert
-elif [[ "$MY_DEGRADE_COUNT" -gt "$MY_AVAILABLE_COUNT" ]]; then
+elif [[ "$MY_OUTAGE_COUNT" -gt "$MY_AVAILABLE_COUNT" ]]; then
 	page_alert_danger
 elif [[ "$MY_DEGRADE_COUNT" -gt "0" ]]; then
 	page_alert_warning
