@@ -76,9 +76,10 @@ bash status.sh
 ```text
 Usage: status.sh [OPTION]:
 	OPTION is one of the following:
-		silent  no output from faulty connections to stout (default: no)
-		loud    output from successful and faulty connections to stout (default: no)
-		help    displays help (this message)
+		 silent  no output from faulty connections to stout (default: no)
+		 loud    output from successful and faulty connections to stout (default: no)
+		 debug   displays all variables
+		 help    displays help (this message)
 ```
 
 Example:
