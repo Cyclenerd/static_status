@@ -18,6 +18,9 @@ curl;https://www.heise.de/ping
 grep;https://www.nkn-it.de/ci.txt;3.14159
 http-status;https://www.nkn-it.de/ci.txt;200
 http-status;https://www.nkn-it.de/gibtesnicht;404
+script;/bin/true|Always up (/bin/true)
+# DEGRADED
+script;exit 80|Always degraded (exit 80)
 # DOWN
 ping;gibt.es.nicht.nkn-it.de
 nc;gibt.es.nicht.nkn-it.de;21
@@ -26,6 +29,7 @@ curl;https://www.nkn-it.de/gibtesnicht
 grep;https://www.nkn-it.de/ci.txt;GibtEsNicht
 http-status;https://www.nkn-it.de/ci.txt;404
 http-status;https://www.nkn-it.de/gibtesnicht;200
+script;/bin/flase|Always down (/bin/false)
 EOF
 
 # shellcheck disable=SC1091
@@ -44,6 +48,8 @@ assert "cat $HOME/status/status_hostname_ok.txt | grep 'http-status;https://www.
 assert "cat $HOME/status/status_hostname_ok.txt | grep 'http-status;https://www.nkn-it.de/gibtesnicht;404'" "http-status;https://www.nkn-it.de/gibtesnicht;404"
 assert "cat $HOME/status/status_hostname_ok.txt | grep 'curl;https://www.heise.de/ping;'"                   "curl;https://www.heise.de/ping;"
 assert "cat $HOME/status/status_hostname_ok.txt | grep 'grep;https://www.nkn-it.de/ci.txt;3.14159'"         "grep;https://www.nkn-it.de/ci.txt;3.14159"
+# DEGRADED
+assert "cat $HOME/status/status_hostname_last_degrade.txt | grep 'script;exit 80|Always degraded (exit 80);2'"
 # DOWN
 assert "cat $HOME/status/status_hostname_down.txt | grep 'nkn-it.de' | wc -l | perl -pe 's/\\s//g'"         "7" # (7 test/sites with nkn-it.de)
 

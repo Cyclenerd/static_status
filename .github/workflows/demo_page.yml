@@ -28,6 +28,7 @@ jobs:
           echo 'curl;ftp://ftp.usa.openbsd.org/pub/OpenBSD/timestamp|ftp.usa.openbsd.org (curl)' >> status_hostname_list.txt
           echo 'nc;8.8.8.8|DNS @ Google (nc);53' >> status_hostname_list.txt
           echo 'script;/bin/true|Always up (/bin/true)' >> status_hostname_list.txt
+          echo 'script;exit 80|Always degraded (exit 80)' >> status_hostname_list.txt
           echo 'script;/bin/false|Always down (/bin/false)' >> status_hostname_list.txt
           echo "config"
           cat config

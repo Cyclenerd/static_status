@@ -21,7 +21,7 @@ With the script `alert.sh`, you can be alerted by email, SMS or Pushover in case
 ##  Installation 📦
 
 By default, it's a good practice to create a `status` directory within your home directory and place everything in it :
-```
+```shell
 mkdir ~/status
 cd ~/status
 ```
@@ -95,7 +95,7 @@ crontab -e
 
 Add:
 
-```
+```text
 */1 * * * * bash "/path/to/status.sh" silent >> /dev/null
 ```
 
@@ -135,7 +135,7 @@ You can display a custom text instead of the HOSTNAME/IP/URL (see example below)
 
 status_hostname_list.txt:
 
-```csv
+```text
 ping;8.8.8.8|Google DNS
 nc;8.8.8.8|DNS @ Google;53
 curl;http://www.heise.de/ping|www.heise.de
@@ -173,12 +173,12 @@ Example JSON:
 If you want to signal directly if everything is fine or if something is wrong in the infrastructure, you can insert the SVG icon into your website.
 
 Please remember to include the image with a cache breaker URL (eg. an appended timestamp:
-```
+```html
 <a href="status.html">Status <img src="status.svg?{{ timestamp }}"></a>
 ```
 
 Static websites need to fallback to render the icon with javascript, eg with:
-```
+```html
 document.write('<img src="status.svg?' + Date.now() + '">')
 ```
 
@@ -186,16 +186,19 @@ document.write('<img src="status.svg?' + Date.now() + '">')
 
 You can extend the checks of `status.sh` with your own custom shell scripts.
 
-If the shell script outputs a return code 0 it is evaluated as available. With other return codes, it is a failure (outage, down).
+If the shell script outputs a return code `0` it is evaluated as available.
+With the special return code `80`, it is not classified as down but as degraded.
+With all other return codes, it is a failure (outage, down).
 
 Add your script to the `status_hostname_list.txt` configuration file. Example:
 
-```
+```text
 script;script.sh
 script;/path/to/your/script.sh|Custom Text
 script;/path/to/your/script.sh parameterA parameterB|Custom Text
-
 ```
+
+The script [`check-websites.sh`](./scripts/check-websites.sh) is an example.
 
 ## TODO ✅
 
