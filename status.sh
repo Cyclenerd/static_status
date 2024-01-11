@@ -72,7 +72,7 @@ fi
 #      The default curl config file is checked for in the following places in this order:
 #        1. "$CURL_HOME/.curlrc"
 #        2. "$HOME/.curlrc"
-#      
+#
 #      ~~~ Example .curlrc file ~~~
 #      # this is a comment
 #      # change the useragent string
@@ -562,7 +562,7 @@ function page_alert_warning() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-warning my-3" role="alert">
 	<i class="fas fa-exclamation-triangle"></i>
-	Some systems are experiencing problems	
+	Some systems are experiencing problems
 </div>
 EOF
 }
