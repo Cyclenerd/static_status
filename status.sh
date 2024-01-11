@@ -501,7 +501,7 @@ function page_header() {
 	fi
 	cat > "$MY_STATUS_HTML" << EOF
 <!DOCTYPE HTML>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
 <meta charset="utf-8">
 <title>$MY_STATUS_TITLE</title>
@@ -509,7 +509,8 @@ function page_header() {
 <meta name="robots" content="noindex, nofollow">
 $MY_AUTOREFRESH_TEXT
 <link rel="stylesheet" href="$MY_STATUS_STYLESHEET">
-<link href="$MY_STATUS_FONTAWESOME" rel="stylesheet">
+<link rel="stylesheet" href="$MY_STATUS_FONTAWESOME">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚦</text></svg>">
 </head>
 <body>
 <div class="container">
