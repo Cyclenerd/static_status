@@ -3,7 +3,7 @@
 [![Badge: GNU Bash](https://img.shields.io/badge/GNU%20Bash-4EAA25.svg?logo=gnubash&logoColor=white)](#readme)
 [![Badge: ShellCheck](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/shellcheck.yml)
 [![Badge: Ubuntu 22.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2204.yml)
-[![Badge: Ubuntu 24.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2404.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2404.yml
+[![Badge: Ubuntu 24.04 LTS](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2404.yml/badge.svg?branch=master)](https://github.com/Cyclenerd/static_status/actions/workflows/ubuntu_2404.yml)
 [![Badge: GitHub](https://img.shields.io/github/license/cyclenerd/static_status)](https://github.com/Cyclenerd/static_status/blob/master/LICENSE)
 
 ##  Description 📝
