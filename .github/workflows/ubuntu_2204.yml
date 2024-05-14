@@ -10,6 +10,7 @@ on:
 jobs:
   ubuntu-2204:
     name: Test Ubuntu 22.04 LTS
+    # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md
     runs-on: ubuntu-22.04
     steps:
       - name: 🔧 Install dependencies
