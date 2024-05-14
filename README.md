@@ -103,14 +103,28 @@ Add:
 
 ## Requirements ⚙️
 
-Only `bash`, `ping`, `traceroute`, `curl`, `nc`, `grep` and `sed`.
+Only
+`bash`,
+`coreutils`
+`curl`,
+`grep`,
+`nc`,
+`ping`,
+`sed` and `traceroute`.
 In many *NIX distributions (Ubuntu, macOS) the commands are already included.
 If not, the missing packages can be installed quickly.
 
 On a debian-based system (Ubuntu), just run:
 
 ```shell
-sudo apt install curl iputils-ping traceroute netcat-openbsd grep sed
+sudo apt install \
+  coreutils \
+  curl \
+  grep \
+  iputils-ping \
+  netcat-openbsd \
+  sed \
+  traceroute
 ```
 
 > 💡 Tip: You can disable the `traceroute` dependency. Add `MY_TRACEROUTE_HOST=''` to your config.

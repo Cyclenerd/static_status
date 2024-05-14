@@ -15,13 +15,14 @@ jobs:
     steps:
       - name: 🔧 Install dependencies
         run: |
-          sudo apt-get install  \
-            curl                \
-            iputils-ping        \
-            traceroute          \
-            netcat-openbsd      \
-            grep                \
-            sed
+          sudo apt-get install \
+            coreutils \
+            curl \
+            grep \
+            iputils-ping \
+            netcat-openbsd \
+            sed \
+            traceroute
 
       # Test commands
       - name: 🐧 Test ping
