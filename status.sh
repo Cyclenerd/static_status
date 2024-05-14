@@ -124,6 +124,9 @@ MY_TIMEOUT=${MY_TIMEOUT:-"2"}
 MY_PING_TIMEOUT=${MY_PING_TIMEOUT:-"4"}
 MY_PING_COUNT=${MY_PING_COUNT:-"2"}
 
+# Duration we wait for response (only script)
+MY_SCRIPT_TIMEOUT=${MY_SCRIPT_TIMEOUT:-20}
+
 # Route to host
 MY_TRACEROUTE_HOST=${MY_TRACEROUTE_HOST:-"1.1.1.1"} # Cloudflare DNS
 # Sets the number of probe packets per hop
@@ -210,6 +213,7 @@ debug_variables() {
 	echo "MY_TIMEOUT: $MY_TIMEOUT"
 	echo "MY_PING_TIMEOUT: $MY_PING_TIMEOUT"
 	echo "MY_PING_COUNT: $MY_PING_COUNT"
+	echo "MY_SCRIPT_TIMEOUT: $MY_SCRIPT_TIMEOUT"
 	echo "MY_TRACEROUTE_HOST: $MY_TRACEROUTE_HOST"
 	echo "MY_TRACEROUTE_NQUERIES: $MY_TRACEROUTE_NQUERIES"
 	echo
@@ -911,7 +915,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		else
 			cmd="$MY_HOSTNAME"
 		fi
-		($cmd &> /dev/null)
+		(timeout "$MY_SCRIPT_TIMEOUT" "$cmd" &> /dev/null)
 		case "$?" in
 			"0")
 				check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"

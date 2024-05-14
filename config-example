@@ -45,6 +45,9 @@ MY_TIMEOUT="2"
 MY_PING_TIMEOUT="4"
 MY_PING_COUNT="2"
 
+# Duration we wait for response (only script).
+MY_SCRIPT_TIMEOUT="20"
+
 # Route to host
 MY_TRACEROUTE_HOST="1.1.1.1" # Cloudflare DNS
 # Sets the number of probe packets per hop
