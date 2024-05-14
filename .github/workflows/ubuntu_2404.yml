@@ -1,0 +1,55 @@
+name: "Ubuntu 24.04 LTS"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  ubuntu-2404:
+    name: Test Ubuntu 24.04 LTS
+    # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md
+    runs-on: ubuntu-24.04
+    steps:
+      - name: 🔧 Install dependencies
+        run: |
+          sudo apt-get install  \
+            curl                \
+            iputils-ping        \
+            traceroute          \
+            netcat-openbsd      \
+            grep                \
+            sed
+
+      # Test commands
+      - name: 🐧 Test ping
+        run: ping -w 5 -c 2 '127.0.0.1'
+      - name: 🐧 Test nc
+        run: nc -z -w 5 'www.nkn-it.de' '443'
+      - name: 🐧 Test curl
+        run: curl -Is --max-time 5 'https://www.nkn-it.de/ci.txt'
+      - name: 🐧 Test curl (http-status)
+        run: curl -s -o /dev/null -I --max-time "5" -w "%{http_code}" "https://www.nkn-it.de/ci.txt"
+      - name: 🐧 Test dig
+        run: dig ns 'nkn-it.de'
+
+      # git clone
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🎁 Get assert.sh
+        run: curl -f "https://raw.githubusercontent.com/lehmannro/assert.sh/v1.1/assert.sh" -o assert.sh
+
+      # Run tests
+      - name: 🛠️ Test
+        run: bash test.sh
+
+      # View files
+      - name: 📃 status_hostname_list.txt
+        run: cat $HOME/status/status_hostname_list.txt
+      - name: 📃 status_hostname_ok.txt
+        run: cat $HOME/status/status_hostname_ok.txt
+      - name: 📃 status_hostname_down.txt
+        run: cat $HOME/status/status_hostname_down.txt
