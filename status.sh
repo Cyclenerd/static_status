@@ -915,7 +915,7 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 		else
 			cmd="$MY_HOSTNAME"
 		fi
-		(timeout "$MY_SCRIPT_TIMEOUT" --preserve-status "$cmd" &> /dev/null)
+		(timeout --preserve-status "$MY_SCRIPT_TIMEOUT" "$cmd" &> /dev/null)
 		case "$?" in
 			"0")
 				check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
