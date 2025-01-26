@@ -143,6 +143,10 @@ if [[ "$MY_MAIL_TO" == "Pushover" && ! -r "$HOME/pushover.pl" ]]; then
 	echo '    curl -f "https://raw.githubusercontent.com/Cyclenerd/toolbox/master/pushover.pl" -o ~/pushover.pl'
 	exit 9
 fi
+if [[ -e "$MY_MAIL_TO" && ! -x "$MY_MAIL_TO" ]]; then
+	echo "!!! Notification script '$MY_MAIL_TO' it's not executable."
+	exit 9
+fi
 
 # Check downtime file
 if [ ! -r "$MY_HOSTNAME_STATUS_DOWN" ]; then
@@ -172,6 +176,9 @@ if [[ "$MY_CHECK" == "test notification" ]]; then
 		perl "$HOME/sipgate-sms.pl" --msg="Test from $HOSTNAME" && echo "(notified by SMS)"
 	elif [[ "$MY_MAIL_TO" == "Pushover" ]]; then
 		perl "$HOME/pushover.pl" --msg="Test from $HOSTNAME" && echo "(notified by Pushover)"
+	# Use a script/binary
+	elif [[ -x "$MY_MAIL_TO" ]]; then
+		$MY_MAIL_TO "Test from $HOSTNAME" &> /dev/null && echo "(notified by script)"
 	else
 		echo "Test from $HOSTNAME" | mutt -s "TEST: This is a test" "$MY_MAIL_TO" && echo "(notified by email)"
 	fi
@@ -223,6 +230,9 @@ if [ "$MY_ALERT_NOW" == "true" ]; then
 			perl "$HOME/sipgate-sms.pl" --msg="$MY_CHECK is $MY_ALERT_TYPE_LC from $HOSTNAME" && echo "(notified by SMS)"
 		elif [[ "$MY_MAIL_TO" == "Pushover" ]]; then
 			perl "$HOME/pushover.pl" --msg="$MY_CHECK is $MY_ALERT_TYPE_LC from $HOSTNAME" && echo "(notified by Pushover)"
+		# Use a script/binary
+		elif [[ -x "$MY_MAIL_TO" ]]; then
+			$MY_MAIL_TO "$MY_CHECK is $MY_ALERT_TYPE_LC from $HOSTNAME" &> /dev/null && echo "(notified by script)"
 		else
 			echo "$MY_CHECK is $MY_ALERT_TYPE_LC" | mutt -s "$MY_ALERT_TYPE: $MY_CHECK" "$MY_MAIL_TO" && echo "(notified by email)"
 		fi
@@ -250,6 +260,9 @@ if [[ -f "$MY_HOSTNAME_STATUS_ALERT" || -f "$MY_HOSTNAME_STATUS_ALERT_DEGRADE" ]
 	# Pushover : https://github.com/Cyclenerd/notify-me/blob/master/pushover.pl
 	elif [[ "$MY_MAIL_TO" == "Pushover" ]]; then
 		perl "$HOME/pushover.pl" --msg="$MY_CHECK is up again from $HOSTNAME" && echo "(notified by Pushover)"
+	# Use a script/binary
+	elif [[ -x "$MY_MAIL_TO" ]]; then
+		$MY_MAIL_TO "$MY_CHECK is up again from $HOSTNAME" &> /dev/null && echo "(notified by script)"
 	# Email : mutt
 	else
 		echo "$MY_CHECK is up again" | mutt -s "UP: $MY_CHECK" "$MY_MAIL_TO" && echo "(notified)"
