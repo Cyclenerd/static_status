@@ -145,7 +145,7 @@ MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT=${MY_HOSTNAME_STATUS_HISTORY_TEMP_SORT:-"/t
 MY_MIN_DOWN_TIME=${MY_MIN_DOWN_TIME:-"60"}
 
 # CSS Stylesheet for the status page
-MY_STATUS_STYLESHEET=${MY_STATUS_STYLESHEET:-"https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css"}
+MY_STATUS_STYLESHEET=${MY_STATUS_STYLESHEET:-"https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"}
 
 # FontAwesome for the status page
 MY_STATUS_FONTAWESOME=${MY_STATUS_FONTAWESOME:-"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"}
@@ -521,7 +521,7 @@ $MY_AUTOREFRESH_TEXT
 <div class="pb-2 mt-5 mb-2 border-bottom">
 	<h1>
 		$MY_STATUS_TITLE
-		<span class="float-right d-none d-sm-block">
+		<span class="float-end d-none d-sm-block">
 			<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button">
 				<i class="fas fa-home"></i>
 				$MY_HOMEPAGE_TITLE
@@ -625,7 +625,7 @@ function item_ok() {
 		fi
 	fi
 	cat <<EOF
-	<span class="badge badge-pill badge-success"><i class="fas fa-check"></i></span>
+	<span class="badge rounded-pill text-bg-success"><i class="fas fa-check"></i></span>
 </li>
 EOF
 }
@@ -653,7 +653,7 @@ function item_down() {
 			echo "Script $MY_DOWN_HOSTNAME"
 		fi
 	fi
-	printf '<span class="badge badge-pill badge-danger"><i class="fas fa-times"></i> '
+	printf '<span class="badge rounded-pill text-bg-danger"><i class="fas fa-times"></i> '
 	if [[ "$MY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_DOWN_TIME/60))"
 	else
@@ -669,7 +669,7 @@ function item_degrade() {
 	else
 		echo "Script $MY_DEGRADE_HOSTNAME"
 	fi
-	printf '<span class="badge badge-pill badge-warning badge"><i class="fas fa-times"></i> '
+	printf '<span class="badge rounded-pill text-bg-warning"><i class="fas fa-times"></i> '
 	if [[ "$MY_DEGRADE_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_DEGRADE_TIME/60))"
 	else
