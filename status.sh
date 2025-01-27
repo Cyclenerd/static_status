@@ -541,24 +541,12 @@ $MY_AUTOREFRESH_TEXT
 </head>
 <body>
 <div class="container">
-<div class="pb-2 mt-5 mb-2 border-bottom">
-	<h1>
-		$MY_STATUS_TITLE
-		<span class="float-end d-none d-sm-block">
-			<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button">
-				<i class="fa-solid fa-house-chimney"></i>
-				$MY_HOMEPAGE_TITLE
-			</a>
-		</span>
-	</h1>
-</div>
-
-<div class="d-sm-none d-md-none d-lg-none d-xl-none my-3">
-	<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button">
-		<i class="fa-solid fa-house-chimney"></i>
-		$MY_HOMEPAGE_TITLE
-	</a>
-</div>
+<header class="d-flex align-items-center justify-content-center py-3 mb-4 border-bottom">
+	<h1 class="col-md-8">$MY_STATUS_TITLE</h1>
+	<div class="col-md-4 text-end d-none d-md-block">
+		<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button"><i class="fa-solid fa-house-chimney"></i> $MY_HOMEPAGE_TITLE</a>
+	</div>
+</header>
 EOF
 }
 
@@ -730,7 +718,7 @@ function item_history() {
 	echo "$MY_HISTORY_DATE_TIME"
 	echo '</small>'
 	echo '</span>'
-	printf '<span class="badge badge-pill badge-dark"><i class="fa-solid fa-xmark"></i></i> '
+	printf '<span class="badge badge-pill badge-dark"><i class="fa-solid fa-xmark"></i> '
 	if [[ "$MY_HISTORY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_HISTORY_DOWN_TIME/60))"
 	else
