@@ -79,6 +79,13 @@ MY_STATUS_FOOTER='Powered by <a href="https://github.com/Cyclenerd/static_status
 # If something has gone wrong and the file has not been deleted automatically, you can delete it.
 MY_STATUS_LOCKFILE="/tmp/STATUS_SH_IS_RUNNING.lock"
 
+# Hook to call when a hostname status changes
+# The hook script must be executable and receives three arguments:
+# 1. New status, either up, down or degraded
+# 2. Command used
+# 3. Hostname
+MY_HOOK_STATUS=""
+
 # Date format for the web page.
 # UTC (`-u`) is the default.
 # Example: 2021-12-23 12:34:55 UTC

@@ -167,6 +167,13 @@ MY_DATE_TIME=${MY_DATE_TIME:-$(date -u "+%Y-%m-%d %H:%M:%S %Z")}
 # Avoid semicolons.
 # More details can be found in `man date`.
 
+# Hook to call when a hostname status changes
+# The hook script must be executable and receives three arguments:
+# 1. New status, either up, down or degraded
+# 2. Command used
+# 3. Hostname
+MY_HOOK_STATUS=${MY_HOOK_STATUS:-""}
+
 ################################################################################
 #### END Configuration Section
 ################################################################################
@@ -220,6 +227,8 @@ debug_variables() {
 	echo "MY_TIMESTAMP: $MY_TIMESTAMP"
 	echo "MY_DATE_TIME: $MY_DATE_TIME"
 	echo "MY_LASTRUN_TIME: $MY_LASTRUN_TIME"
+	echo
+	echo "MY_HOOK_STATUS: $MY_HOOK_STATUS"
 }
 
 # command_exists() tells if a given command exists.
@@ -429,6 +438,10 @@ function save_downtime() {
 			printf " %s" "$MY_PORT"
 		fi
 	fi
+
+	if [[ -x "${MY_HOOK_STATUS}" ]] && ! grep -E "^${MY_COMMAND};${MY_HOSTNAME}" "${MY_HOSTNAME_STATUS_LASTRUN}" &> /dev/null; then
+		${MY_HOOK_STATUS} "down" "${MY_COMMAND}" "${MY_HOSTNAME}" &> /dev/null
+	fi
 }
 
 # save_degradetime()
@@ -439,6 +452,10 @@ function save_degradetime() {
 	printf "\\n%s;%s;%s" "$MY_COMMAND" "$MY_HOSTNAME" "$MY_DEGRADE_TIME" >> "$MY_HOSTNAME_STATUS_DEGRADE"
 	if [[ "$BE_LOUD" = "yes" ]] || [[ "$BE_QUIET" = "no" ]]; then
 		printf "\\n%-5s %-4s %s" "DEGRADED:" "$MY_COMMAND" "$MY_HOSTNAME"
+	fi
+
+	if [[ -x "${MY_HOOK_STATUS}" ]] && ! grep -E "^${MY_COMMAND};${MY_HOSTNAME}" "${MY_HOSTNAME_STATUS_LASTRUN_DEGRADE}" &>/dev/null; then
+		${MY_HOOK_STATUS} "degraded" "${MY_COMMAND}" "${MY_HOSTNAME}" &> /dev/null
 	fi
 }
 
@@ -458,6 +475,12 @@ function save_availability() {
 		fi
 		if [[ $MY_COMMAND == "http-status" ]]; then
 			printf " %s" "$MY_PORT"
+		fi
+	fi
+
+	if [[ -x "${MY_HOOK_STATUS}" ]]; then
+		if grep -E "^${MY_COMMAND};${MY_HOSTNAME}" "${MY_HOSTNAME_STATUS_LASTRUN}" &>/dev/null || grep -E "^${MY_COMMAND};${MY_HOSTNAME}" "${MY_HOSTNAME_STATUS_LASTRUN_DEGRADE}" &>/dev/null; then
+			${MY_HOOK_STATUS} "up" "${MY_COMMAND}" "${MY_HOSTNAME}" &> /dev/null
 		fi
 	fi
 }
