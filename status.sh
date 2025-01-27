@@ -148,7 +148,7 @@ MY_MIN_DOWN_TIME=${MY_MIN_DOWN_TIME:-"60"}
 MY_STATUS_STYLESHEET=${MY_STATUS_STYLESHEET:-"https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"}
 
 # FontAwesome for the status page
-MY_STATUS_FONTAWESOME=${MY_STATUS_FONTAWESOME:-"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"}
+MY_STATUS_FONTAWESOME=${MY_STATUS_FONTAWESOME:-"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"}
 
 # A footer
 MY_STATUS_FOOTER=${MY_STATUS_FOOTER:-'Powered by <a href="https://github.com/Cyclenerd/static_status">static_status</a>'}
@@ -523,7 +523,7 @@ $MY_AUTOREFRESH_TEXT
 		$MY_STATUS_TITLE
 		<span class="float-end d-none d-sm-block">
 			<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button">
-				<i class="fas fa-home"></i>
+				<i class="fa-solid fa-house-chimney"></i>
 				$MY_HOMEPAGE_TITLE
 			</a>
 		</span>
@@ -532,7 +532,7 @@ $MY_AUTOREFRESH_TEXT
 
 <div class="d-sm-none d-md-none d-lg-none d-xl-none my-3">
 	<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button">
-		<i class="fas fa-home"></i>
+		<i class="fa-solid fa-house-chimney"></i>
 		$MY_HOMEPAGE_TITLE
 	</a>
 </div>
@@ -556,7 +556,7 @@ EOF
 function page_alert_success() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-success my-3" role="alert">
-	<i class="fas fa-thumbs-up"></i>
+	<i class="fa-solid fa-thumbs-up"></i>
 	All systems are operational
 </div>
 EOF
@@ -565,7 +565,7 @@ EOF
 function page_alert_warning() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-warning my-3" role="alert">
-	<i class="fas fa-exclamation-triangle"></i>
+	<i class="fa-solid fa-triangle-exclamation"></i>
 	Some systems are experiencing problems
 </div>
 EOF
@@ -574,7 +574,7 @@ EOF
 function page_alert_danger() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-danger my-3" role="alert">
-	<i class="fas fa-fire"></i>
+	<i class="fa-solid fa-fire-flame-curved"></i>
 	Major Outage
 </div>
 EOF
@@ -584,7 +584,7 @@ function page_alert_maintenance() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="card my-3">
 	<div class="card-header">
-		<i class="fas fa-wrench"></i>
+		<i class="fa-solid fa-wrench"></i>
 		Maintenance
 	</div>
 	<div class="card-body">
@@ -625,7 +625,7 @@ function item_ok() {
 		fi
 	fi
 	cat <<EOF
-	<span class="badge rounded-pill text-bg-success"><i class="fas fa-check"></i></span>
+	<span class="badge rounded-pill text-bg-success"><i class="fa-solid fa-check"></i></span>
 </li>
 EOF
 }
@@ -653,7 +653,7 @@ function item_down() {
 			echo "Script $MY_DOWN_HOSTNAME"
 		fi
 	fi
-	printf '<span class="badge rounded-pill text-bg-danger"><i class="fas fa-times"></i> '
+	printf '<span class="badge rounded-pill text-bg-danger"><i class="fa-solid fa-xmark"></i></i> '
 	if [[ "$MY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_DOWN_TIME/60))"
 	else
@@ -669,7 +669,7 @@ function item_degrade() {
 	else
 		echo "Script $MY_DEGRADE_HOSTNAME"
 	fi
-	printf '<span class="badge rounded-pill text-bg-warning"><i class="fas fa-times"></i> '
+	printf '<span class="badge rounded-pill text-bg-warning"><i class="fa-solid fa-xmark"></i></i> '
 	if [[ "$MY_DEGRADE_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_DEGRADE_TIME/60))"
 	else
@@ -707,7 +707,7 @@ function item_history() {
 	echo "$MY_HISTORY_DATE_TIME"
 	echo '</small>'
 	echo '</span>'
-	printf '<span class="badge badge-pill badge-dark"><i class="fas fa-times"></i> '
+	printf '<span class="badge badge-pill badge-dark"><i class="fa-solid fa-xmark"></i></i> '
 	if [[ "$MY_HISTORY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_HISTORY_DOWN_TIME/60))"
 	else
