@@ -93,7 +93,7 @@ function usage {
 	echo -e "Usage: $MY_SCRIPT_NAME [-c <CHECK>] [-m <MAIL_TO>] [-d <SEC>] [-h]:
 	[-c <CHECK>]   Check downtime file (default: $MY_CHECK)
 	[-m <MAIL_TO>] Send notification to email address (default: $MY_MAIL_TO)
-	               Alternatively, 'SMS' and 'Pushover' can be passed for alternative notification methods
+	               Alternative options: 'SMS', 'Pushover', or path to custom script
 	[-d <SEC>]     Notify if downtime is greater than N seconds (default: $MY_ALERT_SEC)
 	[-h]           Displays help (this message)"
 	exit "$MY_RETURN_CODE"
