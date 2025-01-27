@@ -676,7 +676,7 @@ function item_down() {
 			echo "Script $MY_DOWN_HOSTNAME"
 		fi
 	fi
-	printf '<span class="badge rounded-pill text-bg-danger"><i class="fa-solid fa-xmark"></i></i> '
+	printf '<span class="badge rounded-pill text-bg-danger"><i class="fa-solid fa-xmark"></i> '
 	if [[ "$MY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_DOWN_TIME/60))"
 	else
@@ -692,7 +692,7 @@ function item_degrade() {
 	else
 		echo "Script $MY_DEGRADE_HOSTNAME"
 	fi
-	printf '<span class="badge rounded-pill text-bg-warning"><i class="fa-solid fa-xmark"></i></i> '
+	printf '<span class="badge rounded-pill text-bg-warning"><i class="fa-solid fa-xmark"></i> '
 	if [[ "$MY_DEGRADE_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_DEGRADE_TIME/60))"
 	else
