@@ -718,7 +718,7 @@ function item_history() {
 	echo "$MY_HISTORY_DATE_TIME"
 	echo '</small>'
 	echo '</span>'
-	printf '<span class="badge badge-pill badge-dark"><i class="fa-solid fa-xmark"></i> '
+	printf '<span class="badge rounded-pill text-bg-dark"><i class="fa-solid fa-xmark"></i> '
 	if [[ "$MY_HISTORY_DOWN_TIME" -gt "1" ]]; then
 		printf "%.0f min</span>" "$((MY_HISTORY_DOWN_TIME/60))"
 	else
