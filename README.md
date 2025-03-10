@@ -132,7 +132,7 @@ sudo apt install \
 
 ## Demo 🌐
 
-This [demo page](https://cyclenerd.github.io/static_status/) is generated with [GitHub Action](https://github.com/Cyclenerd/static_status/blob/master/.github/workflows/main.yml):
+This [demo page](https://cyclenerd.github.io/static_status/) is generated with [GitHub Action](https://github.com/Cyclenerd/static_status/blob/master/.github/workflows/demo_page.yml):
 <https://cyclenerd.github.io/static_status/>
 
 ### Screenshots 📷
