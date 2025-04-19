@@ -537,7 +537,7 @@ function page_header() {
 $MY_AUTOREFRESH_TEXT
 <link rel="stylesheet" href="$MY_STATUS_STYLESHEET">
 <link rel="stylesheet" href="$MY_STATUS_FONTAWESOME">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚦</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E🚦%3C/text%3E%3C/svg%3E">
 </head>
 <body>
 <div class="container">
