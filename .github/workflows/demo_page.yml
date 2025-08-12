@@ -11,7 +11,7 @@ jobs:
       - name: Dependencies 🔧
         run: sudo apt-get install curl iputils-ping traceroute netcat-openbsd grep sed
       - name: Checkout 🛎️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Configuration 🖊️
         run: |
           mkdir -p "build/"
