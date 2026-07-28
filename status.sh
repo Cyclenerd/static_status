@@ -568,7 +568,7 @@ function page_alert_success() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-success my-3" role="alert">
 	<i class="fa-solid fa-thumbs-up"></i>
-	All systems are operational
+	All systems are operational ($MY_DATE_TIME)
 </div>
 EOF
 }
@@ -577,7 +577,7 @@ function page_alert_warning() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-warning my-3" role="alert">
 	<i class="fa-solid fa-triangle-exclamation"></i>
-	Some systems are experiencing problems
+	Some systems are experiencing problems ($MY_DATE_TIME)
 </div>
 EOF
 }
@@ -586,7 +586,7 @@ function page_alert_danger() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="alert alert-danger my-3" role="alert">
 	<i class="fa-solid fa-fire-flame-curved"></i>
-	Major Outage
+	Major Outage ($MY_DATE_TIME)
 </div>
 EOF
 }
