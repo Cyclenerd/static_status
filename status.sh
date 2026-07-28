@@ -1128,7 +1128,9 @@ done <"$MY_HOSTNAME_STATUS_HISTORY"
 if [[ "$MY_SHOW_INCIDENTS" == "true" ]]; then
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="pb-2 mt-5 mb-3 border-bottom">
-	<h2>Past Incidents</h2>
+	<h2>
+	<i class="fa-solid fa-bell-slash"></i>
+	Past Incidents</h2>
 </div>
 <ul class="list-group">
 EOF
