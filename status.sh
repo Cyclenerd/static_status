@@ -117,6 +117,9 @@ MY_STATUS_JSON=${MY_STATUS_JSON:-"$HOME/status.json"}
 # If the file exists and has a content, all errors on the status page are overwritten.
 MY_MAINTENANCE_TEXT_FILE=${MY_MAINTENANCE_TEXT_FILE:-"$MY_STATUS_CONFIG_DIR/status_maintenance_text.txt"}
 
+# Text file in which you can place notifications of past maintenance work.
+MY_PAST_MAINTENANCE_TEXT_FILE=${MY_PAST_MAINTENANCE_TEXT_FILE:-"$MY_STATUS_CONFIG_DIR/status_past_maintenance_text.txt"}
+
 # Duration we wait for response (nc, curl and traceroute).
 MY_TIMEOUT=${MY_TIMEOUT:-"2"}
 
@@ -612,6 +615,28 @@ EOF
 EOF
 }
 
+function page_past_maintenance() {
+	cat >> "$MY_STATUS_HTML" << EOF
+<div class="pb-2 mt-5 mb-3 border-bottom">
+	<h2>
+	<i class="fa-solid fa-screwdriver-wrench"></i>
+	Past Maintenance</h2>
+</div>
+<div class="card my-3">
+	<div class="card-body">
+EOF
+	if [ -r "$MY_PAST_MAINTENANCE_TEXT_FILE" ]; then
+		cat "$MY_PAST_MAINTENANCE_TEXT_FILE" >> "$MY_STATUS_HTML"
+	else
+		echo ":-(" >> "$MY_STATUS_HTML"
+		echo_warning "Can not read file '$MY_PAST_MAINTENANCE_TEXT_FILE'"
+	fi
+	cat >> "$MY_STATUS_HTML" << EOF
+	</div>
+</div>
+EOF
+}
+
 function item_ok() {
 	echo '<li class="list-group-item d-flex justify-content-between align-items-center">'
 	if [[ -n "${MY_DISPLAY_TEXT}" ]]; then
@@ -1095,6 +1120,11 @@ if [ -n "$MY_STATUS_JSON" ]; then
 		fi
 	done
 	printf "]" >> "$MY_STATUS_JSON"
+fi
+
+# Past maintenance text
+if [ -s "$MY_PAST_MAINTENANCE_TEXT_FILE" ]; then
+	page_past_maintenance
 fi
 
 # Get history (last 10 incidents)
