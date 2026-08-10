@@ -570,27 +570,27 @@ EOF
 
 function page_alert_success() {
 	cat >> "$MY_STATUS_HTML" << EOF
-<div class="alert alert-success my-3" role="alert">
-	<i class="fa-solid fa-thumbs-up"></i>
-	All systems are operational ($MY_DATE_TIME)
+<div class="alert alert-success d-flex justify-content-between align-items-center my-3" role="alert">
+	<span><i class="fa-solid fa-thumbs-up"></i> All systems are operational</span>
+	<span class="opacity-75" title="Last updated $MY_DATE_TIME">$MY_DATE_TIME</span>
 </div>
 EOF
 }
 
 function page_alert_warning() {
 	cat >> "$MY_STATUS_HTML" << EOF
-<div class="alert alert-warning my-3" role="alert">
-	<i class="fa-solid fa-triangle-exclamation"></i>
-	Some systems are experiencing problems ($MY_DATE_TIME)
+<div class="alert alert-warning d-flex justify-content-between align-items-center my-3" role="alert">
+	<span><i class="fa-solid fa-triangle-exclamation"></i> Some systems are experiencing problems</span>
+	<span class="opacity-75" title="Last updated $MY_DATE_TIME">$MY_DATE_TIME</span>
 </div>
 EOF
 }
 
 function page_alert_danger() {
 	cat >> "$MY_STATUS_HTML" << EOF
-<div class="alert alert-danger my-3" role="alert">
-	<i class="fa-solid fa-fire-flame-curved"></i>
-	Major Outage ($MY_DATE_TIME)
+<div class="alert alert-danger d-flex justify-content-between align-items-center my-3" role="alert">
+	<span><i class="fa-solid fa-fire-flame-curved"></i> Major Outage</span>
+	<span class="opacity-75" title="Last updated $MY_DATE_TIME">$MY_DATE_TIME</span>
 </div>
 EOF
 }
@@ -598,9 +598,9 @@ EOF
 function page_alert_maintenance() {
 	cat >> "$MY_STATUS_HTML" << EOF
 <div class="card my-3">
-	<div class="card-header">
-		<i class="fa-solid fa-wrench"></i>
-		Maintenance
+	<div class="card-header d-flex justify-content-between align-items-center">
+		<span><i class="fa-solid fa-wrench"></i> Maintenance</span>
+		<span class="opacity-75" title="Last updated $MY_DATE_TIME">$MY_DATE_TIME</span>
 	</div>
 	<div class="card-body">
 EOF
