@@ -1,0 +1,2 @@
+The content of <code>status_past_maintenance_text.txt</code> is displayed as past maintenance notification message at th bottom just before past incidents.
+If you did not have any past maintenance, <mark>delete this file or empty it</mark>.
