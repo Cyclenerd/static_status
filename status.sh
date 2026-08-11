@@ -545,9 +545,9 @@ $MY_AUTOREFRESH_TEXT
 </head>
 <body>
 <div class="container">
-<header class="d-flex align-items-center justify-content-center py-3 mb-4 border-bottom">
-	<h1 class="col-md-8">$MY_STATUS_TITLE</h1>
-	<div class="col-md-4 text-end d-none d-md-block">
+<header class="d-flex flex-wrap align-items-center justify-content-between py-3 mb-4 border-bottom gap-2">
+	<h1 class="mb-0">$MY_STATUS_TITLE</h1>
+	<div>
 		<a href="$MY_HOMEPAGE_URL" class="btn btn-primary" role="button"><i class="fa-solid fa-house-chimney"></i> $MY_HOMEPAGE_TITLE</a>
 	</div>
 </header>
