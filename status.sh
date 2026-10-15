@@ -948,11 +948,13 @@ while IFS=';' read -r MY_COMMAND MY_HOSTNAME_STRING MY_PORT || [[ -n "$MY_COMMAN
 	elif [[ "$MY_COMMAND" = "script" ]]; then
 		(( MY_HOSTNAME_COUNT++ ))
 		if [[ -x "$MY_STATUS_CONFIG_DIR/$MY_HOSTNAME" ]]; then
-			cmd="$MY_STATUS_CONFIG_DIR/$MY_HOSTNAME"
+			MY_SCRIPT_COMMAND=("$MY_STATUS_CONFIG_DIR/$MY_HOSTNAME")
+		elif [[ -x "$MY_HOSTNAME" ]]; then
+			MY_SCRIPT_COMMAND=("$MY_HOSTNAME")
 		else
-			cmd="$MY_HOSTNAME"
+			read -r -a MY_SCRIPT_COMMAND <<< "$MY_HOSTNAME"
 		fi
-		(timeout --preserve-status "$MY_SCRIPT_TIMEOUT" "$cmd" &> /dev/null)
+		(timeout --preserve-status "$MY_SCRIPT_TIMEOUT" bash -c '"$@"' bash "${MY_SCRIPT_COMMAND[@]}" &> /dev/null)
 		case "$?" in
 			"0")
 				check_downtime "$MY_COMMAND" "$MY_HOSTNAME_STRING" "$MY_PORT"
