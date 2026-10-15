@@ -104,14 +104,14 @@ MY_HOSTNAME_FILE=${MY_HOSTNAME_FILE:-"$MY_STATUS_CONFIG_DIR/status_hostname_list
 MY_STATUS_HTML=${MY_STATUS_HTML:-"$HOME/status_index.html"}
 
 # Where should the SVG status icon be stored?
-MY_STATUS_ICON=${MY_STATUS_ICON:-"$HOME/status.svg"}
+MY_STATUS_ICON=${MY_STATUS_ICON-"$HOME/status.svg"}
 # Icon colors
 MY_STATUS_ICON_COLOR_SUCCESS=${MY_STATUS_ICON_COLOR_SUCCESS:-"lime"}
 MY_STATUS_ICON_COLOR_WARNING=${MY_STATUS_ICON_COLOR_WARNING:-"orange"}
 MY_STATUS_ICON_COLOR_DANGER=${MY_STATUS_ICON_COLOR_DANGER:-"red"}
 
 # Where should the JSON status page be stored? Set to "" to disable JSON output
-MY_STATUS_JSON=${MY_STATUS_JSON:-"$HOME/status.json"}
+MY_STATUS_JSON=${MY_STATUS_JSON-"$HOME/status.json"}
 
 # Text file in which you can place a status message.
 # If the file exists and has a content, all errors on the status page are overwritten.
@@ -131,7 +131,7 @@ MY_PING_COUNT=${MY_PING_COUNT:-"2"}
 MY_SCRIPT_TIMEOUT=${MY_SCRIPT_TIMEOUT:-20}
 
 # Route to host
-MY_TRACEROUTE_HOST=${MY_TRACEROUTE_HOST:-"1.1.1.1"} # Cloudflare DNS
+MY_TRACEROUTE_HOST=${MY_TRACEROUTE_HOST-"1.1.1.1"} # Cloudflare DNS
 # Sets the number of probe packets per hop
 MY_TRACEROUTE_NQUERIES=${MY_TRACEROUTE_NQUERIES:-"1"}
 
