@@ -388,7 +388,7 @@ function check_downtime() {
 	MY_HOSTNAME="$2"
 	MY_PORT="$3"
 	MY_DOWN_TIME="0"
-	while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME MY_DOWN_PORT MY_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
+	while IFS=';' read -r MY_DOWN_COMMAND MY_DOWN_HOSTNAME MY_DOWN_PORT MY_PREVIOUS_DOWN_TIME || [[ -n "$MY_DOWN_COMMAND" ]]; do
 		if [[ "$MY_DOWN_COMMAND" = "ping" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "ping6" ]] ||
 		   [[ "$MY_DOWN_COMMAND" = "nc" ]] ||
@@ -399,7 +399,7 @@ function check_downtime() {
 		   [[ "$MY_DOWN_COMMAND" = "script" ]]; then
 			if 	[[ "$MY_DOWN_HOSTNAME" = "$MY_HOSTNAME" ]]; then
 				if 	[[ "$MY_DOWN_PORT" = "$MY_PORT" ]]; then
-					MY_DOWN_TIME="$((MY_DOWN_TIME+MY_LASTRUN_TIME))"
+					MY_DOWN_TIME="$((MY_PREVIOUS_DOWN_TIME+MY_LASTRUN_TIME))"
 					break  # Skip entire rest of loop.
 				fi
 			fi
@@ -413,10 +413,10 @@ function check_degradetime() {
 	MY_COMMAND="$1"
 	MY_HOSTNAME="$2"
 	MY_DEGRADE_TIME="0"
-	while IFS=';' read -r MY_DEGRADE_COMMAND MY_DEGRADE_HOSTNAME MY_DEGRADE_TIME || [[ -n "$MY_DEGRADE_COMMAND" ]]; do
+	while IFS=';' read -r MY_DEGRADE_COMMAND MY_DEGRADE_HOSTNAME MY_PREVIOUS_DEGRADE_TIME || [[ -n "$MY_DEGRADE_COMMAND" ]]; do
 		if [[ "$MY_DEGRADE_COMMAND" = "script" ]]; then
 			if [[ "$MY_DEGRADE_HOSTNAME" = "$MY_HOSTNAME" ]]; then
-				MY_DEGRADE_TIME="$((MY_DEGRADE_TIME+MY_LASTRUN_TIME))"
+				MY_DEGRADE_TIME="$((MY_PREVIOUS_DEGRADE_TIME+MY_LASTRUN_TIME))"
 				break  # Skip entire rest of loop.
 			fi
 		fi
